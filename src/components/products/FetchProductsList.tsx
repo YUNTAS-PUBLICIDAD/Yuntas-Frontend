@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type Producto from "../../models/Product.ts";
 import ProductCard from "./ProductCard.jsx";
-import ProductSearchBar from "../../pages/products/ProductSearchBar.tsx";
+import ProductSearchBar from "../../pages/products/_ProductSearchBar.tsx";
 
 export default function FetchProductsList() {
   const [allProducts, setAllProducts] = useState<Producto[]>([]);
