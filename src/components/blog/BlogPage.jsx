@@ -1,5 +1,8 @@
+import { useEffect } from 'react';
 import useBlogSEO from "../../hooks/useBlogSEO";
 import { buildImageUrl, getImageTitle } from "../../utils/imageHelpers";
+import { insertJsonLd } from "../../utils/schema-markup-generator";
+
 /**
  * @param {{ article: import('../../models/Blog').default }} props
  */
@@ -8,6 +11,10 @@ export default function BlogPage({ article }) {
   
   // Usamos el hook de SEO con la prop que recibimos
   useBlogSEO(article);
+
+  useEffect(() => {
+    insertJsonLd("blog", article);
+  }, [article]);
 
   // 3. Añadimos una validación por si la prop no llega
   if (!article) {
