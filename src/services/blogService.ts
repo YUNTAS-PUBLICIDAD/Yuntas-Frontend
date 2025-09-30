@@ -27,23 +27,63 @@ interface BlogDetailResponse {
 
 class BlogService {
   
-  // --- MÉTODOS PÚBLICOS (Obtención de datos) ---
-  getAllBlogs(): Promise<BlogListResponse> {
-    return httpService.get<BlogPagination>(config.endpoints.blogs.list);
+ // --- MÉTODOS DE OBTENCIÓN (Sin cambios) ---
+
+  async getAllBlogs(): Promise<BlogListResponse> {
+    let allBlogs: Blog[] = [];
+    let currentPage = 1;
+    let lastPage = 1;
+    let hasMorePages = true;
+
+    while (hasMorePages) {
+      // Usamos httpService para obtener página por página
+      const response: BlogListResponse = await httpService.get<BlogPagination>(
+        `${config.endpoints.blogs.list}?page=${currentPage}`
+      );
+      
+      if (response && response.success && response.data.data.length > 0) {
+        allBlogs = [...allBlogs, ...response.data.data];
+        lastPage = response.data.last_page;
+
+        if (currentPage >= lastPage) {
+          hasMorePages = false;
+        } else {
+          currentPage++;
+        }
+      } else {
+        hasMorePages = false;
+      }
+    }
+
+    // Devolvemos la respuesta en el formato esperado, pero con la lista completa de blogs
+    return {
+      success: true,
+      message: 'Todos los blogs obtenidos exitosamente.',
+      status: 200,
+      data: {
+        data: allBlogs,
+        current_page: 1,
+        last_page: 1,
+        per_page: allBlogs.length,
+        total: allBlogs.length,
+      },
+    };
   }
 
   getBlogByLink(link: string): Promise<BlogDetailResponse> {
     return httpService.get<Blog>(`/api/blogs/link/${link}`);
   }
 
-  // --- MÉTODOS PÚBLICOS (Modificación de datos) ---
+  // --- MÉTODOS DE MODIFICACIÓN ---
+
   createBlog(blogData: BlogFormData): Promise<BlogDetailResponse> {
-    const formData = this._buildCreateFormData(blogData);
+    const formData = this.buildFormData(blogData, 'create');
     return httpService.authenticatedPostFormData<Blog>(config.endpoints.blogs.create, formData);
   }
   
   updateBlog(id: number | string, blogData: BlogFormData): Promise<BlogDetailResponse> {
-    const formData = this._buildUpdateFormData(blogData);
+
+    const formData = this.buildFormData(blogData, 'update');
     formData.append('_method', 'PATCH'); 
     return httpService.authenticatedPostFormData<Blog>(`/api/blogs/${id}`, formData);
   }
@@ -52,84 +92,48 @@ class BlogService {
     return httpService.authenticatedDelete(`/api/blogs/${id}`);
   }
 
-  // Construir FormData para envío de archivos
+  // --- FUNCIÓN PRIVADA Y ADAPTADA PARA CONSTRUIR FORMDATA ---
+
   /**
-   * Construye el FormData para ACTUALIZAR un blog existente.
-   * Solo adjunta archivos de imagen si son nuevos (tipo File).
+   * Construye el FormData para crear o actualizar un blog.
+   * Traduce los campos de BlogFormData a lo que la API espera.
    */
-  private _buildCreateFormData(data: BlogFormData): FormData {
+  private buildFormData(data: BlogFormData, mode: 'create' | 'update'): FormData {
     const formData = new FormData();
     
+    // --- TRADUCCIÓN DE CAMPOS ---
     formData.append('producto_id', data.producto_id || '');
-    formData.append('subtitulo', data.subtitulo || '');
-    formData.append('meta_titulo', data.meta_titulo || '');
-    formData.append('meta_descripcion', data.meta_descripcion || '');
     formData.append('link', data.link || '');
-    formData.append('url_video', data.url_video || '');
     
-    if (data.parrafos && data.parrafos.length > 0) {
-      data.parrafos.forEach((p, i) => {
-        formData.append(`parrafos[${i}]`, p.texto); // Asumiendo que cada párrafo es un objeto { texto: '...' }
-      });
-    }
+    // 1. Traducimos 'titulo' del form a 'subtitulo' para la API
+    formData.append('subtitulo', data.titulo || ''); 
 
-    if (data.imagen_principal) {
-      formData.append('imagen_principal', data.imagen_principal);
-    }
-    if (data.alt_imagen_principal) {
-      formData.append('text_alt_principal', data.alt_imagen_principal);
-    }
-
-    if (data.imagenes_secundarias && data.imagenes_secundarias.length > 0) {
-      data.imagenes_secundarias.forEach((img, i) => {
-        if (img.archivo) {
-          formData.append(`imagenes[${i}]`, img.archivo);
-          formData.append(`alt_imagenes[${i}]`, img.alt || '');
-        }
-      });
-    }
-
-    return formData;
-  }
-
-  private _buildUpdateFormData(data: BlogFormData): FormData {
-    const formData = new FormData();
-    
-    // Adjunta todos los campos de texto
-    formData.append('producto_id', data.producto_id || '');
-    formData.append('subtitulo', data.subtitulo || '');
-    formData.append('meta_titulo', data.meta_titulo || '');
-    formData.append('meta_descripcion', data.meta_descripcion || '');
-    formData.append('link', data.link || '');
-    formData.append('url_video', data.url_video || '');
-    
-    if (data.parrafos && data.parrafos.length > 0) {
-      data.parrafos.forEach((p, i) => {
-        formData.append(`parrafos[${i}]`, p.texto);
-      });
+    // 2. Traducimos 'parrafo' (string) a un array 'parrafos' para la API
+    if (data.parrafo) {
+      formData.append('parrafos[0]', data.parrafo);
     }
     
-    if (data.alt_imagen_principal) {
-      formData.append('text_alt_principal', data.alt_imagen_principal);
+    // 3. Traducimos campos opcionales si existen
+    if (data.url_video) {
+      formData.append('url_video', data.url_video);
     }
-
-    // LÓGICA CLAVE: Solo adjunta la imagen principal si es un archivo nuevo
+        // Solo se envía la imagen si es un archivo (File),
+    // lo cual es correcto para 'create' y para 'update' si se cambia la imagen.
     if (data.imagen_principal instanceof File) {
       formData.append('imagen_principal', data.imagen_principal);
     }
 
-    // Lógica para imágenes secundarias: adjunta el archivo si es nuevo y el texto alt siempre
-    if (data.imagenes_secundarias && data.imagenes_secundarias.length > 0) {
-      data.imagenes_secundarias.forEach((img, i) => {
-        if (img.archivo instanceof File) {
-          formData.append(`imagenes[${i}]`, img.archivo);
+    if (data.imagenes?.length) {
+      data.imagenes.forEach((img, i) => {
+        // 4. Verificamos que 'url_imagen' sea un archivo nuevo
+        if (img.url_imagen instanceof File) {
+          formData.append(`imagenes[${i}]`, img.url_imagen);
+          // Traducimos 'parrafo_imagen' a 'alt_imagenes'
+          formData.append(`alt_imagenes[${i}]`, img.parrafo_imagen || '');
         }
-        // Siempre se envía el texto alt, ya sea nuevo o existente
-        formData.append(`alt_imagenes[${i}]`, img.alt || '');
       });
     }
 
-    
     return formData;
   }
 
