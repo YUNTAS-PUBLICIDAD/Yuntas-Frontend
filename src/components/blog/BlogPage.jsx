@@ -1,5 +1,8 @@
+import { useEffect } from 'react';
 import useBlogSEO from "../../hooks/useBlogSEO";
 import { buildImageUrl, getImageTitle } from "../../utils/imageHelpers";
+import { insertJsonLd } from "../../utils/schema-markup-generator";
+
 /**
  * @param {{ article: import('../../models/Blog').default }} props
  */
@@ -8,6 +11,10 @@ export default function BlogPage({ article }) {
   
   // Usamos el hook de SEO con la prop que recibimos
   useBlogSEO(article);
+
+  useEffect(() => {
+    insertJsonLd("blog", article);
+  }, [article]);
 
   // 3. Añadimos una validación por si la prop no llega
   if (!article) {
@@ -61,7 +68,7 @@ export default function BlogPage({ article }) {
       </div>
 
       <section className="px-4 sm:px-8 md:px-12 lg:px-24 py-16 text-white bg-gradient-to-b from-blue-900 to-indigo-950 flex flex-col">
-        <div className="Montserrat relative z-10 max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        <div className="Montserrat relative z-10 max-w-7xl mx-auto py-12 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-fade-in">
             <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white animate-float">
               {article.subtitulo || "Descubre nuestro blog"}
