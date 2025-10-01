@@ -330,8 +330,8 @@ export default function FetchBlogsList() {
                 <span className="text-2xl font-bold">&lt;</span>
               </button>
 
-              <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white px-8 py-4 rounded-full">
-                <span className="uppercase tracking-wide font-semibold text-lg">
+              <div className="flex items-center justify-center sm:space-x-3 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white px-6 sm:px-8 py-2 sm:py-4 rounded-full text-sm sm:text-base">
+                <span className="uppercase tracking-wide font-semibold text-center">
                   ver más
                 </span>
               </div>
