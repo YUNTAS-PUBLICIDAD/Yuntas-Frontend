@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 import { buildImageUrl, getImageTitle } from "../../utils/imageHelpers";
 import { motion } from "framer-motion";
 import Emergente from "./Emergente";
@@ -11,17 +11,19 @@ interface ProductoPageProps {
 }
 
 const ProductoPage = ({ data }: ProductoPageProps) => {
-<<<<<<< Updated upstream
-    if (!data) return <p className="grid min-h-screen place-content-center text-5xl font-extrabold animate-pulse bg-blue-200">Cargando...</p>
-    //insertJsonLd("product", {data});
-
-    useEffect(() => {
-        insertJsonLd("product", { data });
-    }, [data]);
-
-=======
   if (!data)
->>>>>>> Stashed changes
+    return (
+      <p className="grid min-h-screen place-content-center text-5xl font-extrabold animate-pulse bg-blue-200">
+        Cargando...
+      </p>
+    );
+  //insertJsonLd("product", {data});
+
+  useEffect(() => {
+    insertJsonLd("product", { data });
+  }, [data]);
+
+  if (!data)
     return (
       <p className="grid min-h-screen place-content-center text-5xl font-extrabold animate-pulse bg-blue-200">
         Cargando...
