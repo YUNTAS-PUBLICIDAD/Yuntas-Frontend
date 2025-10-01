@@ -225,9 +225,10 @@ export default function FetchProductsList() {
                 >
                   <span className="text-2xl font-bold">&lt;</span>
                 </button>
-
-                <div className="px-8 py-4 rounded-full bg-white/10 text-white border-2 border-white/30 font-semibold text-lg tracking-wide uppercase">
-                  Página {currentPage} de {totalPages}
+                <div className="flex items-center justify-center sm:space-x-3 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white px-6 sm:px-8 py-2 sm:py-4 rounded-full text-sm sm:text-base">
+                  <span className="uppercase tracking-wide font-semibold text-center">
+                    Página {currentPage} de {totalPages}
+                  </span>
                 </div>
 
                 <button
