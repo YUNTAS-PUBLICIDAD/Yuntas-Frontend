@@ -337,10 +337,10 @@ const AddBlogModal = ({
       const parrafosConContenido = formData.parrafos.filter((p) => p.trim());
       if (parrafosConContenido.length === 0)
         return alert("⚠️ Debe haber al menos un párrafo con contenido.");
-      const urlRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+      const urlRegex = /^[a-z0-Z0-9]+(?:-[a-z0-Z0-9]+)*$/;
       if (formData.link && !urlRegex.test(formData.link)) {
         return alert(
-          "⚠️ El link debe ser URL-friendly (solo minúsculas, guiones y números)."
+          "⚠️ El link debe ser URL-friendly (Solo letras, guiones y números)."
         );
 
       }
@@ -557,24 +557,6 @@ const AddBlogModal = ({
                     className="w-full border border-gray-300 rounded px-3 py-2"
                   />
                   <small className="text-gray-500">Escribe solo letras y guiones. Máx. 255 letras o números.</small>
-
-                  {/* Link */}
-                  <div className="col-span-1 md:col-span-4">
-                    <label className="block font-medium mb-1">
-                      Link (URL amigable)
-                    </label>
-                    <input
-                      type="text"
-                      name="link"
-                      value={formData.link}
-                      onChange={handleInputChange}
-                      placeholder="ejemplo: mi-blog-post"
-                      className="w-full border border-gray-300 rounded px-3 py-2"
-                    />
-                    <small className="text-gray-500">
-                      Escribe solo minúsculas y guiones. Máx. 255 letras o números.
-                    </small>
-                  </div>
 
                 </div>
               </div>
