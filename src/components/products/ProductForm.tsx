@@ -4,12 +4,6 @@ import Input from "../Input";
 import Swal from "sweetalert2";
 import type { Product } from "../../models/Product";
 
-interface ImagenLegacy {
-  id: string;
-  url_imagen: string;
-  texto_alt_SEO: string;
-}
-
 interface Props {
   initialData?: Product;
   onSubmit: (formData: FormData) => Promise<void>;
@@ -39,16 +33,16 @@ const ProductForm = ({ initialData, onSubmit, isEditing }: Props) => {
 
       const specs = initialData.especificaciones
         ? Object.entries(initialData.especificaciones)
-            .filter(([key]) => key.startsWith("spec_"))
-            .map(([, value]) => String(value).trim())
+          .filter(([key]) => key.startsWith("spec_"))
+          .map(([, value]) => String(value).trim())
         : [];
 
       setEspecificaciones(specs.length > 0 ? specs : [""]);
 
       const benefits = initialData.especificaciones
         ? Object.entries(initialData.especificaciones)
-            .filter(([key]) => key.startsWith("beneficio_"))
-            .map(([, value]) => String(value).trim())
+          .filter(([key]) => key.startsWith("beneficio_"))
+          .map(([, value]) => String(value).trim())
         : [];
 
       setBeneficios(benefits.length > 0 ? benefits : [""]);
@@ -82,6 +76,14 @@ const ProductForm = ({ initialData, onSubmit, isEditing }: Props) => {
       return benefits.length > 0 ? benefits : [""];
     })()
   );
+
+  const [keywords, setKeywords] = useState<string[]>((
+    () => {
+      if (!initialData?.etiqueta.keywords) return [""]
+      const keywords = initialData.etiqueta.keywords.split(",");
+      return keywords.length > 0 ? keywords : [""]
+    }
+  ))
 
   // Funciones para manejar imágenes existentes
   const deleteExistImage = (id: string) => {
@@ -370,9 +372,9 @@ const ProductForm = ({ initialData, onSubmit, isEditing }: Props) => {
                 initialData?.link ||
                 (initialData?.titulo
                   ? initialData.titulo
-                      .toLowerCase()
-                      .replace(/\s+/g, "-")
-                      .replace(/[^\w\-]/g, "")
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")
+                    .replace(/[^\w\-]/g, "")
                   : "")
               }
               placeholder="letreros-neon-led"
@@ -415,6 +417,42 @@ const ProductForm = ({ initialData, onSubmit, isEditing }: Props) => {
               Máx. 160 caracteres (letras, números y espacios).
             </small>
           </div>
+
+          {/* Keywords */}
+          {/* <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Keywords{" "}
+              <span className="text-blue-600 text-sm">(SEO)</span>
+            </label>
+            {keywords.map((keyword, index) => (
+              <div key={index} className="flex gap-2">
+                <input 
+                  type="text" 
+                  value={keyword}
+                  onChange={}
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                />
+                {keywords.length > 1 &&
+                  <button type="button"
+                    onClick={() => {
+                      if (keywords.length > 1) {
+                        setKeywords(keywords.filter((_, i) => i !== index));
+                      }
+                    }}
+                  >X</button>
+                }
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() => {
+                setKeywords((prev) => [...prev, ""]);
+              }}
+              className="text-purple-600 hover:text-purple-800 text-sm font-medium p-1"
+            >
+              + Agregar keyword
+            </button>
+          </div> */}
         </div>
       </div>
 
