@@ -1,4 +1,4 @@
-type MappedData = { success: boolean; message: string; data: any };
+type MappedData = { data: any };
 
 export function insertJsonLd(
   type: "product" | "blog",
@@ -10,7 +10,7 @@ export function insertJsonLd(
     if (type === "product") {
       jsonLd = generateProductJsonLd(mapped.data);
     } else if (type === "blog") {
-      jsonLd = generateBlogJsonLd(mapped.data);
+      jsonLd = generateBlogJsonLd(mapped);
     } else {
       throw new Error(`Tipo no soportado: ${type}`);
     }
@@ -58,12 +58,12 @@ export function generateProductJsonLd(product: any) {
       logo: "https://yuntaspublicidad.com/images/yuntas_publicidad_logo_tablet.webp",
       url: "https://yuntaspublicidad.com",
     },
-    url: `https://yuntaspublicidad.com/products/producto/?link=${encodeURIComponent(product.link)}`,
+    url: `https://yuntaspublicidad.com/products/${encodeURIComponent(product.link)}`,
     category: product.seccion,
     additionalProperty,
     /* offers: {
       "@type": "Offer",
-      url: `https://yuntaspublicidad.com/products/producto/?link=${encodeURIComponent(product.link)}`,
+      url: `https://yuntaspublicidad.com/products/${encodeURIComponent(product.link)}`,
       price: 50.00,
       priceCurrency: "PEN",
       priceValidUntil: "2025-09-19",
@@ -251,8 +251,8 @@ export function generateBlogJsonLd(blog: any) {
     blogPost: [
       {
         "@type": "BlogPosting",
-        "@id": `https://yuntaspublicidad.com/blogs/blog/?link=${blog.link}`,
-        mainEntityOfPage: `https://yuntaspublicidad.com/blogs/blog/?link=${blog.link}`,
+        "@id": `https://yuntaspublicidad.com/blogs/${blog.link}`,
+        mainEntityOfPage: `https://yuntaspublicidad.com/blogs/${blog.link}`,
         headline: blog.nombre_producto,
         name: blog.nombre_producto,
         description: description,
@@ -270,7 +270,7 @@ export function generateBlogJsonLd(blog: any) {
           height: "800",
           width: "1200"
         },
-        url: `https://yuntaspublicidad.com/blogs/blog/?link=${blog.link}`,
+        url: `https://yuntaspublicidad.com/blogs/${blog.link}`,
         keywords: [
           blog.seccion || "Publicidad",
           "LED",

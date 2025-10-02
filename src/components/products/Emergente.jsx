@@ -273,6 +273,7 @@ const Emergente = ({ producto }) => {
           <img
             src={imagenPopup}
             alt={`Popup de ${productoTitulo || "producto"}`}
+            title={`Popup de ${productoTitulo || "producto"}`}
             className="w-full h-full object-cover object-center"
             onError={(e) => {
               try {
