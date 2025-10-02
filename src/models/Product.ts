@@ -45,6 +45,7 @@ export default interface Producto {
   };
   relacionados?: string[];
   etiqueta?: {
+    keywords?: string;
     meta_titulo: string;
     meta_descripcion: string;
   };
@@ -60,10 +61,12 @@ export interface Product {
   precio?: number;
   seccion: string;
   imagen_principal: string;
+  text_alt_principal?: string;
   especificaciones: Record<string, string>;
   beneficios: Array<{id?: string, texto: string}>;
   imagenes: { id: string, url_imagen: string, texto_alt_SEO: string }[];
   etiqueta: {
+    keywords?: string;
     meta_titulo: string;
     meta_descripcion: string;
   }
