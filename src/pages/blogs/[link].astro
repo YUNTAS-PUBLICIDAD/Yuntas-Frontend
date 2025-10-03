@@ -36,7 +36,10 @@ if (!article) {
 }
 ---
 
-<Layout title={article.nombre_producto} description={article.subtitulo || ''} canonicalUrl=`https://yuntaspublicidad.com/blogs/${link}`>
+<Layout title={article.nombre_producto}
+description={article.subtitulo || ''}
+canonicalUrl={`https://yuntaspublicidad.com/blogs/${link}`}
+>
   
   <BlogDetail client:load article={article} />
 
