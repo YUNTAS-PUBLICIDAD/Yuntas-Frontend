@@ -4,21 +4,31 @@ import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import Modal from "../../Modal";
 import ProductForm from "../../products/ProductForm";
+import EmailForm from "../../products/EmailForm";
+
 import type { Product } from "../../../models/Product";
 import { config, getApiUrl } from "../../../../config";
 import TableContainer from "./TableContainer";
 import { useProducts } from "../../../hooks/useProducts";
 import { useDarkMode } from "../../../hooks/darkmode/useDarkMode";
 export default function DataTable() {
-  const { productos, loading, createProduct, updateProduct, error, pagination, refetch } =
-    useProducts();
+  const {
+    productos,
+    loading,
+    createProduct,
+    updateProduct,
+    error,
+    pagination,
+    refetch,
+  } = useProducts();
   const [isOpen, setIsOpen] = useState(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState<Product | undefined>(
     undefined
   );
-  const { darkMode, toggleDarkMode } = useDarkMode()
+  const { darkMode, toggleDarkMode } = useDarkMode();
 
-  console.log('Productos cargados:', productos); // Depuración básica
+  console.log("Productos cargados:", productos); // Depuración básica
   const eliminarProducto = async (id: string | number) => {
     const url = getApiUrl(config.endpoints.productos.delete(id));
     const token = localStorage.getItem("token");
@@ -178,6 +188,14 @@ export default function DataTable() {
         >
           Añadir Producto
         </button>
+        <button
+          onClick={() => {
+            setIsEmailModalOpen(true);
+          }}
+          className="mt-4 bg-green-700 hover:bg-green-600 text-white text-lg px-10 py-1.5 rounded-full flex items-center gap-2"
+        >
+          Envio de Emails
+        </button>
       </div>
 
       <div className="overflow-x-auto p-4">
@@ -187,7 +205,9 @@ export default function DataTable() {
               {["ID", "Nombre", "Sección", "Precio", "Acción"].map((header) => (
                 <th
                   key={header}
-                  className={`px-4 py-2 text-white uppercase text-xs font-bold rounded-md ${darkMode ? 'bg-cyan-900' : 'bg-cyan-400'}`}
+                  className={`px-4 py-2 text-white uppercase text-xs font-bold rounded-md ${
+                    darkMode ? "bg-cyan-900" : "bg-cyan-400"
+                  }`}
                 >
                   {header}
                 </th>
@@ -201,13 +221,18 @@ export default function DataTable() {
                 <td colSpan={5} className="text-center py-12">
                   <div className="flex justify-center items-center gap-3">
                     <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-teal-500"></div>
-                    <span className="text-teal-500 font-medium">Cargando productos...</span>
+                    <span className="text-teal-500 font-medium">
+                      Cargando productos...
+                    </span>
                   </div>
                 </td>
               </tr>
             ) : productos.length > 0 ? (
               productos.map((item, index) => {
-                const rowBg = (index % 2 === 0 && darkMode) ? "bg-white text-black" : "text-black bg-white";
+                const rowBg =
+                  index % 2 === 0 && darkMode
+                    ? "bg-white text-black"
+                    : "text-black bg-white";
                 const key = item.id ?? `producto-${index}`;
 
                 return (
@@ -215,19 +240,44 @@ export default function DataTable() {
                     key={key}
                     className={`text-center md:table-row block md:mb-0 mb-4 rounded-lg shadow-sm ${rowBg}`}
                   >
-                    <td data-label="ID" className={`px-4 py-2 font-bold border block md:table-cell ${darkMode ? 'bg-gray-300' : 'bg-white'}`}>
+                    <td
+                      data-label="ID"
+                      className={`px-4 py-2 font-bold border block md:table-cell ${
+                        darkMode ? "bg-gray-300" : "bg-white"
+                      }`}
+                    >
                       {item.id}
                     </td>
-                    <td data-label="Nombre" className={`px-4 py-2 font-bold border block md:table-cell ${darkMode ? 'bg-gray-300' : 'bg-white'}`}>
+                    <td
+                      data-label="Nombre"
+                      className={`px-4 py-2 font-bold border block md:table-cell ${
+                        darkMode ? "bg-gray-300" : "bg-white"
+                      }`}
+                    >
                       {item.nombre}
                     </td>
-                    <td data-label="Sección" className={`px-4 py-2 font-bold border block md:table-cell ${darkMode ? 'bg-gray-300' : 'bg-white'}`}>
+                    <td
+                      data-label="Sección"
+                      className={`px-4 py-2 font-bold border block md:table-cell ${
+                        darkMode ? "bg-gray-300" : "bg-white"
+                      }`}
+                    >
                       {item.seccion}
                     </td>
-                    <td data-label="Precio" className={`px-4 py-2 font-bold border block md:table-cell ${darkMode ? 'bg-gray-300' : 'bg-white'}`}>
+                    <td
+                      data-label="Precio"
+                      className={`px-4 py-2 font-bold border block md:table-cell ${
+                        darkMode ? "bg-gray-300" : "bg-white"
+                      }`}
+                    >
                       ${item.precio ? item.precio.toFixed(2) : ""}
                     </td>
-                    <td data-label="Acción" className={`px-4 py-2 border block md:table-cell ${darkMode ? 'bg-gray-300' : 'bg-white'}`}>
+                    <td
+                      data-label="Acción"
+                      className={`px-4 py-2 border block md:table-cell ${
+                        darkMode ? "bg-gray-300" : "bg-white"
+                      }`}
+                    >
                       <div className="flex justify-center gap-4">
                         <button
                           onClick={() => handleEdit(item)}
@@ -255,9 +305,12 @@ export default function DataTable() {
                     <div className="bg-teal-50 p-6 rounded-full">
                       <FaTags className="h-10 w-10 text-teal-300" />
                     </div>
-                    <p className="text-xl font-medium text-gray-600 mt-4">No hay productos registrados</p>
+                    <p className="text-xl font-medium text-gray-600 mt-4">
+                      No hay productos registrados
+                    </p>
                     <p className="text-gray-400 max-w-md mx-auto">
-                      Comienza agregando productos a tu catálogo con el botón 'Añadir Producto'
+                      Comienza agregando productos a tu catálogo con el botón
+                      'Añadir Producto'
                     </p>
                   </div>
                 </td>
@@ -285,10 +338,11 @@ export default function DataTable() {
                 <button
                   key={pageNum}
                   onClick={() => handlePageChange(pageNum)}
-                  className={`px-3 py-2 rounded-md ${pagination.current_page === pageNum
+                  className={`px-3 py-2 rounded-md ${
+                    pagination.current_page === pageNum
                       ? "bg-blue-950 text-white"
                       : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                    }`}
+                  }`}
                 >
                   {pageNum}
                 </button>
@@ -321,7 +375,14 @@ export default function DataTable() {
           isEditing={!!currentProduct}
         />
       </Modal>
+      {/* Modal para Envío de Emails */}
+      <Modal
+        isOpen={isEmailModalOpen}
+        onClose={() => setIsEmailModalOpen(false)}
+        title="Envio de Emails"
+      >
+        <EmailForm onSubmit={handleSubmit} />
+      </Modal>
     </>
   );
-
 }
