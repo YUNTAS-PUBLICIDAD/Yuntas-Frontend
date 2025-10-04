@@ -66,7 +66,7 @@ export interface Product {
   beneficios: Array<{id?: string, texto: string}>;
   imagenes: { id: string, url_imagen: string, texto_alt_SEO: string }[];
   etiqueta: {
-    keywords?: string;
+    keywords: string[];
     meta_titulo: string;
     meta_descripcion: string;
   }
