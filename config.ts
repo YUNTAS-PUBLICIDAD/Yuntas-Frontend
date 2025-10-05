@@ -8,8 +8,8 @@ export const config = {
 
   // La URL de la API se obtiene de la variable de entorno PUBLIC_API_URL
   // Si no está definida, usa el fallback de producción
-  apiUrl: import.meta.env.PUBLIC_API_URL || "https://apiyuntas.yuntaspublicidad.com", 
-  environment: import.meta.env.MODE || "development", // Entorno de la aplicación, por defecto development
+  apiUrl:"https://apiyuntas.yuntaspublicidad.com", 
+  environment:"development", // Entorno de la aplicación, por defecto development
   endpoints: {
     auth: {
       // Endpoints de autenticaci贸
