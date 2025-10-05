@@ -1,43 +1,31 @@
 ---
 import ProductoPage from "../../components/products/ProductoPage";
 import Layout from "../../layouts/Layout.astro";
-import type { Product } from "../../models/Product";
 import { productoService } from "../../services/productoService";
 
-// Las páginas se generan en tiempo de build, no en tiempo de solicitud
-// Por lo tanto, necesitamos definir todas las rutas posibles de antemano mediante el fetct.
-// Si se agrega un nuevo producto, se debe reconstruir el sitio (build) para que la nueva página esté disponible.
-export async function getStaticPaths() {
-  try {
-    let allProducts: Product[] = [];
-    let page = 1;
-    let lastPage = 1;
+// En modo SSR, las páginas se generan bajo demanda cuando se solicitan
+// No necesitamos getStaticPaths, obtenemos el producto directamente por el parámetro link
+const { link } = Astro.params;
 
-    do {
-      const response = await productoService.getAllProductos(page);
-      allProducts = allProducts.concat(response.data);
-      lastPage = response.last_page;
-      page++;
-    } while (page <= lastPage);
-
-    return allProducts.map((producto) => ({
-      params: { link: producto.link },
-      props: { producto },
-    }));
-  } catch (error) {
-    console.warn("⚠️ No se pudieron cargar productos durante el build:", error);
-    // Retornar array vacío si la API no está disponible durante el build
-    // Las páginas dinámicas se generarán cuando el sitio esté corriendo
-    return [];
-  }
+if (!link) {
+  return Astro.redirect("/products");
 }
 
+let producto = null;
+let error = null;
 
-// Props que recibirá el componente
-const { link } = Astro.params;
-const { producto } = Astro.props;
+try {
+  // Obtener el producto por su link
+  const response = await productoService.getProductoByLink(link);
+  producto = response.data;
+} catch (err) {
+  console.error("Error obteniendo producto:", err);
+  error = err instanceof Error ? err.message : "Error desconocido";
+}
+
+// Si no se encontró el producto, redirigir a la lista de productos
 if (!producto) {
-  throw new Error(`Producto con link "${link}" no encontrado.`);
+  return Astro.redirect("/products");
 }
 ---
 

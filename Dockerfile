@@ -20,13 +20,16 @@ FROM node:20-slim
 
 WORKDIR /app
 
-# Instalar servidor HTTP simple para servir archivos estáticos
-RUN npm install -g serve
-
-# Copiar solo los archivos construidos
+# Copiar archivos necesarios para SSR
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+
+# Variables de entorno
+ENV HOST=0.0.0.0
+ENV PORT=4321
 
 EXPOSE 4321
 
-# Servir los archivos estáticos con serve (sin -s para permitir navegación multi-página)
-CMD ["serve", "dist", "-l", "4321"]
+# Ejecutar servidor SSR de Astro
+CMD ["node", "./dist/server/entry.mjs"]
