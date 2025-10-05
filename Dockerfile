@@ -3,6 +3,10 @@ FROM node:20-slim AS builder
 
 WORKDIR /app
 
+# Argumentos de build para variables de entorno públicas
+ARG PUBLIC_API_URL=https://apiyuntas.yuntaspublicidad.com
+ENV PUBLIC_API_URL=$PUBLIC_API_URL
+
 # Copiar archivos de dependencias primero para aprovechar caché
 COPY package*.json ./
 
@@ -12,7 +16,7 @@ RUN npm install
 # Copiar el resto del código
 COPY . .
 
-# Construir la aplicación
+# Construir la aplicación con las variables de entorno
 RUN npm run build
 
 # Stage 2: Runtime
