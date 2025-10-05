@@ -28,5 +28,5 @@ COPY --from=builder /app/dist ./dist
 
 EXPOSE 4321
 
-# Servir los archivos estáticos con serve
-CMD ["serve", "-s", "dist", "-l", "4321"]
+# Servir los archivos estáticos con serve (sin -s para permitir navegación multi-página)
+CMD ["serve", "dist", "-l", "4321"]
