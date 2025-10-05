@@ -203,10 +203,9 @@ export default function FetchBlogsList() {
                     <div
                       key={blog.id}
                       className="group transform transition-all duration-300"
-                      style={{ pointerEvents: 'none' }}
                     >
                       <div className="rounded-2xl p-1">
-                        <div className="w-full max-w-[320px] mx-auto bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden" style={{ pointerEvents: 'auto' }}>
+                        <div className="w-full max-w-[320px] mx-auto bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden">
                           <BlogCard blog={blog} />
                         </div>
                       </div>
@@ -221,10 +220,9 @@ export default function FetchBlogsList() {
                       <div
                         key={blog.id}
                         className="group transform transition-all duration-300"
-                        style={{ pointerEvents: 'none' }}
                       >
                         <div className="rounded-2xl p-1">
-                          <div className="w-full max-w-[320px] mx-auto bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden" style={{ pointerEvents: 'auto' }}>
+                          <div className="w-full max-w-[320px] mx-auto bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden">
                             <BlogCard blog={blog} />
                           </div>
                         </div>
@@ -239,10 +237,9 @@ export default function FetchBlogsList() {
                           <div
                             key={blog.id}
                             className="group transform transition-all duration-300"
-                            style={{ pointerEvents: 'none' }}
                           >
                             <div className="rounded-2xl p-1">
-                              <div className="bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden max-w-[250px]" style={{ pointerEvents: 'auto' }}>
+                              <div className="bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden max-w-[250px]">
                                 <BlogCard blog={blog} />
                               </div>
                             </div>
@@ -259,10 +256,9 @@ export default function FetchBlogsList() {
                         <div
                           key={blog.id}
                           className="group transform transition-all duration-300 justify-self-center"
-                          style={{ pointerEvents: 'none' }}
                         >
                           <div className="rounded-2xl p-1">
-                            <div className="w-full max-w-[320px] mx-auto bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden" style={{ pointerEvents: 'auto' }}>
+                            <div className="w-full max-w-[320px] mx-auto bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden">
                               <BlogCard blog={blog} />
                             </div>
                           </div>

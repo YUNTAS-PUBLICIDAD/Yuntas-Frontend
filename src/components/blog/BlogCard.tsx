@@ -23,12 +23,18 @@ export default function BlogCard({ blog }: BlogCardProps) {
     setImageError(true);
   };
 
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    window.location.href = `/blogs/${blog.link}`;
+  };
+
   const imagenUrl = buildImageUrl(blog.imagen_principal);
   const titulo = blog.nombre_producto || "Blog sin título";
 
   return (
     <a
       href={`/blogs/${blog.link}`}
+      onClick={handleClick}
       className="group relative overflow-hidden rounded-2xl bg-white shadow-md transition-all duration-300 hover:scale-105 w-[250px] h-[320px] flex flex-col"
     >
       <div className="relative w-full h-[200px] overflow-hidden flex-shrink-0">
