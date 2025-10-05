@@ -29,6 +29,7 @@ export default defineConfig({
   },
 
   vite: {
+    // @ts-ignore - Incompatibilidad de tipos entre plugin de Tailwind y Vite
     plugins: [tailwindcss()],
     build: {
       cssCodeSplit: true,
