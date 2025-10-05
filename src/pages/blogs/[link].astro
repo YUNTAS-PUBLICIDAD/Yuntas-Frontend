@@ -5,17 +5,24 @@ import { blogService } from "../../services/blogService";
 import type BlogAPI from "../../models/Blog";
 
 export async function getStaticPaths() {
-  const response = await blogService.getAllBlogs();
-  const blogs = response.data.data;
+  try {
+    const response = await blogService.getAllBlogs();
+    const blogs = response.data.data;
 
-  return blogs
-    .filter(
-      (blog: BlogAPI) =>
-        typeof blog.link === "string" && blog.link.trim() !== ""
-    )
-    .map((blog: BlogAPI) => ({
-      params: { link: blog.link },
-    }));
+    return blogs
+      .filter(
+        (blog: BlogAPI) =>
+          typeof blog.link === "string" && blog.link.trim() !== ""
+      )
+      .map((blog: BlogAPI) => ({
+        params: { link: blog.link },
+      }));
+  } catch (error) {
+    console.warn("⚠️ No se pudieron cargar blogs durante el build:", error);
+    // Retornar array vacío si la API no está disponible durante el build
+    // Las páginas dinámicas se generarán cuando el sitio esté corriendo
+    return [];
+  }
 }
 
 const { link } = Astro.params;
