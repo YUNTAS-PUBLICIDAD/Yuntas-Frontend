@@ -202,7 +202,7 @@ export default function FetchBlogsList() {
                   {currentBlogs.map((blog) => (
                     <div
                       key={blog.id}
-                      className="group cursor-pointer transform transition-all duration-300"
+                      className="group transform transition-all duration-300"
                     >
                       <div className="rounded-2xl p-1">
                         <div className="w-full max-w-[320px] mx-auto bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden">
@@ -219,7 +219,7 @@ export default function FetchBlogsList() {
                     {currentBlogs.slice(0, 3).map((blog) => (
                       <div
                         key={blog.id}
-                        className="group cursor-pointer transform transition-all duration-300"
+                        className="group transform transition-all duration-300"
                       >
                         <div className="rounded-2xl p-1">
                           <div className="w-full max-w-[320px] mx-auto bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden">
@@ -236,7 +236,7 @@ export default function FetchBlogsList() {
                         {currentBlogs.slice(3, 5).map((blog) => (
                           <div
                             key={blog.id}
-                            className="group cursor-pointer transform transition-all duration-300"
+                            className="group transform transition-all duration-300"
                           >
                             <div className="rounded-2xl p-1">
                               <div className="bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden max-w-[250px]">
@@ -255,7 +255,7 @@ export default function FetchBlogsList() {
                       {currentBlogs.slice(3).map((blog) => (
                         <div
                           key={blog.id}
-                          className="group cursor-pointer transform transition-all duration-300 justify-self-center"
+                          className="group transform transition-all duration-300 justify-self-center"
                         >
                           <div className="rounded-2xl p-1">
                             <div className="w-full max-w-[320px] mx-auto bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden">
