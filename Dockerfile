@@ -20,11 +20,13 @@ FROM node:20-slim
 
 WORKDIR /app
 
-# Copiar solo lo necesario desde el builder
+# Instalar servidor HTTP simple para servir archivos estáticos
+RUN npm install -g serve
+
+# Copiar solo los archivos construidos
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
 
 EXPOSE 4321
 
-CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "4321"]
+# Servir los archivos estáticos con serve
+CMD ["serve", "-s", "dist", "-l", "4321"]
