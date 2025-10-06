@@ -251,6 +251,19 @@ const removeKeyword = (index: number) => {
           `❌ Imagen ${imagen.index} (${imagen.key}) no tiene archivo válido o está vacía`
         );
       }
+        const metaTitulo = formData.get("meta_título") as string;
+  const metaDescripcion = formData.get("meta_descripcion") as string;
+
+  finalFormData.append("etiqueta[meta_titulo]", metaTitulo.trim());
+  finalFormData.append("etiqueta[meta_descripcion]", metaDescripcion.trim());
+
+// Filtramos las keywords que no estén vacías antes de enviarlas
+  const nonEmptyKeywords = keywords.filter(k => k.trim() !== "");
+  if (nonEmptyKeywords.length > 0) {
+    nonEmptyKeywords.forEach((keyword, index) => {
+      finalFormData.append(`etiqueta[keywords][${index}]`, keyword.trim());
+    });
+  }
     });
 
     console.log(`Total de imágenes enviadas: ${imagenesEnviadas}`);
