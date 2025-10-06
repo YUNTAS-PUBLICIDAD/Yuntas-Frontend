@@ -6,9 +6,10 @@
  **/
 export const config = {
 
-  //apiUrl: "http://localhost:8000", // API local para desarrollo
-  apiUrl: "https://apiyuntas.yuntaspublicidad.com", // API desplegada (comentada para desarrollo)
-  environment: import.meta.env.MODE || "development", // Entorno de la aplicación, por defecto development
+  // La URL de la API se obtiene de la variable de entorno PUBLIC_API_URL
+  // Si no está definida, usa el fallback de producción
+  apiUrl:"https://apiyuntas.yuntaspublicidad.com", 
+  environment:"development", // Entorno de la aplicación, por defecto development
   endpoints: {
     auth: {
       // Endpoints de autenticaci贸

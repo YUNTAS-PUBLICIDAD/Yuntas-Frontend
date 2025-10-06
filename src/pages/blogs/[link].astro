@@ -4,21 +4,13 @@ import BlogDetail from "../../components/blog/BlogPage.jsx";
 import { blogService } from "../../services/blogService";
 import type BlogAPI from "../../models/Blog";
 
-export async function getStaticPaths() {
-  const response = await blogService.getAllBlogs();
-  const blogs = response.data.data;
-
-  return blogs
-    .filter(
-      (blog: BlogAPI) =>
-        typeof blog.link === "string" && blog.link.trim() !== ""
-    )
-    .map((blog: BlogAPI) => ({
-      params: { link: blog.link },
-    }));
-}
-
+// En modo SSR, las páginas se generan bajo demanda cuando se solicitan
+// No necesitamos getStaticPaths, obtenemos el blog directamente por el parámetro link
 const { link } = Astro.params;
+
+if (!link) {
+  return Astro.redirect("/blogs");
+}
 
 let article: BlogAPI | null = null;
 let error: string | null = null;
@@ -31,8 +23,9 @@ try {
   error = err instanceof Error ? err.message : "Error desconocido";
 }
 
+// Si no se encontró el artículo, redirigir a la lista de blogs
 if (!article) {
-  throw new Error(`Artículo no encontrado: ${link}`);
+  return Astro.redirect("/blogs");
 }
 ---
 
