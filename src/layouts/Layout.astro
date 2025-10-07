@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
-import { ClientRouter } from "astro:transitions";
+// ClientRouter removido temporalmente - causa conflictos con SSR en rutas dinámicas
+// import { ClientRouter } from "astro:transitions";
 import Navbar from "../components/Navbar.astro";
 import ScrollModal from "../components/ScrollModal";
 import Footer from "../components/Footer.astro";
@@ -64,7 +65,7 @@ const {
       />
     </noscript> -->
     <meta name="google-site-verification" content="XmepIr9EXYbyFVG03v5DDp8vneZIOH0Z3OLHOBGX6e0" />
-    <ClientRouter />
+    <!-- ClientRouter removido - causa conflictos con SSR -->
   </head>
   <body>
     <Navbar variant="default" />

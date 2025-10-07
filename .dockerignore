@@ -1,0 +1,17 @@
+Dockerfile
+.dockerignore
+.git
+.gitignore
+README.md
+.env
+.env.local
+.env.*.local
+node_modules
+npm-debug.log*
+.DS_Store
+dist
+.vscode
+.idea
+*.swp
+*.swo
+*~

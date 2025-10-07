@@ -3,10 +3,15 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
+import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://yuntaspublicidad.com',
+  output: 'server',
+  adapter: node({
+    mode: 'standalone'
+  }),
   integrations: [
     react(), 
     sitemap({
@@ -24,6 +29,7 @@ export default defineConfig({
   },
 
   vite: {
+    // @ts-ignore - Incompatibilidad de tipos entre plugin de Tailwind y Vite
     plugins: [tailwindcss()],
     build: {
       cssCodeSplit: true,
