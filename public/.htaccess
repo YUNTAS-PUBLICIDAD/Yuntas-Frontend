@@ -1,0 +1,10 @@
+# Fuerza redirección de www a no-www con HTTPS
+RewriteEngine On
+
+# Redirige de www a no-www
+RewriteCond %{HTTP_HOST} ^www\.yuntaspublicidad\.com [NC]
+RewriteRule ^(.*)$ https://yuntaspublicidad.com/$1 [L,R=301,NC]
+
+# Redirige todo el tráfico HTTP a HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]

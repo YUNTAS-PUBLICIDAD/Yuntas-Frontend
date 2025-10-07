@@ -77,13 +77,27 @@ const ProductForm = ({ initialData, onSubmit, isEditing }: Props) => {
     })()
   );
 
-  const [keywords, setKeywords] = useState<string[]>((
-    () => {
-      if (!initialData?.etiqueta.keywords) return [""]
-      const keywords = initialData.etiqueta.keywords.split(",");
-      return keywords.length > 0 ? keywords : [""]
-    }
-  ))
+  const [keywords, setKeywords] = useState<string[]>(
+    initialData?.etiqueta?.keywords || [""]
+  );
+   const handleKeywordChange = (index: number, value: string) => {
+  const updated = [...keywords];
+  updated[index] = value;
+  setKeywords(updated);
+};
+
+const addKeyword = () => {
+  const last = keywords[keywords.length - 1];
+  if (last.trim()) { // Solo agrega si la última no está vacía
+    setKeywords([...keywords, ""]);
+  }
+};
+
+const removeKeyword = (index: number) => {
+  if (keywords.length > 1) { // No permite eliminar el último campo
+    setKeywords(keywords.filter((_, i) => i !== index));
+  }
+}; 
 
   // Funciones para manejar imágenes existentes
   const deleteExistImage = (id: string) => {
@@ -237,6 +251,19 @@ const ProductForm = ({ initialData, onSubmit, isEditing }: Props) => {
           `❌ Imagen ${imagen.index} (${imagen.key}) no tiene archivo válido o está vacía`
         );
       }
+        const metaTitulo = formData.get("meta_título") as string;
+  const metaDescripcion = formData.get("meta_descripcion") as string;
+
+  finalFormData.append("etiqueta[meta_titulo]", metaTitulo.trim());
+  finalFormData.append("etiqueta[meta_descripcion]", metaDescripcion.trim());
+
+// Filtramos las keywords que no estén vacías antes de enviarlas
+  const nonEmptyKeywords = keywords.filter(k => k.trim() !== "");
+  if (nonEmptyKeywords.length > 0) {
+    nonEmptyKeywords.forEach((keyword, index) => {
+      finalFormData.append(`etiqueta[keywords][${index}]`, keyword.trim());
+    });
+  }
     });
 
     console.log(`Total de imágenes enviadas: ${imagenesEnviadas}`);
@@ -417,7 +444,45 @@ const ProductForm = ({ initialData, onSubmit, isEditing }: Props) => {
               Máx. 160 caracteres (letras, números y espacios).
             </small>
           </div>
-
+          
+              {/* keywords */}
+              <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Keywords <span className="text-blue-600 text-sm">(SEO)</span>
+                  </label>
+                  <div className="space-y-2">
+                    {keywords.map((keyword, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          value={keyword}
+                          onChange={(e) => handleKeywordChange(index, e.target.value)}
+                          placeholder="ej: letreros para negocio"
+                          className="flex-1 mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        />
+                        {keywords.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => removeKeyword(index)}
+                            className="text-red-500 hover:text-red-700 font-bold text-lg"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={addKeyword}
+                    className="mt-2 text-blue-600 hover:text-blue-800 text-sm font-medium cursor-pointer"
+                  >
+                    + Agregar keyword
+                  </button>
+                  <small className="text-gray-500 block mt-1">
+                    Palabras clave relevantes para que los buscadores encuentren el producto.
+                  </small>
+                </div>   
           {/* Keywords */}
           {/* <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">
