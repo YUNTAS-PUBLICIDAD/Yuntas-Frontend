@@ -28,7 +28,7 @@
     "yuntas": "file:"
   },
   "devDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.52.4",
+ 
     "@types/config": "^3.3.5"
   }
 }
