@@ -4,13 +4,28 @@ import BlogDetail from "../../components/blog/BlogPage.jsx";
 import { blogService } from "../../services/blogService";
 import type BlogAPI from "../../models/Blog";
 
-// En modo SSR, las páginas se generan bajo demanda cuando se solicitan
-// No necesitamos getStaticPaths, obtenemos el blog directamente por el parámetro link
-const { link } = Astro.params;
+export async function getStaticPaths() {
+  try {
+    const response = await blogService.getAllBlogs();
+    const blogs = response.data.data;
 
-if (!link) {
-  return Astro.redirect("/blogs");
+    return blogs
+      .filter(
+        (blog: BlogAPI) =>
+          typeof blog.link === "string" && blog.link.trim() !== ""
+      )
+      .map((blog: BlogAPI) => ({
+        params: { link: blog.link },
+      }));
+  } catch (error) {
+    console.warn("⚠️ No se pudieron cargar blogs durante el build:", error);
+    // Retornar array vacío si la API no está disponible durante el build
+    // Las páginas dinámicas se generarán cuando el sitio esté corriendo
+    return [];
+  }
 }
+
+const { link } = Astro.params;
 
 let article: BlogAPI | null = null;
 let error: string | null = null;
@@ -23,18 +38,13 @@ try {
   error = err instanceof Error ? err.message : "Error desconocido";
 }
 
-// Si no se encontró el artículo, redirigir a la lista de blogs
 if (!article) {
-  return Astro.redirect("/blogs");
+  throw new Error(`Artículo no encontrado: ${link}`);
 }
 ---
 
-<Layout title={article.nombre_producto}
-description={article.subtitulo || ''}
-canonicalUrl={`https://yuntaspublicidad.com/blogs/${link}`}
->
+<Layout title={article.nombre_producto} description={article.subtitulo || ''} canonicalUrl=`https://yuntaspublicidad.com/blogs/${link}`>
   
-
   <BlogDetail client:load article={article} />
 
 </Layout>
