@@ -48,7 +48,7 @@ export default function FetchBlogsList() {
         // Obtener todos los blogs de todas las páginas
         while (hasMorePages) {
           const timestamp = new Date().getTime();
-          const apiUrl = `https://apiyuntas.yuntaspublicidad.com/api/blogs?page=${currentPageToFetch}&perPage=50&_t=${timestamp}`;
+          const apiUrl = `https://apiyuntas.yuntaspublicidad.com/api/v1/blogs?page=${currentPageToFetch}&perPage=50&_t=${timestamp}`;
 
           const response = await fetch(apiUrl, {
             method: "GET",
