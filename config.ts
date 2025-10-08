@@ -8,11 +8,11 @@ export const config = {
 
   // La URL de la API se obtiene de la variable de entorno PUBLIC_API_URL
   // Si no está definida, usa el fallback de producción
-  apiUrl:"https://apiyuntas.yuntaspublicidad.com", 
-  environment:"development", // Entorno de la aplicación, por defecto development
+  apiUrl: "https://apiyuntas.yuntaspublicidad.com", // API desplegada (comentada para desarrollo)
+  environment: "development", // Entorno de la aplicación, por defecto development
   endpoints: {
     auth: {
-      // Endpoints de autenticaci贸
+      // Endpoints de autenticación
       login: "/api/v1/auth/login",
       logout: "/api/v1/auth/logout",
     },
@@ -45,12 +45,12 @@ export const config = {
     },
     blogs: {
       // Endpoints de blogs
-      list: "/api/blogs",
-      detail: (id: number | string) => `/api/blogs/${id}`,
-      link: (link: string) => `/api/blogs/link/${link}`,
-      create: "/api/blogs",
-      update: (id: number | string) => `/api/blogs/${id}`,
-      delete: (id: number | string) => `/api/blogs/${id}`,
+      list: "/api/v1/blogs",
+      detail: (id: number | string) => `/api/v1/blogs/${id}`,
+      link: (link: string) => `/api/v1/blogs/link/${link}`,
+      create: "/api/v1/blogs",
+      update: (id: number | string) => `/api/v1/blogs/${id}`,
+      delete: (id: number | string) => `/api/v1/blogs/${id}`,
     },
   },
 };

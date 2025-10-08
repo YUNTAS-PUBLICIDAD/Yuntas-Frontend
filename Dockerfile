@@ -3,20 +3,16 @@ FROM node:20-slim AS builder
 
 WORKDIR /app
 
-# Argumentos de build para variables de entorno públicas
-ARG PUBLIC_API_URL=https://apiyuntas.yuntaspublicidad.com
-ENV PUBLIC_API_URL=$PUBLIC_API_URL
-
 # Copiar archivos de dependencias primero para aprovechar caché
 COPY package*.json ./
 
-# Instalar dependencias (usar npm install porque package-lock.json puede no estar sincronizado)
-RUN npm install
+# Instalar dependencias
+RUN npm ci --only=production=false
 
 # Copiar el resto del código
 COPY . .
 
-# Construir la aplicación con las variables de entorno
+# Construir la aplicación
 RUN npm run build
 
 # Stage 2: Runtime
@@ -24,16 +20,13 @@ FROM node:20-slim
 
 WORKDIR /app
 
-# Copiar archivos necesarios para SSR
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
+# Instalar servidor HTTP simple para servir archivos estáticos
+RUN npm install -g serve
 
-# Variables de entorno
-ENV HOST=0.0.0.0
-ENV PORT=4321
+# Copiar solo los archivos construidos
+COPY --from=builder /app/dist ./dist
 
 EXPOSE 4321
 
-# Ejecutar servidor SSR de Astro
-CMD ["node", "./dist/server/entry.mjs"]
+# Servir los archivos estáticos con serve (sin -s para permitir navegación multi-página)
+CMD ["serve", "dist", "-l", "4321"]

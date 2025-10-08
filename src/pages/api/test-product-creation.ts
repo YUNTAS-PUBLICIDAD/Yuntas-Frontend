@@ -53,3 +53,7 @@ export async function POST() {
     });
   }
 }
+
+export async function GET() {
+  return new Response("GET method not implemented", { status: 405 });
+}
