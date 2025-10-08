@@ -1,7 +1,7 @@
-import { httpService } from './httpService';
-import { config } from '../../config';
-import type Blog from '../models/Blog';
-import type { BlogFormData } from '../models/Blog';
+import { httpService } from "./httpService";
+import { config } from "../../config";
+import type Blog from "../models/Blog";
+import type { BlogFormData } from "../models/Blog";
 
 interface BlogPagination {
   data: Blog[];
@@ -13,7 +13,7 @@ interface BlogPagination {
 
 interface BlogListResponse {
   success: boolean;
-  data: BlogPagination; // ✅ aquí está el arreglo real
+  data: BlogPagination;
   message: string;
   status: number;
 }
@@ -26,8 +26,7 @@ interface BlogDetailResponse {
 }
 
 class BlogService {
-  
- // --- MÉTODOS DE OBTENCIÓN (Sin cambios) ---
+  // --- MÉTODOS DE OBTENCIÓN (CORREGIDOS) ---
 
   async getAllBlogs(): Promise<BlogListResponse> {
     let allBlogs: Blog[] = [];
@@ -36,29 +35,33 @@ class BlogService {
     let hasMorePages = true;
 
     while (hasMorePages) {
-      // Usamos httpService para obtener página por página
-      const response: BlogListResponse = await httpService.get<BlogPagination>(
-        `${config.endpoints.blogs.list}?page=${currentPage}`
-      );
-      
-      if (response && response.success && response.data.data.length > 0) {
-        allBlogs = [...allBlogs, ...response.data.data];
-        lastPage = response.data.last_page;
+      try {
+        // Usar httpService.authenticatedGet si necesitas autenticación
+        const response = await httpService.get<BlogPagination>(
+          `${config.endpoints.blogs.list}?page=${currentPage}`
+        );
 
-        if (currentPage >= lastPage) {
-          hasMorePages = false;
+        if (response.success && response.data.data.length > 0) {
+          allBlogs = [...allBlogs, ...response.data.data];
+          lastPage = response.data.last_page;
+
+          if (currentPage >= lastPage) {
+            hasMorePages = false;
+          } else {
+            currentPage++;
+          }
         } else {
-          currentPage++;
+          hasMorePages = false;
         }
-      } else {
+      } catch (error) {
+        console.error(`Error obteniendo página ${currentPage}:`, error);
         hasMorePages = false;
       }
     }
 
-    // Devolvemos la respuesta en el formato esperado, pero con la lista completa de blogs
     return {
       success: true,
-      message: 'Todos los blogs obtenidos exitosamente.',
+      message: "Todos los blogs obtenidos exitosamente.",
       status: 200,
       data: {
         data: allBlogs,
@@ -70,66 +73,76 @@ class BlogService {
     };
   }
 
-  getBlogByLink(link: string): Promise<BlogDetailResponse> {
-    return httpService.get<Blog>(`/api/blogs/link/${link}`);
+  async getBlogByLink(link: string): Promise<BlogDetailResponse> {
+    // Usar la función de la configuración
+    return await httpService.get<Blog>(config.endpoints.blogs.link(link));
   }
 
-  // --- MÉTODOS DE MODIFICACIÓN ---
+  // --- MÉTODOS DE MODIFICACIÓN (CORREGIDOS) ---
 
-  createBlog(blogData: BlogFormData): Promise<BlogDetailResponse> {
-    const formData = this.buildFormData(blogData, 'create');
-    return httpService.authenticatedPostFormData<Blog>(config.endpoints.blogs.create, formData);
-  }
-  
-  updateBlog(id: number | string, blogData: BlogFormData): Promise<BlogDetailResponse> {
-
-    const formData = this.buildFormData(blogData, 'update');
-    formData.append('_method', 'PATCH'); 
-    return httpService.authenticatedPostFormData<Blog>(`/api/blogs/${id}`, formData);
+  async createBlog(blogData: BlogFormData): Promise<BlogDetailResponse> {
+    const formData = this.buildFormData(blogData, "create");
+    return await httpService.authenticatedPostFormData<Blog>(
+      config.endpoints.blogs.create,
+      formData
+    );
   }
 
-  deleteBlog(id: number | string): Promise<any> {
-    return httpService.authenticatedDelete(`/api/blogs/${id}`);
+  async updateBlog(
+    id: number | string,
+    blogData: BlogFormData
+  ): Promise<BlogDetailResponse> {
+    const formData = this.buildFormData(blogData, "update");
+
+    // Para PATCH con FormData, necesitamos usar el método POST con _method
+    formData.append("_method", "PATCH");
+
+    return await httpService.authenticatedPostFormData<Blog>(
+      config.endpoints.blogs.update(id),
+      formData
+    );
   }
 
-  // --- FUNCIÓN PRIVADA Y ADAPTADA PARA CONSTRUIR FORMDATA ---
+  async deleteBlog(id: number | string): Promise<any> {
+    return await httpService.authenticatedDelete(
+      config.endpoints.blogs.delete(id)
+    );
+  }
 
-  /**
-   * Construye el FormData para crear o actualizar un blog.
-   * Traduce los campos de BlogFormData a lo que la API espera.
-   */
-  private buildFormData(data: BlogFormData, mode: 'create' | 'update'): FormData {
+  // --- FUNCIÓN PRIVADA PARA CONSTRUIR FORMDATA ---
+
+  private buildFormData(
+    data: BlogFormData,
+    mode: "create" | "update"
+  ): FormData {
     const formData = new FormData();
-    
-    // --- TRADUCCIÓN DE CAMPOS ---
-    formData.append('producto_id', data.producto_id || '');
-    formData.append('link', data.link || '');
-    
-    // 1. Traducimos 'titulo' del form a 'subtitulo' para la API
-    formData.append('subtitulo', data.titulo || ''); 
 
-    // 2. Traducimos 'parrafo' (string) a un array 'parrafos' para la API
+    // Campos básicos
+    formData.append("producto_id", data.producto_id || "");
+    formData.append("link", data.link || "");
+    formData.append("subtitulo", data.titulo || "");
+
+    // Parrafos
     if (data.parrafo) {
-      formData.append('parrafos[0]', data.parrafo);
-    }
-    
-    // 3. Traducimos campos opcionales si existen
-    if (data.url_video) {
-      formData.append('url_video', data.url_video);
-    }
-        // Solo se envía la imagen si es un archivo (File),
-    // lo cual es correcto para 'create' y para 'update' si se cambia la imagen.
-    if (data.imagen_principal instanceof File) {
-      formData.append('imagen_principal', data.imagen_principal);
+      formData.append("parrafos[0]", data.parrafo);
     }
 
+    // Video
+    if (data.url_video) {
+      formData.append("url_video", data.url_video);
+    }
+
+    // Imagen principal (solo si es un archivo nuevo)
+    if (data.imagen_principal instanceof File) {
+      formData.append("imagen_principal", data.imagen_principal);
+    }
+
+    // Imágenes adicionales
     if (data.imagenes?.length) {
       data.imagenes.forEach((img, i) => {
-        // 4. Verificamos que 'url_imagen' sea un archivo nuevo
         if (img.url_imagen instanceof File) {
           formData.append(`imagenes[${i}]`, img.url_imagen);
-          // Traducimos 'parrafo_imagen' a 'alt_imagenes'
-          formData.append(`alt_imagenes[${i}]`, img.parrafo_imagen || '');
+          formData.append(`alt_imagenes[${i}]`, img.parrafo_imagen || "");
         }
       });
     }
@@ -137,14 +150,14 @@ class BlogService {
     return formData;
   }
 
-  // Generar un link automáticamente a partir del título
   generateLinkFromTitle(title: string): string {
     return title
       .toLowerCase()
-      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9\s-]/g, '') // Remover caracteres especiales
-      .replace(/\s+/g, '-') // Reemplazar espacios con guiones
-      .replace(/-+/g, '-') // Reemplazar múltiples guiones con uno solo
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
       .trim();
   }
 }
