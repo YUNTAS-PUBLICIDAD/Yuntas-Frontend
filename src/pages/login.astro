@@ -1,6 +1,7 @@
 ---
-import LoginComponent from "../components/Login.tsx";
-import "../styles/global.css";
+import BlankLayout from '../layouts/BlankLayout.astro'; 
+import LoginComponent from '../components/Login.tsx';
 ---
-
-<div class=""><LoginComponent client:load /></div>
+<BlankLayout title="Iniciar Sesión - Yuntas"> 
+  <LoginComponent client:load />
+</BlankLayout>

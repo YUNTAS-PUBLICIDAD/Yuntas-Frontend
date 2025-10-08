@@ -68,8 +68,7 @@ const Navbar = ({ variant = "default", pathname }: NavbarProps) => {
             alt="Logo Yuntas"
             title="Logo Yuntas Publicidad"
             loading="eager"
-            className="h-14 w-auto" // Se quita cursor-pointer porque ya está en un <a>
-            fetchPriority="high"
+            className="h-14 w-auto" 
           />
         </a>
 

@@ -165,7 +165,7 @@ const Emergente = ({ producto }) => {
       payload.append("producto_id", formData.producto_id);
 
       const response = await fetch(
-        getApiUrl(config.endpoints.clientes.create),
+        getApiUrl(config.endpoints.productos.info),
         {
           method: "POST",
           headers: {
