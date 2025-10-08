@@ -3,7 +3,7 @@ name: Deploy Frontend Astro a Hostinger
 on:
   push:
     branches:
-      - main
+      - pre-master
 
 jobs:
   build-and-deploy:
