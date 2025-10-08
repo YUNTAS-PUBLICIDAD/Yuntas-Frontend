@@ -3,7 +3,7 @@ name: Deploy Frontend Astro a Hostinger
 on:
   push:
     branches:
-      - pre-master
+      - main
 
 jobs:
   build-and-deploy:
@@ -31,7 +31,7 @@ jobs:
           port: ${{ secrets.HOSTINGER_PORT }}
           username: ${{ secrets.HOSTINGER_USER }}
           key: ${{ secrets.HOSTINGER_SSH_KEY }}
-          script: rm -rf /home/${{ secrets.HOSTINGER_USER }}/public_html/*
+          script: rm -rf public_html/*
 
       - name: Subir build a Hostinger (public_html)
         uses: appleboy/scp-action@v0.1.7
@@ -41,5 +41,5 @@ jobs:
           username: ${{ secrets.HOSTINGER_USER }}
           key: ${{ secrets.HOSTINGER_SSH_KEY }}
           source: "dist/*"
-          target: "/home/${{ secrets.HOSTINGER_USER }}/public_html/"
+          target: "public_html/"
           strip_components: 1
