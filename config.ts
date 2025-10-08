@@ -41,6 +41,7 @@ export const config = {
       create: "/api/v1/productos",
       update: (id: number | string) => `/api/v1/productos/${id}`,
       delete: (id: number | string) => `/api/v1/productos/${id}`,
+      info: '/api/v1/solicitar-info-producto'
     },
     blogs: {
       // Endpoints de blogs
