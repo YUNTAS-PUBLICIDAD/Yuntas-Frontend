@@ -5,11 +5,9 @@
  * Los endpoints estan divididos por secciones, como auth, users, clientes, productos y blogs.
  **/
 export const config = {
-
   // La URL de la API se obtiene de la variable de entorno PUBLIC_API_URL
   // Si no está definida, usa el fallback de producción
-  apiUrl: "https://yuntaspublicidad.com/back" , // API desplegada (comentada para desarrollo)
-  environment: "development",
+  apiUrl: import.meta.env.PUBLIC_API_URL, // API desplegada (comentada para desarrollo)
   endpoints: {
     auth: {
       // Endpoints de autenticación
@@ -34,14 +32,14 @@ export const config = {
     },
     productos: {
       // Endpoints de productos
-      list: '/api/v1/productos',
-      all : '/api/v1/productos/all',
+      list: "/api/v1/productos",
+      all: "/api/v1/productos/all",
       detail: (id: string | number) => `/api/v1/productos/${id}`,
       link: (link: string) => `/api/v1/productos/link/${link}`,
       create: "/api/v1/productos",
       update: (id: number | string) => `/api/v1/productos/${id}`,
       delete: (id: number | string) => `/api/v1/productos/${id}`,
-      info: '/api/v1/solicitar-info-producto'
+      info: "/api/v1/solicitar-info-producto",
     },
     blogs: {
       // Endpoints de blogs
@@ -57,6 +55,5 @@ export const config = {
 
 export const getApiUrl = (endpoint: string) => {
   const url = `${config.apiUrl}${endpoint}`;
-  console.log(`[${config.environment}] Requesting:`, url);
   return url;
 };
