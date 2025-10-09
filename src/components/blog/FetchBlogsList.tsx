@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import BlogCard from "../../components/blog/BlogCard.tsx";
 import BlogSearchBar from "../../pages/blogs/_SearchBar.tsx";
-
+import {config} from "../../../config";
 interface Blog {
   id: number;
   nombre_producto: string;
@@ -48,7 +48,7 @@ export default function FetchBlogsList() {
         // Obtener todos los blogs de todas las páginas
         while (hasMorePages) {
           const timestamp = new Date().getTime();
-          const apiUrl = `https://apiyuntas.yuntaspublicidad.com/api/v1/blogs?page=${currentPageToFetch}&perPage=50&_t=${timestamp}`;
+          const apiUrl = `${config.apiUrl}${config.endpoints.blogs.list}?page=${currentPageToFetch}&perPage=50&_t=${timestamp}`;
 
           const response = await fetch(apiUrl, {
             method: "GET",

@@ -6,7 +6,7 @@ import imagen1 from "../assets/images/blog/banner_blog.webp";
 import { blogService } from "../services/blogService";
 import FetchBlogsList from "../components/blog/FetchBlogsList.tsx";
 import type Blog from "../models/Blog";
-
+import {config} from "../../config";
 // Metadatos específicos para la página general del blog
 const generalMetadata = {
   titulo: "Blog Yuntas | Tendencias en Publicidad LED y Tips para tu negocio",
@@ -20,7 +20,7 @@ let allArticles = [];
 let error = null;
 
 try {
-  const res = await fetch("https://apiyuntas.yuntaspublicidad.com/api/blogs");
+  const res = await fetch(`${config.apiUrl}${config.endpoints.blogs.list}`);
   if (!res.ok) {
     throw new Error(`HTTP error! status: ${res.status}`);
   }
