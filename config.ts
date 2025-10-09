@@ -7,6 +7,7 @@
 export const config = {
   // La URL de la API se obtiene de la variable de entorno PUBLIC_API_URL
   // Si no está definida, usa el fallback de producción
+  //apiUrl: "http://localhost:8000",
   apiUrl: "https://apiyuntas.yuntaspublicidad.com", // API desplegada (comentada para desarrollo)
   endpoints: {
     auth: {
@@ -40,6 +41,11 @@ export const config = {
       update: (id: number | string) => `/api/v1/productos/${id}`,
       delete: (id: number | string) => `/api/v1/productos/${id}`,
       info: "/api/v1/solicitar-info-producto",
+    },
+    emailProducto: {
+    create: "/api/v1/email-producto/plantilla",
+    update: (id: number | string) => `/api/v1/email-producto/plantilla/${id}`,
+    plantillaPorProducto: (productoId: string | number) => `/api/v1/email-producto/plantilla/${productoId}`,
     },
     blogs: {
       // Endpoints de blogs

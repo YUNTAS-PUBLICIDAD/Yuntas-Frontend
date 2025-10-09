@@ -3,7 +3,6 @@ import { FaImage, FaTimes } from "react-icons/fa";
 import { config, getApiUrl } from "../../../config";
 import type { Product } from "../../models/Product";
 
-// Estructura para cada sección del email
 interface SeccionEmail {
   imagenPrincipal: File | null;
   vistaPreviaPrincipal: string;
@@ -13,53 +12,121 @@ interface SeccionEmail {
   vistaPreviaSecundaria2: string;
   titulo: string;
   subtitulo: string;
+  parrafo1: string;
 }
 
 interface FormularioEmailProps {
   onSubmit: (formData: FormData) => Promise<void>;
+  plantillaId?: number | null;
 }
 
-export default function FormularioEmail({ onSubmit }: FormularioEmailProps) {
+export default function FormularioEmail({
+  onSubmit,
+  plantillaId = null,
+}: FormularioEmailProps) {
   const [productoSeleccionado, setProductoSeleccionado] = useState<
     number | null
   >(null);
   const [listaProductos, setListaProductos] = useState<Product[]>([]);
   const [cargando, setCargando] = useState<boolean>(false);
+  const [seccionesEmail, setSeccionesEmail] = useState<SeccionEmail[]>([]);
 
-  const [seccionesEmail, setSeccionesEmail] = useState<SeccionEmail[]>([
-    {
-      imagenPrincipal: null,
-      vistaPreviaPrincipal: "",
-      imagenSecundaria1: null,
-      vistaPreviaSecundaria1: "",
-      imagenSecundaria2: null,
-      vistaPreviaSecundaria2: "",
-      titulo: "",
-      subtitulo: "",
-    },
-    {
-      imagenPrincipal: null,
-      vistaPreviaPrincipal: "",
-      imagenSecundaria1: null,
-      vistaPreviaSecundaria1: "",
-      imagenSecundaria2: null,
-      vistaPreviaSecundaria2: "",
-      titulo: "",
-      subtitulo: "",
-    },
-    {
-      imagenPrincipal: null,
-      vistaPreviaPrincipal: "",
-      imagenSecundaria1: null,
-      vistaPreviaSecundaria1: "",
-      imagenSecundaria2: null,
-      vistaPreviaSecundaria2: "",
-      titulo: "",
-      subtitulo: "",
-    },
-  ]);
+  // ✅ Plantilla base vacía para reutilizar
+  const SECCIONES_VACIAS: SeccionEmail[] = Array.from({ length: 3 }, () => ({
+    imagenPrincipal: null,
+    vistaPreviaPrincipal: "",
+    imagenSecundaria1: null,
+    vistaPreviaSecundaria1: "",
+    imagenSecundaria2: null,
+    vistaPreviaSecundaria2: "",
+    titulo: "",
+    subtitulo: "",
+    parrafo1: "",
+  }));
 
-  // ✅ Cargar la lista de productos al montar el componente
+  // Inicializa con secciones vacías
+  useEffect(() => {
+    setSeccionesEmail(SECCIONES_VACIAS);
+  }, []);
+
+  // 🔹 Cargar plantilla del producto seleccionado
+  useEffect(() => {
+    if (productoSeleccionado === null) {
+      setSeccionesEmail(SECCIONES_VACIAS);
+      return;
+    }
+
+    const cargarDatosProducto = async () => {
+      try {
+        setCargando(true);
+        const token = localStorage.getItem("token");
+        const respuesta = await fetch(
+          getApiUrl(
+            config.endpoints.emailProducto.plantillaPorProducto(
+              productoSeleccionado
+            )
+          ),
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: "application/json",
+            },
+          }
+        );
+
+        // 🟦 No hay plantilla asociada
+        if (respuesta.status === 404) {
+          alert("ℹ️ El producto seleccionado no tiene una plantilla asociada.");
+          setSeccionesEmail(SECCIONES_VACIAS);
+          return;
+        }
+
+        if (!respuesta.ok) throw new Error("Error al obtener plantilla");
+
+        const datos = await respuesta.json();
+
+        // 🟨 No hay secciones configuradas
+        if (!datos?.secciones || datos.secciones.length === 0) {
+          alert(
+            "ℹ️ Este producto no tiene secciones configuradas en su plantilla."
+          );
+          setSeccionesEmail(SECCIONES_VACIAS);
+          return;
+        }
+
+        // ✅ Cargar plantilla existente
+        const secciones = datos.secciones.map((sec: any) => ({
+          imagenPrincipal: null,
+          vistaPreviaPrincipal: sec.imagen_principal_url || "",
+          imagenSecundaria1: null,
+          vistaPreviaSecundaria1: sec.imagen_secundaria1_url || "",
+          imagenSecundaria2: null,
+          vistaPreviaSecundaria2: sec.imagen_secundaria2_url || "",
+          titulo: sec.titulo || "",
+          subtitulo: sec.subtitulo || "",
+          parrafo1: sec.parrafo1 || "",
+        }));
+
+        // Si vienen menos de 3 secciones, completamos el resto vacías
+        const seccionesCompletas = [
+          ...secciones,
+          ...Array(Math.max(0, 3 - secciones.length)).fill(SECCIONES_VACIAS[0]),
+        ];
+
+        setSeccionesEmail(seccionesCompletas);
+      } catch (error) {
+        console.error("Error cargando plantilla del producto:", error);
+        alert("❌ Ocurrió un error al cargar la plantilla del producto.");
+        setSeccionesEmail(SECCIONES_VACIAS);
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    cargarDatosProducto();
+  }, [productoSeleccionado]);
+
+  // 🔹 Obtener lista de productos
   useEffect(() => {
     const obtenerProductos = async () => {
       setCargando(true);
@@ -99,7 +166,7 @@ export default function FormularioEmail({ onSubmit }: FormularioEmailProps) {
     obtenerProductos();
   }, []);
 
-  // Manejar cambio de imágenes
+  // 🔹 Manejadores
   const manejarCambioImagen = (
     indice: number,
     tipo: keyof Pick<
@@ -110,24 +177,21 @@ export default function FormularioEmail({ onSubmit }: FormularioEmailProps) {
   ) => {
     const nuevasSecciones = [...seccionesEmail];
     nuevasSecciones[indice][tipo] = archivo;
-
     const vistaPrevia = archivo ? URL.createObjectURL(archivo) : "";
 
-    if (tipo === "imagenPrincipal") {
+    if (tipo === "imagenPrincipal")
       nuevasSecciones[indice].vistaPreviaPrincipal = vistaPrevia;
-    } else if (tipo === "imagenSecundaria1") {
+    if (tipo === "imagenSecundaria1")
       nuevasSecciones[indice].vistaPreviaSecundaria1 = vistaPrevia;
-    } else if (tipo === "imagenSecundaria2") {
+    if (tipo === "imagenSecundaria2")
       nuevasSecciones[indice].vistaPreviaSecundaria2 = vistaPrevia;
-    }
 
     setSeccionesEmail(nuevasSecciones);
   };
 
-  // Manejar cambio de texto
   const manejarCambioTexto = (
     indice: number,
-    campo: "titulo" | "subtitulo",
+    campo: "titulo" | "subtitulo" | "parrafo1",
     valor: string
   ) => {
     const nuevasSecciones = [...seccionesEmail];
@@ -135,15 +199,12 @@ export default function FormularioEmail({ onSubmit }: FormularioEmailProps) {
     setSeccionesEmail(nuevasSecciones);
   };
 
-  // Eliminar imagen
   const eliminarImagen = (
     indice: number,
     tipo: "imagenPrincipal" | "imagenSecundaria1" | "imagenSecundaria2"
-  ) => {
-    manejarCambioImagen(indice, tipo, null);
-  };
+  ) => manejarCambioImagen(indice, tipo, null);
 
-  // Enviar formulario
+  // 🔹 Enviar formulario
   const manejarEnvio = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -156,30 +217,40 @@ export default function FormularioEmail({ onSubmit }: FormularioEmailProps) {
     formData.append("producto_id", String(productoSeleccionado));
 
     seccionesEmail.forEach((item, i) => {
-      const seccion = i + 1;
-      if (item.imagenPrincipal) {
-        formData.append(`email${seccion}_main_image`, item.imagenPrincipal);
-      }
-      if (item.imagenSecundaria1) {
+      if (item.imagenPrincipal)
         formData.append(
-          `email${seccion}_secondary_image_1`,
+          `secciones[${i}][imagen_principal]`,
+          item.imagenPrincipal
+        );
+
+      if (item.imagenSecundaria1)
+        formData.append(
+          `secciones[${i}][imagenes_secundarias][]`,
           item.imagenSecundaria1
         );
-      }
-      if (item.imagenSecundaria2) {
+
+      if (item.imagenSecundaria2)
         formData.append(
-          `email${seccion}_secondary_image_2`,
+          `secciones[${i}][imagenes_secundarias][]`,
           item.imagenSecundaria2
         );
-      }
-      formData.append(`email${seccion}_title`, item.titulo);
-      formData.append(`email${seccion}_subtitle`, item.subtitulo);
+
+      formData.append(`secciones[${i}][titulo]`, item.titulo);
+      formData.append(`secciones[${i}][subtitulo]`, item.subtitulo);
+      formData.append(`secciones[${i}][parrafo1]`, item.parrafo1);
     });
 
-    await onSubmit(formData);
+    if (plantillaId != null) formData.append("_method", "PUT");
+
+    try {
+      await onSubmit(formData);
+    } catch (err) {
+      console.error("Error al enviar plantilla:", err);
+      alert("❌ No se pudo guardar la plantilla. Ver consola.");
+    }
   };
 
-  // Componente de carga de imagen
+  // 🔹 Componente interno para carga de imágenes
   const SeccionCargaImagen = ({
     emailIndex,
     tipoImagen,
@@ -228,6 +299,7 @@ export default function FormularioEmail({ onSubmit }: FormularioEmailProps) {
     </div>
   );
 
+  // 🔹 Render principal
   return (
     <form
       onSubmit={manejarEnvio}
@@ -256,11 +328,8 @@ export default function FormularioEmail({ onSubmit }: FormularioEmailProps) {
         </select>
 
         {cargando && (
-          <p className="text-sm text-gray-400 italic mt-1">
-            Cargando productos...
-          </p>
+          <p className="text-sm text-gray-400 italic mt-1">Cargando...</p>
         )}
-
         {!cargando && listaProductos.length === 0 && (
           <p className="text-sm text-gray-500 italic mt-2">
             No hay productos disponibles.
@@ -268,7 +337,7 @@ export default function FormularioEmail({ onSubmit }: FormularioEmailProps) {
         )}
       </div>
 
-      {/* Secciones de email */}
+      {/* Secciones */}
       {seccionesEmail.map((seccion, index) => (
         <div
           key={index}
@@ -305,31 +374,46 @@ export default function FormularioEmail({ onSubmit }: FormularioEmailProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Título
               </label>
               <input
                 type="text"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 value={seccion.titulo}
                 onChange={(e) =>
                   manejarCambioTexto(index, "titulo", e.target.value)
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Escribe el título"
+                placeholder="Escribe el título aquí"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Subtítulo
               </label>
-              <textarea
+              <input
+                type="text"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 value={seccion.subtitulo}
                 onChange={(e) =>
                   manejarCambioTexto(index, "subtitulo", e.target.value)
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Escribe el subtítulo"
+                placeholder="Escribe el subtítulo aquí"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Párrafo 1
+              </label>
+              <textarea
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                value={seccion.parrafo1}
+                onChange={(e) =>
+                  manejarCambioTexto(index, "parrafo1", e.target.value)
+                }
+                placeholder="Escribe el párrafo aquí"
                 rows={3}
               />
             </div>
@@ -337,14 +421,12 @@ export default function FormularioEmail({ onSubmit }: FormularioEmailProps) {
         </div>
       ))}
 
-      <div className="flex justify-end gap-3 pt-4 border-t">
-        <button
-          type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors shadow-md"
-        >
-          Guardar Cambios
-        </button>
-      </div>
+      <button
+        type="submit"
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition"
+      >
+        Guardar plantilla
+      </button>
     </form>
   );
 }
