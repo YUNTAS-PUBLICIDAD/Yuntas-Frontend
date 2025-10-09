@@ -7,7 +7,7 @@
 export const config = {
   // La URL de la API se obtiene de la variable de entorno PUBLIC_API_URL
   // Si no está definida, usa el fallback de producción
-  apiUrl: import.meta.env.PUBLIC_API_URL, // API desplegada (comentada para desarrollo)
+  apiUrl: "https://apiyuntas.yuntaspublicidad.com", // API desplegada (comentada para desarrollo)
   endpoints: {
     auth: {
       // Endpoints de autenticación
