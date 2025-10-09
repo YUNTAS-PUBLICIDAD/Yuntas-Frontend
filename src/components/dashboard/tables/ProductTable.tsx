@@ -121,7 +121,7 @@ export default function DataTable() {
         : urlCreate;
 
       const respuesta = await fetch(url, {
-        method: currentProduct ? "PUT" : "POST",
+        method: "POST",
         headers: {
           Accept: "application/json",
           Authorization: `Bearer ${token}`,
