@@ -48,6 +48,7 @@ export default function FetchBlogsList() {
         // Obtener todos los blogs de todas las páginas
         while (hasMorePages) {
           const timestamp = new Date().getTime();
+          //Se uso el config global
           const apiUrl = `${config.apiUrl}${config.endpoints.blogs.list}?page=${currentPageToFetch}&perPage=50&_t=${timestamp}`;
 
           const response = await fetch(apiUrl, {
