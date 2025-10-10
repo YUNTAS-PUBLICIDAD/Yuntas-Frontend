@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { config, getApiUrl } from "../../config";
 import { z } from "zod";
-import yuleLove from "../assets/images/emergente/yuleLove.jpg";
+import yuleLove from "../assets/images/emergente/yuleLove.webp";
 
 const MODAL_STORAGE_KEY = "asesoriaModalLastClosed";
 const MODAL_COOLDOWN_MS = 1 * 10 * 1000;
