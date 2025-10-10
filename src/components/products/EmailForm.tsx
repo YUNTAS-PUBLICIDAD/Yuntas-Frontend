@@ -11,7 +11,6 @@ interface SeccionEmail {
   imagenSecundaria2: File | null;
   vistaPreviaSecundaria2: string;
   titulo: string;
-  subtitulo: string;
   parrafo1: string;
 }
 
@@ -40,7 +39,6 @@ export default function FormularioEmail({
     imagenSecundaria2: null,
     vistaPreviaSecundaria2: "",
     titulo: "",
-    subtitulo: "",
     parrafo1: "",
   }));
 
@@ -191,7 +189,7 @@ export default function FormularioEmail({
 
   const manejarCambioTexto = (
     indice: number,
-    campo: "titulo" | "subtitulo" | "parrafo1",
+    campo: "titulo" | "parrafo1",
     valor: string
   ) => {
     const nuevasSecciones = [...seccionesEmail];
@@ -236,7 +234,6 @@ export default function FormularioEmail({
         );
 
       formData.append(`secciones[${i}][titulo]`, item.titulo);
-      formData.append(`secciones[${i}][subtitulo]`, item.subtitulo);
       formData.append(`secciones[${i}][parrafo1]`, item.parrafo1);
     });
 
@@ -387,22 +384,6 @@ export default function FormularioEmail({
                 placeholder="Escribe el título aquí"
               />
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Subtítulo
-              </label>
-              <input
-                type="text"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                value={seccion.subtitulo}
-                onChange={(e) =>
-                  manejarCambioTexto(index, "subtitulo", e.target.value)
-                }
-                placeholder="Escribe el subtítulo aquí"
-              />
-            </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Párrafo 1
