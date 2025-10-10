@@ -11,6 +11,7 @@ import { config, getApiUrl } from "../../../../config";
 import TableContainer from "./TableContainer";
 import { useProducts } from "../../../hooks/useProducts";
 import { useDarkMode } from "../../../hooks/darkmode/useDarkMode";
+
 export default function DataTable() {
   const {
     productos,
@@ -21,6 +22,7 @@ export default function DataTable() {
     pagination,
     refetch,
   } = useProducts();
+
   const [isOpen, setIsOpen] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState<Product | undefined>(
@@ -28,7 +30,115 @@ export default function DataTable() {
   );
   const { darkMode, toggleDarkMode } = useDarkMode();
 
-  console.log("Productos cargados:", productos); // Depuración básica
+  // ✅ SUBMIT para producto (crear o editar)
+  const handleSubmit = async (formData: FormData) => {
+    const urlCreate = getApiUrl(config.endpoints.productos.create);
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      Swal.fire(
+        "Error",
+        "No hay token de autenticación. Por favor inicia sesión.",
+        "error"
+      );
+      return;
+    }
+
+    try {
+      const url = currentProduct
+        ? getApiUrl(config.endpoints.productos.update(currentProduct.id))
+        : urlCreate;
+
+      const respuesta = await fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        body: formData,
+      });
+
+      const result = await respuesta.json();
+
+      if (respuesta.ok) {
+        Swal.fire({
+          title: result.message || "Producto guardado exitosamente",
+          icon: "success",
+        });
+        setIsOpen(false);
+        refetch(pagination.current_page);
+      } else {
+        let errorMessage = result.message || "Error desconocido";
+
+        if (respuesta.status === 401) {
+          errorMessage =
+            "Token expirado o inválido. Por favor inicia sesión nuevamente.";
+          localStorage.removeItem("token");
+        } else if (respuesta.status === 403) {
+          errorMessage = "Acceso denegado. Permisos insuficientes.";
+        } else if (respuesta.status === 422) {
+          errorMessage = "Datos inválidos: " + result.message;
+        }
+
+        Swal.fire("Error", errorMessage, "error");
+      }
+    } catch (error) {
+      Swal.fire("Error", "Hubo un error al insertar el producto", "error");
+    }
+  };
+
+  // ✅ SUBMIT para emails
+  const handleEmailSubmit = async (formData: FormData) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      Swal.fire(
+        "Error",
+        "No hay token de autenticación. Por favor inicia sesión.",
+        "error"
+      );
+      return;
+    }
+
+    const url = getApiUrl(config.endpoints.emailProducto.create);
+
+    try {
+      const respuesta = await fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const result = await respuesta.json();
+
+      if (respuesta.ok) {
+        Swal.fire({
+          title: result.message || "Email enviado con éxito",
+          icon: "success",
+        });
+        setIsEmailModalOpen(false);
+      } else {
+        let errorMessage = result.message || "Error al enviar email";
+
+        if (respuesta.status === 401) {
+          errorMessage =
+            "Token expirado o inválido. Por favor inicia sesión nuevamente.";
+          localStorage.removeItem("token");
+        } else if (respuesta.status === 422) {
+          errorMessage = "Datos inválidos: " + result.message;
+        }
+
+        Swal.fire("Error", errorMessage, "error");
+      }
+    } catch (error) {
+      Swal.fire("Error", "No se pudo conectar con el servidor.", "error");
+    }
+  };
+
   const eliminarProducto = async (id: string | number) => {
     const url = getApiUrl(config.endpoints.productos.delete(id));
     const token = localStorage.getItem("token");
@@ -69,7 +179,6 @@ export default function DataTable() {
 
         if (respuesta.ok) {
           Swal.fire("¡Eliminado!", data.message, "success");
-          // Después de eliminar, recargamos la página actual
           refetch(pagination.current_page);
         } else {
           let errorMessage = data.message || "Error desconocido al eliminar";
@@ -92,8 +201,8 @@ export default function DataTable() {
       }
     }
   };
+
   const handlePageChange = (pageNumber: number) => {
-    // Al cambiar de página, llamamos a refetch con la nueva página
     refetch(pageNumber, pagination.per_page);
   };
 
@@ -102,75 +211,8 @@ export default function DataTable() {
     setIsOpen(true);
   };
 
-  const handleSubmit = async function (formData: FormData) {
-    const urlCreate = getApiUrl(config.endpoints.productos.create);
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      Swal.fire(
-        "Error",
-        "No hay token de autenticación. Por favor inicia sesión.",
-        "error"
-      );
-      return;
-    }
-
-    try {
-      const url = currentProduct
-        ? getApiUrl(config.endpoints.productos.update(currentProduct.id))
-        : urlCreate;
-
-      const respuesta = await fetch(url, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-          "X-Requested-With": "XMLHttpRequest",
-        },
-        body: formData,
-      });
-
-      const result = await respuesta.json();
-
-      if (respuesta.ok) {
-        Swal.fire({
-          title: `${result.message || "Producto guardado exitosamente"}`,
-          icon: "success",
-        });
-        setIsOpen(false);
-        // Después de guardar/editar, recargamos la página actual
-        refetch(pagination.current_page);
-      } else {
-        let errorMessage = result.message || "Error desconocido";
-
-        if (respuesta.status === 401) {
-          errorMessage =
-            "Token expirado o inválido. Por favor inicia sesión nuevamente.";
-          localStorage.removeItem("token");
-        } else if (respuesta.status === 403) {
-          errorMessage = "Acceso denegado. Permisos insuficientes.";
-        } else if (respuesta.status === 422) {
-          errorMessage =
-            "Datos inválidos: " +
-            (result.message || "Verifica los campos del formulario");
-        }
-
-        Swal.fire("Error", errorMessage, "error");
-      }
-    } catch (error) {
-      Swal.fire({
-        title: `Hubo un error al insertar el producto`,
-        icon: "error",
-      });
-    }
-  };
-
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
     return () => {
       document.body.style.overflow = "auto";
     };
@@ -178,6 +220,7 @@ export default function DataTable() {
 
   return (
     <>
+      {/* Botones superiores */}
       <div className="flex flex-row gap-4 mb-4">
         <button
           onClick={() => {
@@ -188,16 +231,16 @@ export default function DataTable() {
         >
           Añadir Producto
         </button>
+
         <button
-          onClick={() => {
-            setIsEmailModalOpen(true);
-          }}
+          onClick={() => setIsEmailModalOpen(true)}
           className="mt-4 bg-green-700 hover:bg-green-600 text-white text-lg px-10 py-1.5 rounded-full flex items-center gap-2"
         >
-          Envio de Emails
+          Envío de Emails
         </button>
       </div>
 
+      {/* Tabla de productos */}
       <div className="overflow-x-auto p-4">
         <TableContainer tableType="productos">
           <thead className="hidden md:table-header-group">
@@ -214,7 +257,6 @@ export default function DataTable() {
               ))}
             </tr>
           </thead>
-
           <tbody>
             {loading ? (
               <tr>
@@ -240,55 +282,24 @@ export default function DataTable() {
                     key={key}
                     className={`text-center md:table-row block md:mb-0 mb-4 rounded-lg shadow-sm ${rowBg}`}
                   >
-                    <td
-                      data-label="ID"
-                      className={`px-4 py-2 font-bold border block md:table-cell ${
-                        darkMode ? "bg-gray-300" : "bg-white"
-                      }`}
-                    >
-                      {item.id}
+                    <td className="px-4 py-2 border">{item.id}</td>
+                    <td className="px-4 py-2 border">{item.nombre}</td>
+                    <td className="px-4 py-2 border">{item.seccion}</td>
+                    <td className="px-4 py-2 border">
+                      ${item.precio?.toFixed(2)}
                     </td>
-                    <td
-                      data-label="Nombre"
-                      className={`px-4 py-2 font-bold border block md:table-cell ${
-                        darkMode ? "bg-gray-300" : "bg-white"
-                      }`}
-                    >
-                      {item.nombre}
-                    </td>
-                    <td
-                      data-label="Sección"
-                      className={`px-4 py-2 font-bold border block md:table-cell ${
-                        darkMode ? "bg-gray-300" : "bg-white"
-                      }`}
-                    >
-                      {item.seccion}
-                    </td>
-                    <td
-                      data-label="Precio"
-                      className={`px-4 py-2 font-bold border block md:table-cell ${
-                        darkMode ? "bg-gray-300" : "bg-white"
-                      }`}
-                    >
-                      ${item.precio ? item.precio.toFixed(2) : ""}
-                    </td>
-                    <td
-                      data-label="Acción"
-                      className={`px-4 py-2 border block md:table-cell ${
-                        darkMode ? "bg-gray-300" : "bg-white"
-                      }`}
-                    >
+                    <td className="px-4 py-2 border">
                       <div className="flex justify-center gap-4">
                         <button
                           onClick={() => handleEdit(item)}
-                          className="flex items-center justify-center gap-2 p-2 text-yellow-600 hover:text-yellow-800 transition bg-yellow-100 rounded-lg shadow-sm"
+                          className="p-2 text-yellow-600 hover:text-yellow-800 bg-yellow-100 rounded-lg shadow-sm"
                           title="Editar"
                         >
                           <FaRegEdit size={18} />
                         </button>
                         <button
                           onClick={() => eliminarProducto(item.id)}
-                          className="flex items-center justify-center gap-2 p-2 text-red-600 hover:text-red-800 transition bg-red-100 rounded-lg shadow-sm"
+                          className="p-2 text-red-600 hover:text-red-800 bg-red-100 rounded-lg shadow-sm"
                           title="Eliminar"
                         >
                           <FaTrash size={18} />
@@ -360,7 +371,7 @@ export default function DataTable() {
         </div>
       )}
 
-      {/* Modal */}
+      {/* Modal para Producto */}
       <Modal
         isOpen={isOpen}
         onClose={() => {
@@ -375,13 +386,14 @@ export default function DataTable() {
           isEditing={!!currentProduct}
         />
       </Modal>
+
       {/* Modal para Envío de Emails */}
       <Modal
         isOpen={isEmailModalOpen}
         onClose={() => setIsEmailModalOpen(false)}
         title="Envio de Emails"
       >
-        <EmailForm onSubmit={handleSubmit} />
+        <EmailForm onSubmit={handleEmailSubmit} />
       </Modal>
     </>
   );
