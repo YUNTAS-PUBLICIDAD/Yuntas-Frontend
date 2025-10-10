@@ -252,7 +252,9 @@ const AddBlogModal = ({
     )
       return;
     const currentText = formData.parrafos[selectedParagraphIndex];
-    const linkedText = `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" title="${selectedText}" class="text-white font-bold italic">${selectedText}</a>`;
+
+    const linkedText = `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" title="${selectedText}" style="color: white; font-weight: bold;">${selectedText}</a>`;
+
     const newText =
       currentText.slice(0, selectedTextRange.start) +
       linkedText +
@@ -293,7 +295,7 @@ const AddBlogModal = ({
     if (selectedParagraphIndex === null || selectedTextRange === null) return;
     const currentText = formData.parrafos[selectedParagraphIndex];
     const link = producto.link;
-    const linkedText = `<a href="/products/producto/?link=${link}" style="color: white; font-weight: bold; font-style: italic;" title="${link}">${selectedText}</a>`;
+    const linkedText = `<a href="/products/producto/?link=${link}" style="color: white; font-weight: bold;" title="${link}">${selectedText}</a>`;
 
     const newText =
       currentText.slice(0, selectedTextRange.start) +
