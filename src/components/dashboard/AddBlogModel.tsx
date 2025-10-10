@@ -252,8 +252,7 @@ const AddBlogModal = ({
     )
       return;
     const currentText = formData.parrafos[selectedParagraphIndex];
-    const linkedText = `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" title="${selectedText}" style="color: white; font-weight: bold; font-style: italic;">${selectedText}</a>`;
-
+    const linkedText = `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" title="${selectedText}" class="text-white font-bold italic">${selectedText}</a>`;
     const newText =
       currentText.slice(0, selectedTextRange.start) +
       linkedText +
