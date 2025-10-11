@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type Producto from "../../models/Product.ts";
 import ProductCard from "./ProductCard.jsx";
 import ProductSearchBar from "../../pages/products/_ProductSearchBar.tsx";
+import {config} from "../../../config.ts";
 
 export default function FetchProductsList() {
   const [allProducts, setAllProducts] = useState<Producto[]>([]);
@@ -24,7 +25,7 @@ export default function FetchProductsList() {
 
         // Obtener todos los productos de todas las páginas
         while (hasMorePages) {
-          const apiUrl = `https://apiyuntas.yuntaspublicidad.com/api/v1/productos?page=${currentPageToFetch}&per_page=50`;
+          const apiUrl = `${config.apiUrl}${config.endpoints.productos.list}?page=${currentPageToFetch}&per_page=50`;
 
           const response = await fetch(apiUrl, {
             headers: {
