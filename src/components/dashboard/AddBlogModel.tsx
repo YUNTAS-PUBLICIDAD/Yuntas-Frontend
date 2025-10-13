@@ -294,7 +294,7 @@ const AddBlogModal = ({
     if (selectedParagraphIndex === null || selectedTextRange === null) return;
     const currentText = formData.parrafos[selectedParagraphIndex];
     const link = producto.link;
-    const linkedText = `<a href="/products/producto/?link=${link}" style="color: white; font-weight: bold;" title="${link}">${selectedText}</a>`;
+    const linkedText = `<a href="/products/${link}" style="font-weight: bold;" title="${link}">${selectedText}</a>`;
 
     const newText =
       currentText.slice(0, selectedTextRange.start) +
