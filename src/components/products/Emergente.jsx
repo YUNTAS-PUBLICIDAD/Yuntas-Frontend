@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState, useMemo } from "react";
 import { config, getApiUrl } from "../../../config";
 import { z } from "zod";
-import yuleLove from "../../assets/images/emergente/yuleLove.jpg";
+import yuleLove from "../../assets/images/emergente/yuleLove.webp";
 
 
 /* Textos promocionales */
