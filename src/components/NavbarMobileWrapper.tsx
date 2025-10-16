@@ -1,7 +1,7 @@
 import { useState } from "react";
 import MobileMenuUnified from "./MobileMenuUnified";
 import ToggleNavbar from "./ui/ToggleNavbar";
-import logo from "../assets/images/yuntas_publicidad_logo.webp";
+import logo from "../../public/images/yuntas_publicidad_logo.webp";
 
 const NavbarMobileWrapper = () => {
   const [isOpen, setIsOpen] = useState(false);
