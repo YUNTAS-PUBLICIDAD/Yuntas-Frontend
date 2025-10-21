@@ -56,6 +56,9 @@ export const config = {
       update: (id: number | string) => `/api/v1/blogs/${id}`,
       delete: (id: number | string) => `/api/v1/blogs/${id}`,
     },
+    information:{
+      sendInformation:"/api/v1/send-info",
+    }
   },
 };
 
