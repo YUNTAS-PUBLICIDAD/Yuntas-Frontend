@@ -91,17 +91,57 @@ export default function DataTable() {
     }
   };
 
-    const handleEmailSubmit = async (formData: FormData) => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            Swal.fire("Error", "No hay token de autenticación. Por favor inicia sesión.", "error");
-            return;
+  // ✅ SUBMIT para emails
+  const handleEmailSubmit = async (formData: FormData) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      Swal.fire(
+        "Error",
+        "No hay token de autenticación. Por favor inicia sesión.",
+        "error"
+      );
+      return;
+    }
+
+    const url = getApiUrl(config.endpoints.emailProducto.create);
+
+    try {
+      const respuesta = await fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const result = await respuesta.json();
+
+      if (respuesta.ok) {
+        Swal.fire({
+          title: result.message || "Email enviado con éxito",
+          icon: "success",
+        });
+        setIsEmailModalOpen(false);
+      } else {
+        let errorMessage = result.message || "Error al enviar email";
+
+        if (respuesta.status === 401) {
+          errorMessage =
+            "Token expirado o inválido. Por favor inicia sesión nuevamente.";
+          localStorage.removeItem("token");
+        } else if (respuesta.status === 422) {
+          errorMessage = "Datos inválidos: " + result.message;
         }
 
-        const fd = new FormData();
-        for (const [k, v] of formData.entries()) fd.append(k, v);
+        Swal.fire("Error", errorMessage, "error");
+      }
+    } catch (error) {
+      Swal.fire("Error", "No se pudo conectar con el servidor.", "error");
+    }
+  };
 
-<<<<<<< HEAD
   const handleWhatsappSubmit = async (formData: FormData) => {
     const token = localStorage.getItem("token");
 
@@ -153,53 +193,6 @@ export default function DataTable() {
   };
 
   const eliminarProducto = async (id: string | number) => {
-=======
-        fd.set("replace", "1");
-
-        const base = getApiUrl(config.endpoints.emailProducto.create);
-        const url  = `${base}?replace=1`;
-
-        console.log("POST URL:", url);
-        for (const [k, v] of fd.entries()) console.log("FD:", k, v);
-
-        try {
-            const respuesta = await fetch(url, {
-                method: "POST", // POST real (no PUT)
-                headers: {
-                    Accept: "application/json",
-                    Authorization: `Bearer ${token}`,
-                    // NO pongas Content-Type manualmente
-                },
-                body: fd,
-            });
-
-            let result: any = {};
-            try { result = await respuesta.json(); } catch {}
-
-            if (respuesta.ok) {
-                Swal.fire({ title: result?.message || "Email enviado con éxito", icon: "success" });
-                setIsEmailModalOpen(false);
-                return;
-            }
-
-            let errorMessage = result?.error || result?.message || "Error al enviar email";
-            if (respuesta.status === 401) {
-                errorMessage = "Token expirado o inválido. Por favor inicia sesión nuevamente.";
-                localStorage.removeItem("token");
-            } else if (respuesta.status === 422) {
-                errorMessage = "Datos inválidos: " + (result?.message || "Revise el formulario.");
-            } else if (respuesta.status === 409) {
-                errorMessage = "Ya existen emails para este producto y el backend no detectó el reemplazo.";
-            }
-            Swal.fire("Error", errorMessage, "error");
-        } catch (error) {
-            Swal.fire("Error", "No se pudo conectar con el servidor.", "error");
-        }
-    };
-
-
-    const eliminarProducto = async (id: string | number) => {
->>>>>>> 2b9adf94c27e6539770f03d6282537e16e5de7a9
     const url = getApiUrl(config.endpoints.productos.delete(id));
     const token = localStorage.getItem("token");
 
