@@ -6,7 +6,6 @@ import { insertJsonLd } from "../../utils/schema-markup-generator";
 /**
  * @param {{ article: import('../../models/Blog').default }} props
  */
-// 1. Aceptamos 'article' como una prop en la definición del componente
 export default function BlogPage({ article }) {
   
   // Usamos el hook de SEO con la prop que recibimos
@@ -16,7 +15,7 @@ export default function BlogPage({ article }) {
     insertJsonLd("blog", article);
   }, [article]);
 
-  // 3. Añadimos una validación por si la prop no llega
+  // Validación por si no llega la prop
   if (!article) {
     return (
       <div className="grid min-h-screen place-content-center text-center bg-red-100">
@@ -27,20 +26,41 @@ export default function BlogPage({ article }) {
     );
   }
 
+  // Función robusta que acepta cualquier tipo de enlace de YouTube
   const getEmbeddedVideoUrl = (url) => {
     if (!url) return null;
-    const match = url.match(/(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/);
-    if (match && match[1]) {
-      return `https://www.youtube.com/embed/${match[1]}`;
+
+    try {
+      // Creamos un objeto URL para analizarlo de forma confiable
+      const parsedUrl = new URL(url);
+
+      // 1️ Si es un enlace tipo watch?v=...
+      if (parsedUrl.hostname.includes("youtube.com") && parsedUrl.searchParams.get("v")) {
+        return `https://www.youtube.com/embed/${parsedUrl.searchParams.get("v")}`;
+      }
+
+      // 2️ Si es un enlace corto tipo youtu.be/VIDEO_ID
+      if (parsedUrl.hostname === "youtu.be") {
+        const id = parsedUrl.pathname.replace("/", "").split("?")[0];
+        return `https://www.youtube.com/embed/${id}`;
+      }
+
+      // 3️ Si es un enlace tipo shorts/VIDEO_ID
+      if (parsedUrl.pathname.startsWith("/shorts/")) {
+        const id = parsedUrl.pathname.split("/shorts/")[1].split("?")[0];
+        return `https://www.youtube.com/embed/${id}`;
+      }
+
+      // 4️ Si no coincide con ningún patrón, devolvemos el original
+      return url;
+
+    } catch {
+      // En caso de error (URL malformada), devolvemos null
+      return null;
     }
-    const shortMatch = url.match(/youtu\.be\/([^?]+)/);
-    if (shortMatch && shortMatch[1]) {
-      return `https://www.youtube.com/embed/${shortMatch[1]}`;
-    }
-    return url;
   };
 
-  // 4. El resto del código que renderiza el HTML se queda igual
+  // Renderizado principal del blog
   return (
     <>
       <section className="relative">
@@ -109,7 +129,7 @@ export default function BlogPage({ article }) {
         </div>
       </section>
 
-       <section className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 py-20 px-4 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 py-20 px-4 overflow-hidden">
         <div className="relative z-10 max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
@@ -123,16 +143,18 @@ export default function BlogPage({ article }) {
           <div className="relative bg-black/30 backdrop-blur-sm rounded-2xl overflow-hidden shadow-2xl border border-white/10">
             <div className="aspect-video w-full relative">
               {article.url_video ? (
-                 <iframe
-                    src={getEmbeddedVideoUrl(article.url_video)}
-                    title="Video"
-                    className="absolute inset-0 w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
+                <iframe
+                  src={getEmbeddedVideoUrl(article.url_video)}
+                  title="Video"
+                  className="absolute inset-0 w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                ></iframe>
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center">
-                    <p className="text-white/80 text-xl font-medium">Video próximamente</p>
+                  <p className="text-white/80 text-xl font-medium">
+                    Video próximamente
+                  </p>
                 </div>
               )}
             </div>

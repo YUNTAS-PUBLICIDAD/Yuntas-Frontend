@@ -14,21 +14,36 @@ const Paginator = ({
   onPageChange: (page: number) => void;
 }) => {
   return (
-    <div className="flex justify-center items-center gap-2 mt-4">
+    <div className="flex justify-center items-center mt-4 gap-2">
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="pagination-btn"
+        className="px-4 py-2 bg-blue-950 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Anterior
       </button>
-      <span className="text-gray-700 font-bold">
-        Página {currentPage} de {totalPages}
-      </span>
+      <div className="flex gap-1">
+        {Array.from({ length: totalPages }, (_, i) => {
+          const pageNum = i + 1;
+          return (
+            <button
+              key={pageNum}
+              onClick={() => onPageChange(pageNum)}
+              className={`px-3 py-2 rounded-md ${
+                currentPage === pageNum
+                  ? "bg-blue-950 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              {pageNum}
+            </button>
+          );
+        })}
+      </div>
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="pagination-btn"
+        className="px-4 py-2 bg-blue-950 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Siguiente
       </button>

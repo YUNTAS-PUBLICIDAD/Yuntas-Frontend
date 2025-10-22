@@ -2,7 +2,7 @@ import { FaFacebook, FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
 import { FaTiktok } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { useDarkMode } from "../hooks/darkmode/useDarkMode"; 
-import yuntasLogo from "../assets/images/yuntas_publicidad_logo.webp";
+import yuntasLogo from "../../public/images/yuntas_publicidad_logo.webp";
 
 const Footerjsx = ({ variant = "default" }) => {
     const { darkMode } = useDarkMode();
@@ -31,7 +31,7 @@ const Footerjsx = ({ variant = "default" }) => {
           <div className="border-t-1 border-l-2 border-cyan-400 max-w-54 w-full my-2"></div>
           <div className="flex justify-center gap-3 mt-4">
             <a
-              href="https://www.facebook.com/yuntaspublicidad"
+              href="https://www.facebook.com/YuntasProducciones"
               title="Facebook de Yuntas Publicidad"
               target="_blank"
               aria-label="Facebook"
@@ -63,7 +63,7 @@ const Footerjsx = ({ variant = "default" }) => {
               <FaWhatsapp className="text-white text-2xl hover:text-green-500" />
             </a>
             <a
-              href="https://www.tiktok.com/@yuntasproduccione"
+              href="https://www.tiktok.com/@y.decoracioncomercial"
               target="_blank"
               aria-label="TikTok"
               title="TikTok de Yuntas Publicidad"
