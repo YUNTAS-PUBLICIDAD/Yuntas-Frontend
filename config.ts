@@ -47,6 +47,12 @@ export const config = {
     update: (id: number | string) => `/api/v1/email-producto/plantilla/${id}`,
     plantillaPorProducto: (productoId: string | number) => `/api/v1/email-producto/plantilla/${productoId}`,
     },
+    WhatsappProducto: {
+    create: "/api/v1/Whatsapp-producto/plantilla",
+    update: (id: number | string) => `/api/v1/Whatsapp-producto/plantilla/${id}`,
+    plantillaPorProducto: (productoId: string | number) => `/api/v1/Whatsapp-producto/plantilla/${productoId}`,
+    },
+    
     blogs: {
       // Endpoints de blogs
       list: "/api/v1/blogs",
