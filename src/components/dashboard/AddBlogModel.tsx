@@ -252,6 +252,7 @@ const AddBlogModal = ({
     )
       return;
     const currentText = formData.parrafos[selectedParagraphIndex];
+
     const linkedText = `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" title="${selectedText}" style="color: white; font-weight: bold;">${selectedText}</a>`;
 
     const newText =
