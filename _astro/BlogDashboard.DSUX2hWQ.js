@@ -1,0 +1,1 @@
+import{j as o}from"./jsx-runtime.D_zvdyIk.js";import"./index.Be8AcK8B.js";import{B as r}from"./BlogList.xFj38uRp.js";import"./httpService.G5tsCD_j.js";import"./config.CjXat0bu.js";const a=()=>o.jsx("div",{children:o.jsx(r,{})});export{a as default};
