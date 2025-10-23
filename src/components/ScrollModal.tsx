@@ -123,7 +123,7 @@ const ScrollModal = () => {
         const randomProduct = productList[Math.floor(Math.random() * productList.length)];
         payload.append("producto_id", randomProduct.id);
       } else {
-        payload.append("currentUrl", window.location.pathname.split("/")[1] || "raiz");
+        payload.append("current_page", window.location.pathname.split("/")[1] || "raiz");
       }
 
       console.log("CONTENIDO DEL PAYLOAD: ");
