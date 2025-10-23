@@ -49,6 +49,36 @@ const ScrollModal = () => {
   const hasShownRef = useRef(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
+  const [productList, setProductList] = useState<any[]>([]);
+  const [apiUrl, setApiUrl] = useState<string>(getApiUrl(config.endpoints.clientes.create));
+
+  useEffect(() => {
+    // Verificar la URL para ajustar el endpoint
+    const currentUrl = window.location.pathname;
+    console.log("URL ACTUAL", currentUrl);
+    if (currentUrl === "/products") {
+      setApiUrl(getApiUrl(config.endpoints.productos.info));
+    } else {
+      setApiUrl(getApiUrl(config.endpoints.information.sendInformation));
+    }
+
+    // Obtener lista de productos de forma aleatoria
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(getApiUrl(config.endpoints.productos.all));
+        if (!response.ok) {
+          throw new Error("No se pudieron obtener los productos");
+        }
+        const productsData = await response.json();
+        setProductList(productsData.data);
+      } catch (error) {
+        console.error("Error al obtener productos:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -88,28 +118,26 @@ const ScrollModal = () => {
       payload.append("name", result.data.nombre);
       payload.append("email", result.data.email);
       payload.append("celular", result.data.telefono);
-
-      const response = await fetch(
-        getApiUrl(config.endpoints.clientes.create),
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "X-Requested-With": "XMLHttpRequest",
-          },
-          body: payload,
-        }
-      );
-
-      // Verificar si la respuesta es una redirección (CORS error)
-      if (
-        response.type === "opaque" ||
-        response.url !== getApiUrl(config.endpoints.clientes.create)
-      ) {
-        throw new Error(
-          "Error de configuración del servidor. Por favor contacta al administrador."
-        );
+      
+      if (window.location.pathname === "/products" && productList.length > 0) {
+        const randomProduct = productList[Math.floor(Math.random() * productList.length)];
+        payload.append("producto_id", randomProduct.id);
+      } else {
+        payload.append("current_page", window.location.pathname.split("/")[1] || "raiz");
       }
+
+      console.log("CONTENIDO DEL PAYLOAD: ");
+      for (let pair of payload.entries()) {
+        console.log(pair[0] + ": " + pair[1]);
+      }
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        body: payload,
+      });
 
       // Siempre intentar leer la respuesta como JSON
       let responseData;
