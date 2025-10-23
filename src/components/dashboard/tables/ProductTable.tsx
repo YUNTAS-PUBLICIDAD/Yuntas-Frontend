@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import Modal from "../../Modal";
 import ProductForm from "../../products/ProductForm";
 import EmailForm from "../../products/EmailForm";
+import WhatsappForm from "../../products/WhatsappForm";
 
 import type { Product } from "../../../models/Product";
 import { config, getApiUrl } from "../../../../config";
@@ -25,6 +26,8 @@ export default function DataTable() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+   const [isWhatsappModalOpen, setWhatsappModalOpen] = useState(false);
+
   const [currentProduct, setCurrentProduct] = useState<Product | undefined>(
     undefined
   );
@@ -88,61 +91,108 @@ export default function DataTable() {
     }
   };
 
-    const handleEmailSubmit = async (formData: FormData) => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            Swal.fire("Error", "No hay token de autenticación. Por favor inicia sesión.", "error");
-            return;
+  // ✅ SUBMIT para emails
+  const handleEmailSubmit = async (formData: FormData) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      Swal.fire(
+        "Error",
+        "No hay token de autenticación. Por favor inicia sesión.",
+        "error"
+      );
+      return;
+    }
+
+    const url = getApiUrl(config.endpoints.emailProducto.create);
+
+    try {
+      const respuesta = await fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const result = await respuesta.json();
+
+      if (respuesta.ok) {
+        Swal.fire({
+          title: result.message || "Email enviado con éxito",
+          icon: "success",
+        });
+        setIsEmailModalOpen(false);
+      } else {
+        let errorMessage = result.message || "Error al enviar email";
+
+        if (respuesta.status === 401) {
+          errorMessage =
+            "Token expirado o inválido. Por favor inicia sesión nuevamente.";
+          localStorage.removeItem("token");
+        } else if (respuesta.status === 422) {
+          errorMessage = "Datos inválidos: " + result.message;
         }
 
-        const fd = new FormData();
-        for (const [k, v] of formData.entries()) fd.append(k, v);
+        Swal.fire("Error", errorMessage, "error");
+      }
+    } catch (error) {
+      Swal.fire("Error", "No se pudo conectar con el servidor.", "error");
+    }
+  };
 
-        fd.set("replace", "1");
+  const handleWhatsappSubmit = async (formData: FormData) => {
+    const token = localStorage.getItem("token");
 
-        const base = getApiUrl(config.endpoints.emailProducto.create);
-        const url  = `${base}?replace=1`;
+    if (!token) {
+      Swal.fire(
+        "Error",
+        "No hay token de autenticación. Por favor inicia sesión.",
+        "error"
+      );
+      return;
+    }
 
-        console.log("POST URL:", url);
-        for (const [k, v] of fd.entries()) console.log("FD:", k, v);
+    const url = getApiUrl(config.endpoints.emailProducto.create);
 
-        try {
-            const respuesta = await fetch(url, {
-                method: "POST", // POST real (no PUT)
-                headers: {
-                    Accept: "application/json",
-                    Authorization: `Bearer ${token}`,
-                    // NO pongas Content-Type manualmente
-                },
-                body: fd,
-            });
+    try {
+      const respuesta = await fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
 
-            let result: any = {};
-            try { result = await respuesta.json(); } catch {}
+      const result = await respuesta.json();
 
-            if (respuesta.ok) {
-                Swal.fire({ title: result?.message || "Email enviado con éxito", icon: "success" });
-                setIsEmailModalOpen(false);
-                return;
-            }
+      if (respuesta.ok) {
+        Swal.fire({
+          title: result.message || "Email enviado con éxito",
+          icon: "success",
+        });
+        setIsEmailModalOpen(false);
+      } else {
+        let errorMessage = result.message || "Error al enviar email";
 
-            let errorMessage = result?.error || result?.message || "Error al enviar email";
-            if (respuesta.status === 401) {
-                errorMessage = "Token expirado o inválido. Por favor inicia sesión nuevamente.";
-                localStorage.removeItem("token");
-            } else if (respuesta.status === 422) {
-                errorMessage = "Datos inválidos: " + (result?.message || "Revise el formulario.");
-            } else if (respuesta.status === 409) {
-                errorMessage = "Ya existen emails para este producto y el backend no detectó el reemplazo.";
-            }
-            Swal.fire("Error", errorMessage, "error");
-        } catch (error) {
-            Swal.fire("Error", "No se pudo conectar con el servidor.", "error");
+        if (respuesta.status === 401) {
+          errorMessage =
+            "Token expirado o inválido. Por favor inicia sesión nuevamente.";
+          localStorage.removeItem("token");
+        } else if (respuesta.status === 422) {
+          errorMessage = "Datos inválidos: " + result.message;
         }
-    };
 
+        Swal.fire("Error", errorMessage, "error");
+      }
+    } catch (error) {
+      Swal.fire("Error", "No se pudo conectar con el servidor.", "error");
+    }
+  };
 
-    const eliminarProducto = async (id: string | number) => {
+  const eliminarProducto = async (id: string | number) => {
     const url = getApiUrl(config.endpoints.productos.delete(id));
     const token = localStorage.getItem("token");
 
@@ -237,9 +287,15 @@ export default function DataTable() {
 
         <button
           onClick={() => setIsEmailModalOpen(true)}
-          className="mt-4 bg-green-700 hover:bg-green-600 text-white text-lg px-10 py-1.5 rounded-full flex items-center gap-2"
+          className="mt-4 bg-[#bb001b] hover:bg-[#fbbc05] text-white text-lg px-10 py-1.5 rounded-full flex items-center gap-2"
         >
           Envío de Emails
+        </button>
+        <button
+          onClick={() => setWhatsappModalOpen(true)}
+          className="mt-4 bg-green-700 hover:bg-green-600 text-white text-lg px-10 py-1.5 rounded-full flex items-center gap-2"
+        >
+          Envío de Whatsapp
         </button>
       </div>
 
@@ -397,6 +453,14 @@ export default function DataTable() {
         title="Envio de Emails"
       >
         <EmailForm onSubmit={handleEmailSubmit} />
+      </Modal>
+      {/* Modal para Envío de Whasapp */}
+      <Modal
+        isOpen={isWhatsappModalOpen}
+        onClose={() => setWhatsappModalOpen(false)}
+        title="Envio de Whatsapp"
+      >
+        <WhatsappForm onSubmit={handleWhatsappSubmit} />
       </Modal>
     </>
   );

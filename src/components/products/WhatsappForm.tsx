@@ -3,56 +3,48 @@ import { FaImage, FaTimes } from "react-icons/fa";
 import { config, getApiUrl } from "../../../config";
 import type { Product } from "../../models/Product";
 
-interface SeccionEmail {
+interface SeccionWhatsapp {
   imagenPrincipal: File | null;
   vistaPreviaPrincipal: string;
-  imagenSecundaria1: File | null;
-  vistaPreviaSecundaria1: string;
-  imagenSecundaria2: File | null;
-  vistaPreviaSecundaria2: string;
   titulo: string;
   parrafo1: string;
 }
 
-interface FormularioEmailProps {
+interface FormularioWhatsappProps {
   onSubmit: (formData: FormData) => Promise<void>;
   plantillaId?: number | null;
 }
 
-export default function FormularioEmail({
+export default function FormularioWhatsapp({
   onSubmit,
   plantillaId = null,
-}: FormularioEmailProps) {
+}: FormularioWhatsappProps) {
   const [productoSeleccionado, setProductoSeleccionado] = useState<
     number | null
   >(null);
   const [listaProductos, setListaProductos] = useState<Product[]>([]);
   const [cargando, setCargando] = useState<boolean>(false);
-  const [seccionesEmail, setSeccionesEmail] = useState<SeccionEmail[]>([]);
+  const [seccionesWhatsapp, setSeccionesWhatsapp] = useState<SeccionWhatsapp[]>([]);
   const selectedProduct = listaProductos.find(
       (producto) => producto.id === productoSeleccionado
     );
   // ✅ Plantilla base vacía para reutilizar
-  const SECCIONES_VACIAS: SeccionEmail[] = Array.from({ length: 3 }, () => ({
+  const SECCIONES_VACIAS: SeccionWhatsapp[] = Array.from({ length: 1 }, () => ({
     imagenPrincipal: null,
     vistaPreviaPrincipal: "",
-    imagenSecundaria1: null,
-    vistaPreviaSecundaria1: "",
-    imagenSecundaria2: null,
-    vistaPreviaSecundaria2: "",
     titulo: "",
     parrafo1: "",
   }));
 
   // Inicializa con secciones vacías
   useEffect(() => {
-    setSeccionesEmail(SECCIONES_VACIAS);
+    setSeccionesWhatsapp(SECCIONES_VACIAS);
   }, []);
 
   // 🔹 Cargar plantilla del producto seleccionado
   useEffect(() => {
     if (productoSeleccionado === null) {
-      setSeccionesEmail(SECCIONES_VACIAS);
+      setSeccionesWhatsapp(SECCIONES_VACIAS);
       return;
     }
 
@@ -62,7 +54,7 @@ export default function FormularioEmail({
         const token = localStorage.getItem("token");
         const respuesta = await fetch(
           getApiUrl(
-            config.endpoints.emailProducto.plantillaPorProducto(
+            config.endpoints.WhatsappProducto.plantillaPorProducto(
               productoSeleccionado
             )
           ),
@@ -77,7 +69,7 @@ export default function FormularioEmail({
         // 🟦 No hay plantilla asociada
         if (respuesta.status === 404) {
           alert("ℹ️ El producto seleccionado no tiene una plantilla asociada.");
-          setSeccionesEmail(SECCIONES_VACIAS);
+          setSeccionesWhatsapp(SECCIONES_VACIAS);
           return;
         }
 
@@ -90,7 +82,7 @@ export default function FormularioEmail({
           alert(
             "ℹ️ Este producto no tiene secciones configuradas en su plantilla."
           );
-          setSeccionesEmail(SECCIONES_VACIAS);
+          setSeccionesWhatsapp(SECCIONES_VACIAS);
           return;
         }
 
@@ -113,11 +105,11 @@ export default function FormularioEmail({
           ...Array(Math.max(0, 3 - secciones.length)).fill(SECCIONES_VACIAS[0]),
         ];
 
-        setSeccionesEmail(seccionesCompletas);
+        setSeccionesWhatsapp(seccionesCompletas);
       } catch (error) {
         console.error("Error cargando plantilla del producto:", error);
         alert("❌ Ocurrió un error al cargar la plantilla del producto.");
-        setSeccionesEmail(SECCIONES_VACIAS);
+        setSeccionesWhatsapp(SECCIONES_VACIAS);
       } finally {
         setCargando(false);
       }
@@ -170,23 +162,19 @@ export default function FormularioEmail({
   const manejarCambioImagen = (
     indice: number,
     tipo: keyof Pick<
-      SeccionEmail,
-      "imagenPrincipal" | "imagenSecundaria1" | "imagenSecundaria2"
+      SeccionWhatsapp,
+      "imagenPrincipal" 
     >,
     archivo: File | null
   ) => {
-    const nuevasSecciones = [...seccionesEmail];
+    const nuevasSecciones = [...seccionesWhatsapp];
     nuevasSecciones[indice][tipo] = archivo;
     const vistaPrevia = archivo ? URL.createObjectURL(archivo) : "";
 
     if (tipo === "imagenPrincipal")
       nuevasSecciones[indice].vistaPreviaPrincipal = vistaPrevia;
-    if (tipo === "imagenSecundaria1")
-      nuevasSecciones[indice].vistaPreviaSecundaria1 = vistaPrevia;
-    if (tipo === "imagenSecundaria2")
-      nuevasSecciones[indice].vistaPreviaSecundaria2 = vistaPrevia;
 
-    setSeccionesEmail(nuevasSecciones);
+    setSeccionesWhatsapp(nuevasSecciones);
   };
 
   const manejarCambioTexto = (
@@ -194,14 +182,14 @@ export default function FormularioEmail({
     campo: "titulo" | "parrafo1",
     valor: string
   ) => {
-    const nuevasSecciones = [...seccionesEmail];
+    const nuevasSecciones = [...seccionesWhatsapp];
     nuevasSecciones[indice][campo] = valor;
-    setSeccionesEmail(nuevasSecciones);
+    setSeccionesWhatsapp(nuevasSecciones);
   };
 
   const eliminarImagen = (
     indice: number,
-    tipo: "imagenPrincipal" | "imagenSecundaria1" | "imagenSecundaria2"
+    tipo: "imagenPrincipal"
   ) => manejarCambioImagen(indice, tipo, null);
 
   // 🔹 Enviar formulario
@@ -216,25 +204,12 @@ export default function FormularioEmail({
     const formData = new FormData();
     formData.append("producto_id", String(productoSeleccionado));
 
-    seccionesEmail.forEach((item, i) => {
+    seccionesWhatsapp.forEach((item, i) => {
       if (item.imagenPrincipal)
         formData.append(
           `secciones[${i}][imagen_principal]`,
           item.imagenPrincipal
         );
-
-      if (item.imagenSecundaria1)
-        formData.append(
-          `secciones[${i}][imagenes_secundarias][]`,
-          item.imagenSecundaria1
-        );
-
-      if (item.imagenSecundaria2)
-        formData.append(
-          `secciones[${i}][imagenes_secundarias][]`,
-          item.imagenSecundaria2
-        );
-
       formData.append(`secciones[${i}][titulo]`, item.titulo);
       formData.append(`secciones[${i}][parrafo1]`, item.parrafo1);
     });
@@ -251,13 +226,13 @@ export default function FormularioEmail({
 
   // 🔹 Componente interno para carga de imágenes
   const SeccionCargaImagen = ({
-    emailIndex,
+   WhatsappIndex,
     tipoImagen,
     vistaPrevia,
     etiqueta,
   }: {
-    emailIndex: number;
-    tipoImagen: "imagenPrincipal" | "imagenSecundaria1" | "imagenSecundaria2";
+   WhatsappIndex: number;
+    tipoImagen: "imagenPrincipal" ;
     vistaPrevia: string;
     etiqueta: string;
   }) => (
@@ -274,7 +249,7 @@ export default function FormularioEmail({
           />
           <button
             type="button"
-            onClick={() => eliminarImagen(emailIndex, tipoImagen)}
+            onClick={() => eliminarImagen(WhatsappIndex, tipoImagen)}
             className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
           >
             <FaTimes size={12} />
@@ -290,7 +265,7 @@ export default function FormularioEmail({
             className="hidden"
             onChange={(e) => {
               const archivo = e.target.files?.[0] || null;
-              manejarCambioImagen(emailIndex, tipoImagen, archivo);
+              manejarCambioImagen(WhatsappIndex, tipoImagen, archivo);
             }}
           />
         </label>
@@ -337,45 +312,30 @@ export default function FormularioEmail({
       </div>
 
       {/* Secciones */}
-      {seccionesEmail.map((seccion, index) => (
+      {seccionesWhatsapp.map((seccion, index) => (
         <div
           key={index}
-          className="p-6 bg-gradient-to-br from-red-50 to-indigo-50 rounded-xl shadow-md border border-red-200"
+          className="p-6 bg-gradient-to-br from-green-50 to-indigo-50 rounded-xl shadow-md border border-green-200"
         >
-          <h3 className="text-xl font-bold text-[#c11319] mb-4 flex items-center gap-2">
-            <span className="bg-[#c11319] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">
+          <h3 className="text-xl font-bold text-green-900 mb-4 flex items-center gap-2">
+            <span className="bg-green-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">
               {index + 1}
             </span>
             
             {selectedProduct ? (
               <span>{selectedProduct.nombre}</span>
             ) : (
-              <span>Sección Email {index + 1}</span>
+              <span>Sección Whatsapp </span>
             )}
           </h3>
 
           <div className="space-y-4">
             <SeccionCargaImagen
-              emailIndex={index}
+              WhatsappIndex={index}
               tipoImagen="imagenPrincipal"
               vistaPrevia={seccion.vistaPreviaPrincipal}
               etiqueta="Imagen Principal"
             />
-
-            <div className="grid grid-cols-2 gap-4">
-              <SeccionCargaImagen
-                emailIndex={index}
-                tipoImagen="imagenSecundaria1"
-                vistaPrevia={seccion.vistaPreviaSecundaria1}
-                etiqueta="Imagen Secundaria 1"
-              />
-              <SeccionCargaImagen
-                emailIndex={index}
-                tipoImagen="imagenSecundaria2"
-                vistaPrevia={seccion.vistaPreviaSecundaria2}
-                etiqueta="Imagen Secundaria 2"
-              />
-            </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -411,7 +371,7 @@ export default function FormularioEmail({
 
       <button
         type="submit"
-        className="w-full bg-[#c11319] hover:bg-[#fbbc05] text-white font-bold py-3 rounded-lg transition"
+        className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition"
       >
         Guardar plantilla
       </button>
