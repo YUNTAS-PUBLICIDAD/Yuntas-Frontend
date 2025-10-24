@@ -26,7 +26,7 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/public/yuntas_publicidad_logo.png" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -72,7 +72,7 @@ const {
 
     <slot />
     <Footer />
-    {!Astro.url.pathname.includes("/products/") && <ScrollModal client:idle />}
+    {(Astro.url.pathname === "/products" || !Astro.url.pathname.startsWith("/products/")) && <ScrollModal client:idle />}
     <WhatsApp />
   </body>
 </html>
