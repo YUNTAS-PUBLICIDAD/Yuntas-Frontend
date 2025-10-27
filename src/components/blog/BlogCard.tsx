@@ -29,7 +29,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
   };
 
   const imagenUrl = buildImageUrl(blog.imagen_principal);
-  const titulo = blog.nombre_producto || "Blog sin título";
+  const titulo = blog.subtitulo || "Blog sin título";
 
   return (
     <a
@@ -69,13 +69,13 @@ export default function BlogCard({ blog }: BlogCardProps) {
         )}
       </div>
 
-      <div className="px-4 py-1 flex-1 flex flex-col justify-center items-center min-h-[60px] max-h-[90px] text-center">
-        <h3 className="w-full flex justify-center items-center text-base font-semibold text-gray-800 mb-1 text-center uppercase leading-tight line-clamp-3 max-h-[48px]">
+      <div className="px-2 py-2 flex-1 flex flex-col justify-center items-center min-h-[60px] max-h-[120px] text-center ">
+        <h3 className="w-full flex justify-center items-center text-base font-semibold text-gray-800 mb-1 text-center uppercase leading-tight line-clamp-3 max-h-[100px] ">
           {titulo}
         </h3>
-        {blog.subtitulo && (
+        {blog.nombre_producto && (
           <p className="w-full flex justify-center items-center text-gray-600 text-sm text-center leading-tight line-clamp-3 max-h-[36px]">
-            {blog.subtitulo}
+            {blog.nombre_producto}
           </p>
         )}
       </div>

@@ -56,7 +56,7 @@ const Slider = ({ comentarios }) => {
   const itemsPerPage = isMobile ? 1 : 3;
 
   return (
-    <div className="relative w-full max-w-7xl mx-auto">
+    <div className="flex w-full max-w-7xl mx-auto  py-2">
       {/* Contenedor principal del slider */}
       <div
         ref={sliderRef}
@@ -66,10 +66,10 @@ const Slider = ({ comentarios }) => {
           // 4. Cada tarjeta es ahora un item del slider
           <div
             key={comentario.id}
-            className="flex-shrink-0 w-full md:w-1/3 snap-center p-3 box-border"
+            className="flex-shrink-0 w-full md:w-1/3 snap-center p-8 box-border"
           >
             {/* El contenido de la tarjeta no cambia */}
-            <div className="h-80 bg-white text-black rounded-2xl p-8 shadow-lg flex flex-col justify-between">
+            <div className="h-70 bg-white text-black rounded-2xl p-8 shadow-lg flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 flex justify-center items-center bg-black text-white rounded-full">
