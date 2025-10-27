@@ -50,17 +50,11 @@ const ScrollModal = () => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   const [productList, setProductList] = useState<any[]>([]);
-  const [apiUrl, setApiUrl] = useState<string>(getApiUrl(config.endpoints.clientes.create));
 
   useEffect(() => {
     // Verificar la URL para ajustar el endpoint
     const currentUrl = window.location.pathname;
     console.log("URL ACTUAL", currentUrl);
-    if (currentUrl === "/products") {
-      setApiUrl(getApiUrl(config.endpoints.productos.info));
-    } else {
-      setApiUrl(getApiUrl(config.endpoints.information.sendInformation));
-    }
 
     // Obtener lista de productos de forma aleatoria
     const fetchProducts = async () => {
@@ -119,18 +113,13 @@ const ScrollModal = () => {
       payload.append("email", result.data.email);
       payload.append("celular", result.data.telefono);
       
-      if (window.location.pathname === "/products" && productList.length > 0) {
-        const randomProduct = productList[Math.floor(Math.random() * productList.length)];
-        payload.append("producto_id", randomProduct.id);
-      } else {
-        payload.append("current_page", window.location.pathname.split("/")[1] || "raiz");
-      }
+      payload.append("current_page", window.location.pathname.split("/")[1] || "raiz");
 
       console.log("CONTENIDO DEL PAYLOAD: ");
       for (let pair of payload.entries()) {
         console.log(pair[0] + ": " + pair[1]);
       }
-      const response = await fetch(apiUrl, {
+      const response = await fetch(getApiUrl(config.endpoints.information.sendInformation), {
         method: "POST",
         headers: {
           Accept: "application/json",
