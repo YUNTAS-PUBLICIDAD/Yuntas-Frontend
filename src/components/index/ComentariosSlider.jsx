@@ -60,33 +60,41 @@ const Slider = ({ comentarios }) => {
       {/* Contenedor principal del slider */}
       <div
         ref={sliderRef}
-        className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide"
+        style={{scrollbarWidth: 'none'}}
+        className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide pt-6"
       >
         {comentarios.map((comentario) => (
           // 4. Cada tarjeta es ahora un item del slider
           <div
             key={comentario.id}
-            className="flex-shrink-0 w-full md:w-1/3 snap-center p-3 box-border"
+            className="flex-shrink-0 w-full md:w-1/3 snap-center p-3 box-border relative"
           >
+            <div className="w-16 h-16 flex justify-center items-center bg-black text-white rounded-full absolute -top-5 left-[42%] z-10">
+              {comentario.nombre.charAt(0)}
+            </div>
+
             {/* El contenido de la tarjeta no cambia */}
             <div className="h-80 bg-white text-black rounded-2xl p-8 shadow-lg flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-4">
+              <div className="space-y-5">
+                {/* <div className="flex items-center gap-4">
                   <div className="w-10 h-10 flex justify-center items-center bg-black text-white rounded-full">
                     {comentario.nombre.charAt(0)}
                   </div>
                   <p className="text-lg font-semibold">{comentario.nombre}</p>
+                </div> */}
+                <div className="mt-8">
+                  <p className="text-lg font-semibold text-center">{comentario.nombre}</p>
+                  <p className="text-center text-yellow-500">
+                    {"⭐".repeat(comentario.estrellas)}
+                  </p>
                 </div>
                 <p className="mt-2 text-lg">{comentario.comentario}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500 italic mt-4">
+                <p className="text-sm text-gray-500 italic mt-4 text-end">
                   Publicado: {comentario.publicado}
                 </p>
-                <hr className="border-gray-300 my-2" />
-                <p className="text-center text-yellow-500">
-                  {"⭐".repeat(comentario.estrellas)}
-                </p>
+                
               </div>
             </div>
           </div>
