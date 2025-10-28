@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IoPerson } from "react-icons/io5";
+import { IoPersonCircle } from "react-icons/io5";
 import clsx from "clsx"; 
 
 import { useDarkMode } from "../hooks/darkmode/useDarkMode";
@@ -17,12 +17,19 @@ interface NavbarProps {
   pathname: string;
 }
 
+interface NavItemProps {
+  link: string;
+  texto: string;
+  title: string;
+  isActive: boolean;
+}
+
 // MEJORA: Componente NavItem para reutilizar la lógica del enlace
-const NavItem = ({ link, texto, title, isActive }) => (
+const NavItem = ({ link, texto, title, isActive }: NavItemProps) => (
   <a
     href={link}
     title={title}
-    className={clsx("relative px-6 py-2", { "border-effect": isActive })}
+    className={clsx("relative px-6 py-2 text-base", { "text-[#0D1030] font-bold": isActive })}
   >
     <span className="relative">{texto}</span>
   </a>
@@ -35,11 +42,11 @@ const Navbar = ({ variant = "default", pathname }: NavbarProps) => {
 
   // MEJORA: Uso de clsx para una mejor legibilidad de las clases
   const navClasses = clsx(
-    "relative w-full flex justify-between items-center h-20 px-6 lg:px-10 py-4 font-semibold text-white",
+    "relative w-full flex justify-between items-center h-20 px-6 lg:px-10 py-4",
     {
       "bg-gradient-to-b from-[#0d1030] to-[#1a1a3a] shadow-md": variant === "admin" && darkMode,
       "bg-gradient-to-b from-[#0d1030] to-[#293296] shadow-md": variant === "admin" && !darkMode,
-      "bg-gradient-to-b from-slate-900/85 to-transparent": variant === "default",
+      "bg-white": variant === "default",
     }
   );
 
@@ -60,11 +67,11 @@ const Navbar = ({ variant = "default", pathname }: NavbarProps) => {
 
         <a href="/" title="Ir a la página de inicio">
           <img
-            src={'/images/yuntas_publicidad_logo.webp'}
+            src={'/images/yuntas_publicidad_logo-v2.webp'}
             width={59}
             height={56}
-            srcSet={'/images/yuntas_publicidad_logo_mobile.webp 60w, /images/yuntas_publicidad_logo_tablet.webp 125w'}
-            sizes="(max-width: 640px) 60px, 125px"
+            // srcSet={'/images/yuntas_publicidad_logo_mobile.webp 60w, /images/yuntas_publicidad_logo_tablet.webp 125w'}
+            // sizes="(max-width: 640px) 60px, 125px"
             alt="Logo Yuntas"
             title="Logo Yuntas Publicidad"
             loading="eager"
@@ -80,11 +87,10 @@ const Navbar = ({ variant = "default", pathname }: NavbarProps) => {
               isActive={pathname === ruta.link}
             />
           ))}
+          <a href="/login" className="ml-4 flex items-center justify-center" title="Iniciar Sesión - Yuntas Publicidad">
+            <IoPersonCircle className="text-4xl" aria-label="Login" />
+          </a>
         </div>
-
-        <a href="/login" className="ml-4" title="Iniciar Sesión - Yuntas Publicidad">
-          <IoPerson className="text-3xl" aria-label="Login" />
-        </a>
       </nav>
 
       <MobileMenuUnified
