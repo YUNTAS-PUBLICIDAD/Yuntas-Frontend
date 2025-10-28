@@ -67,26 +67,18 @@ const Slider = ({ comentarios }) => {
           // 4. Cada tarjeta es ahora un item del slider
           <div
             key={comentario.id}
-<<<<<<< HEAD
-            className="flex-shrink-0 w-full md:w-1/3 snap-center p-8 box-border"
-=======
             className="flex-shrink-0 w-full md:w-1/3 snap-center p-3 box-border relative"
->>>>>>> 8952580f334792c077c74f2c4e30b46193d90ffb
+
           >
             <div className="w-16 h-16 flex justify-center items-center bg-black text-white rounded-full absolute -top-5 left-[42%] z-10">
               {comentario.nombre.charAt(0)}
             </div>
 
             {/* El contenido de la tarjeta no cambia */}
-<<<<<<< HEAD
-            <div className="h-70 bg-white text-black rounded-2xl p-8 shadow-lg flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-4">
-=======
+
             <div className="h-80 bg-white text-black rounded-2xl p-8 shadow-lg flex flex-col justify-between">
               <div className="space-y-5">
                 {/* <div className="flex items-center gap-4">
->>>>>>> 8952580f334792c077c74f2c4e30b46193d90ffb
                   <div className="w-10 h-10 flex justify-center items-center bg-black text-white rounded-full">
                     {comentario.nombre.charAt(0)}
                   </div>
