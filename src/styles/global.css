@@ -285,3 +285,11 @@ input, select, textarea {
   object-position: center;
   border-radius: 1rem;
 }
+
+/* Borde azul para títulos tipo acrílicos */
+.text-stroke-blue {
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: #28BEDA;
+  text-stroke-width: 1px;
+  text-stroke-color: #28BEDA;
+}
