@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoPersonCircle } from "react-icons/io5";
 import clsx from "clsx"; 
 
@@ -8,8 +8,6 @@ import "../styles/navbar.css";
 
 import MobileMenuUnified from "./MobileMenuUnified";
 import ToggleNavbar from "./ui/ToggleNavbar";
-import "../styles/navbar.css";
-
 // MEJORA: Tipado de las props
 
 interface NavbarProps {
@@ -29,7 +27,7 @@ const NavItem = ({ link, texto, title, isActive }: NavItemProps) => (
   <a
     href={link}
     title={title}
-    className={clsx("relative px-6 py-2 text-base", { "text-[#0D1030] font-bold": isActive })}
+    className={clsx("relative px-4 py-2 text-base", { "font-bold": isActive })}
   >
     <span className="relative">{texto}</span>
   </a>
@@ -38,21 +36,31 @@ const NavItem = ({ link, texto, title, isActive }: NavItemProps) => (
 // MEJORA: Navbar
 const Navbar = ({ variant = "default", pathname }: NavbarProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { darkMode } = useDarkMode();
 
   // MEJORA: Uso de clsx para una mejor legibilidad de las clases
   const navClasses = clsx(
     "relative w-full flex justify-between items-center h-20 px-6 lg:px-10 py-4",
     {
-      "bg-gradient-to-b from-[#0d1030] to-[#1a1a3a] shadow-md": variant === "admin" && darkMode,
-      "bg-gradient-to-b from-[#0d1030] to-[#293296] shadow-md": variant === "admin" && !darkMode,
-      "bg-white": variant === "default",
+      "bg-gradient-to-b from-[#0d1030] to-[#1a1a3a] shadow-md text-white": variant === "admin" && darkMode,
+      "bg-gradient-to-b from-[#0d1030] to-[#293296] shadow-md text-white": variant === "admin" && !darkMode,
+      "bg-white text-[#0D1030]": variant === "default",
+      "shadow": isScrolled,
     }
   );
 
   const headerClasses = clsx("w-full z-20", {
     fixed: variant !== "admin",
   });
+
+  useEffect(()=>{
+    const initialCheck = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    initialCheck()
+  }, [])
 
   return (
     <header className={headerClasses}>
@@ -66,8 +74,9 @@ const Navbar = ({ variant = "default", pathname }: NavbarProps) => {
         </div>
 
         <a href="/" title="Ir a la página de inicio">
+        
           <img
-            src={'/images/yuntas_publicidad_logo-v2.webp'}
+            src={variant === "admin" ? "/images/yuntas_publicidad_logo.webp" : "/images/yuntas_publicidad_logo-v2.webp"}
             width={59}
             height={56}
             // srcSet={'/images/yuntas_publicidad_logo_mobile.webp 60w, /images/yuntas_publicidad_logo_tablet.webp 125w'}
@@ -79,7 +88,7 @@ const Navbar = ({ variant = "default", pathname }: NavbarProps) => {
           />
         </a>
 
-        <div className="hidden lg:flex justify-between gap-x-6">
+        <div className="hidden lg:flex justify-between gap-x-4">
           {RUTAS.map((ruta) => (
             <NavItem
               key={ruta.link}
@@ -88,7 +97,7 @@ const Navbar = ({ variant = "default", pathname }: NavbarProps) => {
             />
           ))}
           <a href="/login" className="ml-4 flex items-center justify-center" title="Iniciar Sesión - Yuntas Publicidad">
-            <IoPersonCircle className="text-4xl" aria-label="Login" />
+            <IoPersonCircle size={40} className="text-[#203565]" aria-label="Login" />
           </a>
         </div>
       </nav>
