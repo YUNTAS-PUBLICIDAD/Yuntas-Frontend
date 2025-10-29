@@ -142,55 +142,57 @@ export default function DataTable() {
     }
   };
 
-  const handleWhatsappSubmit = async (formData: FormData) => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      Swal.fire(
-        "Error",
-        "No hay token de autenticación. Por favor inicia sesión.",
-        "error"
-      );
-      return;
-    }
-
-    const url = getApiUrl(config.endpoints.emailProducto.create);
-
-    try {
-      const respuesta = await fetch(url, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      const result = await respuesta.json();
-
-      if (respuesta.ok) {
-        Swal.fire({
-          title: result.message || "Email enviado con éxito",
-          icon: "success",
-        });
-        setIsEmailModalOpen(false);
-      } else {
-        let errorMessage = result.message || "Error al enviar email";
-
-        if (respuesta.status === 401) {
-          errorMessage =
-            "Token expirado o inválido. Por favor inicia sesión nuevamente.";
-          localStorage.removeItem("token");
-        } else if (respuesta.status === 422) {
-          errorMessage = "Datos inválidos: " + result.message;
+    const handleWhatsappSubmit = async (formData: FormData) => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            Swal.fire("Error", "No hay token de autenticación. Por favor inicia sesión.", "error");
+            return;
         }
 
-        Swal.fire("Error", errorMessage, "error");
-      }
-    } catch (error) {
-      Swal.fire("Error", "No se pudo conectar con el servidor.", "error");
-    }
-  };
+        // Debe venir del WhatsappForm
+        const rawProductoId = formData.get("producto_id") ?? formData.get("productoId");
+        const productoId = Number(rawProductoId);
+
+        if (!productoId || Number.isNaN(productoId)) {
+            Swal.fire("Error", "Falta seleccionar el producto.", "error");
+            return;
+        }
+
+        const url = getApiUrl(config.endpoints.whatsappProducto.create(productoId));
+
+        try {
+            const respuesta = await fetch(url, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    Authorization: `Bearer ${token}`,
+                    // NO pongas Content-Type, FormData lo arma solo
+                },
+                body: formData,
+            });
+
+            const result = await respuesta.json().catch(() => ({}));
+
+            if (respuesta.ok) {
+                Swal.fire({ title: result.message || "Plantilla WhatsApp guardada", icon: "success" });
+                setWhatsappModalOpen(false);
+            } else {
+                let errorMessage = result.message || "Error al guardar la plantilla";
+                if (respuesta.status === 401) {
+                    errorMessage = "Token expirado o inválido. Por favor inicia sesión nuevamente.";
+                    localStorage.removeItem("token");
+                } else if (respuesta.status === 422 && result?.errors) {
+                    const errs = Object.entries(result.errors)
+                        .map(([k, v]: any) => `${k}: ${(v?.[0] ?? v) as string}`)
+                        .join("\n");
+                    if (errs) errorMessage = `Datos inválidos:\n${errs}`;
+                }
+                Swal.fire("Error", errorMessage, "error");
+            }
+        } catch {
+            Swal.fire("Error", "No se pudo conectar con el servidor.", "error");
+        }
+    };
 
   const eliminarProducto = async (id: string | number) => {
     const url = getApiUrl(config.endpoints.productos.delete(id));
