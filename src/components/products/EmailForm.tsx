@@ -29,9 +29,7 @@ export default function FormularioEmail({
   const [listaProductos, setListaProductos] = useState<Product[]>([]);
   const [cargando, setCargando] = useState<boolean>(false);
   const [seccionesEmail, setSeccionesEmail] = useState<SeccionEmail[]>([]);
-  const selectedProduct = listaProductos.find(
-      (producto) => producto.id === productoSeleccionado
-    );
+
   // ✅ Plantilla base vacía para reutilizar
   const SECCIONES_VACIAS: SeccionEmail[] = Array.from({ length: 3 }, () => ({
     imagenPrincipal: null,
@@ -340,18 +338,13 @@ export default function FormularioEmail({
       {seccionesEmail.map((seccion, index) => (
         <div
           key={index}
-          className="p-6 bg-gradient-to-br from-red-50 to-indigo-50 rounded-xl shadow-md border border-red-200"
+          className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl shadow-md border border-blue-200"
         >
-          <h3 className="text-xl font-bold text-[#c11319] mb-4 flex items-center gap-2">
-            <span className="bg-[#c11319] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">
+          <h3 className="text-xl font-bold text-blue-900 mb-4 flex items-center gap-2">
+            <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">
               {index + 1}
             </span>
-            
-            {selectedProduct ? (
-              <span>{selectedProduct.nombre}</span>
-            ) : (
-              <span>Sección Email {index + 1}</span>
-            )}
+            Sección Email {index + 1}
           </h3>
 
           <div className="space-y-4">
@@ -411,7 +404,7 @@ export default function FormularioEmail({
 
       <button
         type="submit"
-        className="w-full bg-[#c11319] hover:bg-[#fbbc05] text-white font-bold py-3 rounded-lg transition"
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition"
       >
         Guardar plantilla
       </button>
