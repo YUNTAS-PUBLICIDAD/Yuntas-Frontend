@@ -1,0 +1,78 @@
+---
+// Importaciones
+import SearchBar from "../pages/blogs/_SearchBar";
+import Layout from "../layouts/Layout.astro";
+import imagen1 from "../assets/images/blog/banner_blog.webp";
+import { blogService } from "../services/blogService";
+import FetchBlogsList from "../components/blog/FetchBlogsList.tsx";
+import type Blog from "../models/Blog";
+import {config} from "../../config";
+// Metadatos específicos para la página general del blog
+const generalMetadata = {
+  titulo: "Blog Yuntas | Tendencias en Publicidad LED y Tips para tu negocio",
+  description:
+    "Consejos, tendencias y guías sobre publicidad LED, letreros luminosos, señales digitales y mucho más. Contenido experto para potenciar tu negocio con tecnología innovadora.",
+  keywordsBlog:
+  "cómo elegir letrero led, mantenimiento letreros luminosos, diferencias LED vs neón tradicional, ahorro energético publicidad LED, problemas comunes paneles LED, duración vida útil LED, mejores letreros luminosos, como usar neon, mejores productos led",
+  };
+
+let allArticles = [];
+let error = null;
+
+try {
+  const res = await fetch(`${config.apiUrl}${config.endpoints.blogs.list}`);
+  if (!res.ok) {
+    throw new Error(`HTTP error! status: ${res.status}`);
+  }
+  const apiResponse = await res.json();
+  allArticles = apiResponse.data;
+} catch (err) {
+  error = err instanceof Error ? err.message : "Error desconocido";
+}
+---
+
+<Layout title={generalMetadata.titulo} description={generalMetadata.description} keywords={generalMetadata.keywordsBlog} canonicalUrl="https://yuntaspublicidad.com/blogs/">
+  <!-- Banner -->
+  <section class="relative h-screen">
+    <img
+      src={imagen1.src}
+      alt="Biblioteca moderna con tecnología LED, espacio ideal para proyectos de diseño sostenible y ambientes funcionales"
+      title="Biblioteca moderna con tecnología LED"
+      class="w-full h-full object-cover"
+    />
+    <div
+      class="absolute inset-0 flex flex-col justify-center items-center text-center"
+    >
+      <h1
+        class="text-7xl text-center Montserrat font-black text-white sombra-title"
+      >
+        Blog Yuntero
+      </h1>
+    </div>
+  </section>
+  <!-- Título principal -->
+  <div class="bg-gray h-30 flex items-center justify-center">
+    <h2
+      class="text-xl sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl Montserrat font-extrabold text-[#243360]"
+    >
+      NUESTROS ARTICULOS
+    </h2>
+  </div>
+  <!-- <section class="bg-gradient-to-b from-blue-900 to-indigo-950 p-12 text-white">
+    <div class="flex justify-center">
+      {
+        error ? (
+          <div class="text-red-500 text-xl">Error cargando blogs: {error}</div>
+        ) : (
+          <SearchBar client:load articles={allArticles} />
+        )
+      }
+    </div>
+  </section> -->
+  <!-- Sección de productos -->
+  <section class="w-full bg-gradient-to-b from-blue-900 to-indigo-950 py-20">
+    <div class="max-w-[1200px] px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 mx-auto">
+      <FetchBlogsList client:load />
+    </div>
+  </section>
+</Layout>

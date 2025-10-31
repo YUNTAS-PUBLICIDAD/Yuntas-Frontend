@@ -1,0 +1,55 @@
+---
+import { RiTeamFill, RiEmotionHappyFill, RiShakeHandsFill   } from "react-icons/ri";
+import { FaHeadset } from "react-icons/fa";
+const valores = [
+  {
+    light: "Somos un",
+    bold: "EQUIPO",
+    icon: RiTeamFill,
+  },
+  {
+    light: "Velamos por",
+    bold: "EL CLIENTE",
+    icon: RiEmotionHappyFill,
+  },
+  {
+    light: "Somos",
+    bold: "RESPETUOSOS",
+    icon: RiShakeHandsFill,
+  },
+  {
+    light: "Orientamos",
+    bold: "AL CLIENTE",
+    icon: FaHeadset,
+  },
+];
+---
+
+<section>
+  <div
+    class="bg-linear-to-b from-blue-950 from-65% bg-slate-900 w-full py-15"
+  >
+    <div
+      class="text-5xl text-white font-extrabold text-center"
+    >
+      Nuestros valores
+    </div>
+  </div>
+  <div class="bg-cyan-500 py-24">
+    <div class="max-w-4xl mx-auto grid grid-cols-2 md:flex md:flex-row justify-between items-center text-white gap-8 text-center">
+    {
+        valores.map((valor) => {
+          return (
+            <div class="flex flex-col items-center gap-2 text-center text-2xl font-bold">
+              <valor.icon className="size-24 md:size-32"/>
+              <p class="flex flex-col">
+                {valor.light}
+                <span class="font-extrabold">{valor.bold}</span>
+              </p>
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>

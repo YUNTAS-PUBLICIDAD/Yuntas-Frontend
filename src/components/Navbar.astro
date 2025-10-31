@@ -1,0 +1,12 @@
+---
+import Navbar from "./Navbar.tsx";
+// import logo from "../assets/images/yuntas_publicidad_logo.webp";
+
+// Recibe la prop `variant` desde el layout
+const { variant = "default" } = Astro.props;
+---
+
+<!-- Navbar principal en escritorio -->
+<Navbar variant={variant} pathname={Astro.url.pathname} client:idle />
+
+

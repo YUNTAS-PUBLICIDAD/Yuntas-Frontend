@@ -1,0 +1,39 @@
+---
+import logo from '../../../public/images/yuntas_publicidad_logo.webp';
+---
+
+<section
+  class="relative w-full py-28 md:py-36 flex justify-center bg-gradient-to-b from-blue-900 to-indigo-950 px-8 text-white"
+>
+  <div class="md:max-w-5xl flex flex-col xl:flex-row items-center gap-6 md:gap-12">
+    <!-- Logo -->
+    <div class="flex-shrink-0">
+      <img
+        src= { logo.src }
+        alt="Logo Yuntas"
+        title="Logo Yuntas Publicidad"
+        class="w-32 md:w-60"
+      />
+    </div>
+    <!-- Texto -->
+    <div class="text-center max-w-sm md:max-w-lg">
+      <p class="text-lg md:text-3xl font-light leading-tight">
+        En Yuntas Producciones
+        <span class="font-bold"
+          >transformamos espacios con soluciones tecnológicas</span
+        >
+        innovadoras en iluminación y diseño, ofreciendo calidad y vanguardia
+        <span class="font-bold">para crear experiencias inolvidables</span>.
+      </p>
+    </div>
+  </div>
+  <!-- Esquinas decorativas -->
+  <div
+    class="absolute hidden md:block top-15 left-15 border-t-2 border-l-2 border-cyan-400 md:w-40 md:h-30 lg:w-80 lg:h-60"
+  >
+  </div>
+  <div
+    class="absolute hidden md:block bottom-15 right-15 border-b-2 border-r-2 border-cyan-400 md:w-40 md:h-30 lg:w-80 lg:h-60"
+  >
+  </div>
+</section>
