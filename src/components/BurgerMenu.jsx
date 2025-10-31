@@ -8,7 +8,7 @@ const NavLinks = ({ item }) => {
     const nuevoTexto = capitalizar(item.texto)
     return <li className="text-lg font-normal flex hover:bg-black/80 transition-all duration-300"><a className="w-full py-1 px-3" href={item.link}>{nuevoTexto}</a></li>
 }
-
+ 
 const BurgerMenu = ({ links }) => {
     const [isOpen, setIsOpen] = useState(false)
 
