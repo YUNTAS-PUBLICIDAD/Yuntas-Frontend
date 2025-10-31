@@ -6,37 +6,6 @@
 @import "swiper/css/navigation";
 @import "swiper/css/pagination";
 
-
-/* Definir la familia de fuentes Montserrat */
-@font-face {
-  font-family: 'Montserrat';
-  src: url('/fonts/montserrat-regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap; /* Mejora el rendimiento */
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  src: url('/fonts/montserrat-600.woff2') format('woff2');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  src: url('/fonts/montserrat-800.woff2') format('woff2');
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-}
-
-@theme {
-    --font-montserrat: "Montserrat", sans-serif;
-    --color-sunset: #ffc68a;
-}
-
 /* fuentes personalizadas */
 /* .Montserrat {
     font-family: 'Montserrat', sans-serif;
@@ -91,8 +60,6 @@ html.dark {
 }
 
 body {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 400;
   background-color: var(--background-color);
   color: var(--text-color);
 }
@@ -317,12 +284,4 @@ input, select, textarea {
   object-fit: cover;
   object-position: center;
   border-radius: 1rem;
-}
-
-/* Borde azul para títulos tipo acrílicos */
-.text-stroke-blue {
-  -webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: #28BEDA;
-  text-stroke-width: 1px;
-  text-stroke-color: #28BEDA;
 }

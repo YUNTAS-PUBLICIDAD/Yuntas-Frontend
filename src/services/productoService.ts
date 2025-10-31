@@ -136,13 +136,6 @@ class ProductoService {
 
     return formData;
   }
-
-  async listAllProducts() {
-    const url = config.apiUrl + config.endpoints.productos.all
-    const res = await fetch(url);
-    const products = await res.json()
-    return products
-  }
 }
 
 export const productoService = new ProductoService();

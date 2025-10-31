@@ -12,7 +12,7 @@ const Footerjsx = ({ variant = "default" }) => {
     ? darkMode
       ? "bg-gradient-to-b from-[#0d1030] to-[#1a1a3a] text-white shadow-md"
       : "bg-gradient-to-b from-[#0d1030] to-[#293296] text-white shadow-md"
-    : "bg-[#00031E] text-white";
+    : "bg-[#172649] text-white";
   return (
     <footer
       className={`${footerClasses} ${
@@ -28,8 +28,8 @@ const Footerjsx = ({ variant = "default" }) => {
             title="Logo Yuntas Publicidad"
             className={`mx-auto ${isAdmin ? "h-16" : "h-24"}`}
           />
-          <div className="border-t-1 border-l-2 border-cyan-400 max-w-54 w-full my-2 block md:hidden"></div>
-          <div className="flex justify-center gap-3 mt-4 md:hidden">
+          <div className="border-t-1 border-l-2 border-cyan-400 max-w-54 w-full my-2"></div>
+          <div className="flex justify-center gap-3 mt-4">
             <a
               href="https://www.facebook.com/YuntasProducciones"
               title="Facebook de Yuntas Publicidad"
@@ -75,11 +75,11 @@ const Footerjsx = ({ variant = "default" }) => {
 
         {/* Dirección y horario */}
         <div className="text-center md:text-left mb-8 md:mb-0">
-          <h3 className="font-semibold text-[#98D8DF] mb-3">Dirección</h3>
-          <p className="text-white">Urb. Alameda La Rivera Mz F Lt 30</p>
-          <h3 className="font-semibold text-[#98D8DF] mt-4 mb-3">Horario</h3>
-          <p className="text-white">L - V: 9 a.m - 5 p.m</p>
-          <p className="text-white">S: 9 a.m - 2 p.m</p>
+          <h3 className="font-semibold text-[#98D8DF]">Dirección</h3>
+          <p className="text-gray-300">Urb. Alameda La Rivera Mz F Lt 30</p>
+          <h3 className="font-semibold text-[#98D8DF] mt-4">Horario</h3>
+          <p className="text-gray-300">L - V: 9 a.m - 5 p.m</p>
+          <p className="text-gray-300">S: 9 a.m - 2 p.m</p>
           <a href="/libro_reclamaciones" className="text-sm font-bold mt-2 block" title="Libro de Reclamaciones - Yuntas Publicidad">
             Libro de reclamaciones
           </a>
@@ -87,56 +87,20 @@ const Footerjsx = ({ variant = "default" }) => {
 
         {/* Contacto */}
         <div className="text-center md:text-left">
-          <h3 className="font-semibold text-[#98D8DF] mb-3">Contacto</h3>
+          <h3 className="font-semibold text-[#98D8DF]">Contacto</h3>
           <p className="flex items-center justify-center md:justify-start gap-2">
             <FaWhatsapp className="text-white" /> +51 912 849 782
           </p>
           <p className="flex items-center justify-center md:justify-start gap-2 mt-2">
             <MdEmail className="text-white" />
             <a
-              href="mailto:yuntasproducciones@gmail.com"
+              href="mailto:yuntaspublicidad@gmail.com"
               className="hover:text-blue-400"
               title="Correo de Contacto Yuntas Publicidad"
             >
-              yuntasproducciones@gmail.com
+              yuntaspublicidad@gmail.com
             </a>
           </p>
-
-          <div className="hidden md:flex items-center justify-center md:justify-start gap-3 mt-4">
-            <a
-              href="https://www.instagram.com/yuntasdecoracioncomercial/"
-              target="_blank"
-              title="Instagram de Yuntas Publicidad"
-              aria-label="Instagram"
-            >
-              <FaInstagram className="text-white text-2xl hover:text-pink-500" />
-            </a>
-            <a
-              href="https://www.facebook.com/YuntasProducciones"
-              title="Facebook de Yuntas Publicidad"
-              target="_blank"
-              aria-label="Facebook"
-            >
-              <FaFacebook className="text-white text-2xl hover:text-blue-500" />
-            </a>
-            <a
-              href="https://www.tiktok.com/@y.decoracioncomercial"
-              target="_blank"
-              aria-label="TikTok"
-              title="TikTok de Yuntas Publicidad"
-            >
-              <FaTiktok className="text-white text-2xl hover:text-purple-500" />
-            </a>
-            <a
-              href="https://www.youtube.com/@yuntaspublicidad5082/"
-              target="_blank"
-              aria-label="YouTube"
-              title="YouTube de Yuntas Publicidad"
-            >
-              <FaYoutube className="text-white text-2xl hover:text-red-500" />
-            </a>
-            
-          </div>
         </div>
       </div>
     </footer>
