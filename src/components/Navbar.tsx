@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { IoPersonCircle } from "react-icons/io5";
-import clsx from "clsx"; 
+import clsx from "clsx";
 
 import { useDarkMode } from "../hooks/darkmode/useDarkMode";
 import { RUTAS } from "../constants/navigation"; // MEJORA: Constantes externalizadas
@@ -39,14 +39,15 @@ const Navbar = ({ variant = "default", pathname }: NavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const { darkMode } = useDarkMode();
 
-  // MEJORA: Uso de clsx para una mejor legibilidad de las clases
   const navClasses = clsx(
-    "relative w-full flex justify-between items-center h-20 px-6 lg:px-10 py-4",
+    "fixed top-0 left-0 z-50 w-full flex justify-between items-center h-20 px-6 lg:px-10 py-4 transition-colors duration-300",
     {
       "bg-gradient-to-b from-[#0d1030] to-[#1a1a3a] shadow-md text-white": variant === "admin" && darkMode,
       "bg-gradient-to-b from-[#0d1030] to-[#293296] shadow-md text-white": variant === "admin" && !darkMode,
-      "bg-white text-[#0D1030]": variant === "default",
-      "shadow": isScrolled,
+      // Mobile: transparente por defecto, blanco si scroll > 50
+      "bg-transparent md:bg-white text-white md:text-[#0D1030]": variant === "default" && !isScrolled,
+      "bg-white": variant === "default" && isScrolled,
+      "shadow": isScrolled && variant === "default",
     }
   );
 
@@ -54,13 +55,13 @@ const Navbar = ({ variant = "default", pathname }: NavbarProps) => {
     fixed: variant !== "admin",
   });
 
-  useEffect(()=>{
-    const initialCheck = () => {
+  useEffect(() => {
+    const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-
-    initialCheck()
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <header className={headerClasses}>
@@ -73,8 +74,11 @@ const Navbar = ({ variant = "default", pathname }: NavbarProps) => {
           />
         </div>
 
-        <a href="/" title="Ir a la página de inicio">
-        
+        <a href="/login" className="ml-4 flex items-center justify-center md:hidden" title="Iniciar Sesión - Yuntas Publicidad">
+          <IoPersonCircle size={40} aria-label="Login" />
+        </a>
+
+        <a href="/" title="Ir a la página de inicio" className="hidden md:block">
           <img
             src={variant === "admin" ? "/images/yuntas_publicidad_logo.webp" : "/images/yuntas_publicidad_logo-v2.webp"}
             width={59}
@@ -84,7 +88,7 @@ const Navbar = ({ variant = "default", pathname }: NavbarProps) => {
             alt="Logo Yuntas"
             title="Logo Yuntas Publicidad"
             loading="eager"
-            className="h-14 w-auto" 
+            className="h-14 w-auto"
           />
         </a>
 

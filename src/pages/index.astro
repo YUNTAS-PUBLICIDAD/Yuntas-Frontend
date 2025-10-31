@@ -69,13 +69,15 @@ const comentarios = [
   keywords="letreros led para negocio, yuntas, yuntas publicidad, yuntas producciones, yuntas decoraciones, decoraciones, iluminación led negocio, que son vinilos, precio led, productos led lima"
   canonicalUrl="https://yuntaspublicidad.com/"
 >
-  <section class="relative h-screen">
+  <section class="relative h-[318px] md:h-screen">
     <!-- <HeroSlider client:load /> -->
     <Hero />
+    <a href="/contact" class="uppercase font-semibold text-white py-2.5 px-8 bg-[#23C1DE] rounded-lg absolute sm:hidden md:hidden xl:hidden left-1/2 -translate-x-1/2 z-10 -bottom-7 text-xl">Contáctanos</a>
   </section>
 
   <section class="bg-white py-16 border-t-8 border-blue-300">
-    <div class="container grid lg:grid-cols-2 gap-14">
+    {/* DESKTOP */}
+    <div class="w-full hidden sm:grid grid-cols-1 lg:grid-cols-2 gap-14">
       <!-- Columna izquierda -->
       <div class="pr-4 sm:pr-0">
         <div
@@ -116,6 +118,37 @@ const comentarios = [
             consumo energético
           </p>
         </div>
+      </div>
+    </div>
+    {/* MOBILE */}
+    <div class="w-full flex flex-col items-center justify-center sm:hidden gap-6">
+      <!-- card 1 -->
+      <div class="bg-[#6DD0DB33] rounded-xl px-4 py-3 shadow-md flex items-center justify-center gap-4 w-[80%]">
+        <span class="text-xl text-[#0D1030]"><FaCheck /></span>
+        <p class="text-[#00031E] font-semibold text-xs">Descubre cómo integrar esta innovadora tecnología en tus proyectos arquitectónicos</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <Picture
+          src={card2}
+          height={161}
+          alt="Evento con iluminación LED"
+          class="rounded-r-xl shadow-lg object-cover h-[161px]"
+        />
+
+        <Picture
+          src={card1}
+          height={161}
+          alt="Túnel de luces LED"
+          class="rounded-l-xl shadow-lg object-cover h-[161px]"
+        />
+      </div>
+
+      <!-- card 1 -->
+      <div class="bg-[#6DD0DB33] rounded-xl px-4 py-3 shadow-md flex items-center justify-center gap-4 w-[80%]">
+        <span class="text-xl text-[#0D1030]"><FaCheck /></span>
+        <p class="text-[#00031E] font-semibold text-xs">Aprende cómo esta tecnología transforma el ambiente y optimiza el
+            consumo energético</p>
       </div>
     </div>
   </section>

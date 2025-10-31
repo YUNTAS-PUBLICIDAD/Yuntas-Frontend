@@ -7,10 +7,10 @@ import yuleLove from "../../assets/images/emergente/yuleLove.webp";
 /* Textos promocionales */
 const textosPromocionales = [
   { titulo: "Convierte la pista en el alma de la fiesta" }
-  
+   
   
 ];
-
+ 
 /* Textos dinámicos para botones */
 const textosBoton = [
   "Cotiza aquí",
