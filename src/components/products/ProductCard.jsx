@@ -23,32 +23,35 @@ const ProductCard = ({ producto }) => {
     <a
       href={`/products/${link}`}
       onClick={handleClick}
-      className="relative flex flex-col items-center hover:scale-105 transition-all duration-200 cursor-pointer group mb-8"
+      className="block max-w-lg flex flex-col w-max-lg items-center 
+      hover:scale-105 transition-all duration-200 
+      cursor-pointer group mb-8 rounded-xl
+      shadow-xl "
       title={titulo}
     >
       {/* Contenedor principal con dimensiones fijas */}
-      <div className="relative w-[280px] bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl overflow-hidden border border-gray-700">
+      <div className="block max-w-lg bg-white rounded-xl shadow-lg overflow-hidden group mb-2 ">
         {/* Imagen del producto */}
-        <div className="h-[200px] w-[280px] overflow-hidden">
+        <div className="relative aspect-[4/3] w-full ">
           {imagenUrl ? (
             <img
-              className="w-full h-full object-cover object-center"
+              className="w-full h-full object-cover object-center "
               src={imagenUrl}
               alt={imagenAlt}
               title={getImageTitle(imagenUrl, titulo)}
               loading="lazy"
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
-              <p className="text-white text-xl font-bold">Sin imagen</p>
+            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+              <p className="text-gray-500 text-xl font-bold">Sin imagen</p>
             </div>
           )}
         </div>
       </div>
 
       {/* Título en la parte inferior */}
-      <div className="p-4 mt-2">
-        <p className="text-white text-center text-sm font-semibold leading-tight">
+      <div className="p-4   ">
+        <p className="text-left text-gray-900 text-sm font-semibold uppercase tracking-wider">
           {titulo}
         </p>
       </div>
