@@ -22,15 +22,12 @@
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
     "react-router-dom": "^6.30.0",
-    "sharp": "^0.34.4",
     "sweetalert2": "^11.17.2",
     "swiper": "^10.0.0",
     "tailwindcss": "^4.0.6",
-    "tailwindcss-text-stroke": "^0.0.5",
     "yuntas": "file:"
   },
   "devDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.52.5",
     "@types/config": "^3.3.5"
   }
 }

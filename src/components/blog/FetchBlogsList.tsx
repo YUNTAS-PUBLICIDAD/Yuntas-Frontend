@@ -18,7 +18,7 @@ export default function FetchBlogsList() {
   const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(6);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
   const [totalPages, setTotalPages] = useState(1);
   const [totalBlogs, setTotalBlogs] = useState(0);
   const [isSearchActive, setIsSearchActive] = useState(false);
@@ -28,7 +28,7 @@ export default function FetchBlogsList() {
       if (window.innerWidth < 1024 && window.innerWidth >= 640) {
         setItemsPerPage(6); // Para 2x3 layout en tablets
       } else {
-        setItemsPerPage(6); // Para desktop o móvil
+        setItemsPerPage(5); // Para desktop o móvil
       }
     };
 
@@ -177,8 +177,7 @@ export default function FetchBlogsList() {
   }
 
   return (
-  
-    <div className="min-h-screen py-16 ">
+    <div className="min-h-screen py-16">
       {/* Header */}
       <div className="w-full bg-[#2DCCFF]
        text-white px-6 md:px-12 py-8 flex
@@ -190,30 +189,32 @@ export default function FetchBlogsList() {
           font-bold uppercase tracking-wide
           flex-grow                           
           leading-tight text-center sm:text-left"> 
+
           DESCUBRE MÁS SOBRE NUESTROS PRODUCTOS
         </h2>
-
-        {allBlogs.length > 0 && (
-          <div className="w-full max-w-[614px] pr-50 "> {/* Limit the width of the search bar */}
-            <BlogSearchBar blogs={allBlogs} onFilteredBlogs={handleFilteredBlogs} />
-          </div>
-        )}
       </div>
+
+      {/* Buscador de blogs */}
+      {allBlogs.length > 0 && (
+        <BlogSearchBar blogs={allBlogs} onFilteredBlogs={handleFilteredBlogs} />
+      )}
       {/* Cards Container */}
-      <div className="w-full mx-auto px-6 relative ">
-        <div className="overflow-hidden ">
+      <div className="max-w-7xl mx-auto px-6 relative">
+        <div className="overflow-hidden">
           <div
-            className="w-full transition-transform duration-500 ease-in-out  "
+            className="transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(0%)` }}
           >
             {currentBlogs.length > 0 ? (
               <>
                 {/* Layout 2x3 para sm y md */}
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center lg:hidden ">
                   {currentBlogs.map((blog) => (
                     <div
                       key={blog.id}
                       className="w-full "
+
                     >
                       <div className="rounded-2xl p-1">
                         <div className="w-full max-w-[320px] mx-auto bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden">
@@ -224,16 +225,16 @@ export default function FetchBlogsList() {
                   ))}
                 </div>
 
-                {/* Layout 3 arriba + 3 abajo para ≥1024px */}
+                {/* Layout 3 arriba + 2 abajo para ≥1024px */}
                 <div className="hidden lg:block space-y-8">
-                  <div className="grid grid-cols-3 gap-8 justify-items-center ">
+                  <div className="grid grid-cols-3 gap-8 justify-items-center">
                     {currentBlogs.slice(0, 3).map((blog) => (
                       <div
                         key={blog.id}
-                        className="group transform transition-all w-[500px] h-[400px] duration-300  shadow-lg"
+                        className="group transform transition-all duration-300"
                       >
                         <div className="rounded-2xl p-1">
-                          <div className="w-full  mx-auto bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden">
+                          <div className="w-full max-w-[320px] mx-auto bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden">
                             <BlogCard blog={blog} />
                           </div>
                         </div>
@@ -242,15 +243,15 @@ export default function FetchBlogsList() {
                   </div>
 
                   {currentBlogs.length > 3 && !isSearchActive && (
-                    <div className="hidden lg:block space-y-8 py-4  ">
-                      <div className="grid grid-cols-3 gap-8  justify-items-center ">
-                        {currentBlogs.slice(3, 6).map((blog) => (
+                    <div className="flex justify-center mt-12">
+                      <div className="grid grid-cols-2 gap-24 max-w-2xl">
+                        {currentBlogs.slice(3, 5).map((blog) => (
                           <div
                             key={blog.id}
-                            className="group transform transition-all w-[500px] h-[400px] duration-300  shadow-lg "
+                            className="group transform transition-all duration-300"
                           >
                             <div className="rounded-2xl p-1">
-                              <div className="w-full mx-auto bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden ">
+                              <div className="bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden max-w-[250px]">
                                 <BlogCard blog={blog} />
                               </div>
                             </div>
@@ -326,63 +327,41 @@ export default function FetchBlogsList() {
         {/* Navegación - Solo mostrar si no estamos buscando */}
         {(totalPages > 1 || hasMorePages()) && !isSearchActive && (
           <>
-        <div className="flex justify-center items-center mt-10 space-x-2 sm:space-x-4"> 
-               <button
+            <div className="flex justify-center items-center mt-16 space-x-8">
+              <button
                 aria-label="Página anterior"
                 title="Página anterior"
                 onClick={goLeft}
                 disabled={!canGoLeft}
-                className={`px-2 py-1 transition-colors duration-200 cursor-pointer ${
+                className={`flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all duration-300 ${
                   canGoLeft
-                    ? "text-blue-900 hover:text-blue-700" 
-                    : "text-gray-400 cursor-not-allowed"
+                    ? "border-white/50 text-white hover:bg-white/10 hover:border-white cursor-pointer"
+                    : "border-white/20 text-white/30 cursor-not-allowed"
                 }`}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                </svg>
+                <span className="text-2xl font-bold">&lt;</span>
               </button>
 
-              <div className="flex items-center space-x-1 sm:space-x-2"> 
-                  {Array.from({ length: totalPages }, (_, i) => (
-                    <button
-                      key={i}
-                      aria-label={`Ir a la página ${i + 1}`}
-                      title={`Ir a la página ${i + 1}`}
-                      onClick={() => setCurrentIndex(i)}
-                      className={`
-                        w-8 h-8 sm:w-10 sm:h-10   {/* Size */}
-                        rounded-full             {/* Shape */}
-                        flex items-center justify-center 
-                        text-[20px] font-semibold 
-                        transition-colors duration-200 cursor-pointer
-                        ${
-                          i === currentIndex
-                            ? "bg-blue-900 text-white" 
-                            : "bg-transparent text-blue-900 hover:bg-blue-100"
-                        }
-                      `}
-                    >
-                      {i + 1}
-                    </button>
-                  ))}
-                </div>
-              <button
-                  aria-label="Página siguiente"
-                  title="Página siguiente"
-                  onClick={goRight}
-                  disabled={!canGoRight}
-                  className={`px-2 py-1 transition-colors duration-200 cursor-pointer  ${
-                    canGoRight
-                      ? "text-blue-900 hover:text-blue-700" 
-                      : "text-gray-400 cursor-not-allowed"
-                  }`}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                  </svg>
-                </button>
+              <div className="flex items-center justify-center sm:space-x-3 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white px-6 sm:px-8 py-2 sm:py-4 rounded-full text-sm sm:text-base">
+                <span className="uppercase tracking-wide font-semibold text-center">
+                  ver más
+                </span>
               </div>
+
+              <button
+                aria-label="Página siguiente"
+                title="Página siguiente"
+                onClick={goRight}
+                disabled={!canGoRight}
+                className={`flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all duration-300 ${
+                  canGoRight
+                    ? "border-white/50 text-white hover:bg-white/10 hover:border-white cursor-pointer"
+                    : "border-white/20 text-white/30 cursor-not-allowed"
+                }`}
+              >
+                <span className="text-2xl font-bold">&gt;</span>
+              </button>
+            </div>
 
             {/* Paginación - Solo mostrar si conocemos el número total de páginas */}
             {totalPages > 1 && (
@@ -393,7 +372,7 @@ export default function FetchBlogsList() {
                     aria-label={`Ir a la página ${i + 1}`}
                     title={`Ir a la página ${i + 1}`}
                     onClick={() => setCurrentIndex(i)}
-                    className={`w-3 h-3 rounded-full transition-all duration-300  ${
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
                       i === currentIndex
                         ? "bg-white"
                         : "bg-white/30 hover:bg-white/50"

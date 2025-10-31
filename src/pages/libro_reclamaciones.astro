@@ -4,16 +4,9 @@ import Layout from "../layouts/Layout.astro";
 import imagen1 from "../assets/images/blog/banner_blog2.jpg";
 import imagenNumero1 from "../assets/images/libro_reclamaciones/numero1.webp";
 import imagenNumero2 from "../assets/images/libro_reclamaciones/numero2.webp";
-import { productoService } from "../services/productoService";
-import type Producto from "../models/Product";
-
-const products = await productoService.listAllProducts();
 ---
 
-<Layout
-  title="Blog"
-  canonicalUrl="https://yuntaspublicidad.com/libro_reclamaciones/"
->
+<Layout title="Blog" canonicalUrl="https://yuntaspublicidad.com/libro_reclamaciones/">
   <section class="relative h-screen">
     <Picture
       src={imagen1}
@@ -32,187 +25,134 @@ const products = await productoService.listAllProducts();
     </div>
   </section>
   <div
-    class="w-full bg-[#F5F5F5] text-blue-950 text-3xl font-bold text-center h-[200px] content-center"
+    class="w-full bg-white text-blue-950 text-3xl font-extrabold text-center h-20 content-center"
   >
     <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
       LIBRO DE RECLAMACIONES
     </h2>
   </div>
   <!-- Inicio del formulario del Libro de Reclamaciones -->
-  <section class="bg-white p-4 sm:p-12">
+  <section class="bg-linear-to-b from-blue-900 to-indigo-950 p-4 sm:p-12">
     <!-- Datos Personales -->
-    <div class="p-5 md:p-28 bg-white space-y-6">
-      <div
-        class="mb-4 sm:mb-12 flex flex-row items-center justify-between gap-6"
-      >
-        <Picture
-          src={imagenNumero1}
-          alt="Número 1 Yuntas"
-          class="w-15 sm:w-[75px]"
-        />
-        <h2 class="inline w-full text-lg sm:text-3xl Montserrat font-medium">
-          Datos de la persona que presenta el reclamo
+    <div class="p-5 sm:p-20 bg-white">
+      <div class="mb-4 sm:mb-12 flex flex-row items-center justify-between">
+        <Picture src={imagenNumero1} alt="Número 1 Yuntas" class="w-15 sm:w-40 mr-16" />
+        <h2 class="inline border-b-5 w-full text-lg sm:text-3xl sm:text-6xl Montserrat font-medium">
+          Datos personales
         </h2>
       </div>
 
-      <div class="space-y-2">
-        <label for="nombre" class="block text-lg sm:text-2xl font-medium"
-          >Nombre</label
-        >
-        <input
-          id="nombre"
-          name="nombre"
-          type="text"
-          placeholder="ej: Juan Quispe"
-          class="border w-full text-lg sm:!text-xl p-3 rounded-xl border-gray-400 focus:outline-none"
-        />
-      </div>
+      <label for="nombre" class="block text-lg sm:text-3xl Montserrat font-medium"
+        >Nombres y Apellidos</label
+      >
+      <input
+        id="nombre"
+        name="nombre"
+        type="text"
+        placeholder="ej: Juan Quispe"
+        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
+      />
 
-      <div class="space-y-2">
-        <label for="apellido" class="block text-lg sm:text-2xl font-medium"
-          >Apellido</label
-        >
-        <input
-          id="apellido"
-          name="apellido"
-          type="text"
-          placeholder="ej: Quispe"
-          class="border w-full text-lg sm:!text-xl p-3 rounded-xl border-gray-400 focus:outline-none"
-        />
-      </div>
+      <label for="tipo_documento" class="block text-lg sm:text-3xl Montserrat font-medium"
+        >Tipo de documento</label
+      >
+      <select
+        id="tipo_documento"
+        name="tipo_documento"
+        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
+      >
+        <option>DNI</option>
+        <option>Carnet de Extranjería</option>
+      </select>
 
-      <div class="flex flex-col xl:flex-row gap-6">
-        <div class="space-y-2 w-full xl:w-4/12">
-          <label
-            for="tipo_documento"
-            class="block text-lg sm:text-2xl font-medium"
-            >Tipo de documento</label
-          >
-          <select
-            id="tipo_documento"
-            name="tipo_documento"
-            class="border w-full text-lg sm:!text-xl p-3 rounded-xl border-gray-400 focus:outline-none"
-          >
-            <option disabled hidden selected>Selecionar</option>
-            <option>DNI</option>
-            <option>Carnet de Extranjería</option>
-          </select>
-        </div>
-        <div class="space-y-2 w-full xl:w-8/12">
-          <label
-            for="numero_documento"
-            class="block text-lg sm:text-2xl font-medium"
-            >Número de documento</label
-          >
-          <input
-            id="numero_documento"
-            name="numero_documento"
-            type="number"
-            placeholder="ej: 123456789"
-            class="border w-full text-lg sm:!text-xl p-3 rounded-xl border-gray-400 focus:outline-none"
-          />
-        </div>
-      </div>
+      <label
+        for="numero_documento"
+        class="block text-lg sm:text-3xl Montserrat font-medium">Número de documento</label
+      >
+      <input
+        id="numero_documento"
+        name="numero_documento"
+        type="number"
+        placeholder="ej: 123456789"
+        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
+      />
 
-      <div class="space-y-2">
-        <label for="correo" class="block text-lg sm:text-2xl font-medium"
-          >Correo Electrónico</label
-        >
-        <input
-          id="correo"
-          name="correo"
-          type="email"
-          placeholder="ej: juanquispe@gmail.com"
-          class="border w-full text-lg sm:!text-xl p-3 rounded-xl border-gray-400 focus:outline-none"
-        />
-      </div>
+      <label for="correo" class="block text-lg sm:text-3xl Montserrat font-medium"
+        >Correo Electrónico</label
+      >
+      <input
+        id="correo"
+        name="correo"
+        type="email"
+        placeholder="ej: juanquispe@gmail.com"
+        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
+      />
 
-      <div class="space-y-2">
-        <label for="telefono" class="block text-lg sm:text-2xl font-medium"
-          >Teléfono</label
-        >
-        <input
-          id="telefono"
-          name="telefono"
-          type="tel"
-          placeholder="ej: 987 654 321"
-          class="border w-full text-lg sm:!text-xl p-3 rounded-xl border-gray-400 focus:outline-none"
-        />
-      </div>
+      <label for="telefono" class="block text-lg sm:text-3xl Montserrat font-medium"
+        >Teléfono</label
+      >
+      <input
+        id="telefono"
+        name="telefono"
+        type="tel"
+        placeholder="ej: 987 654 321"
+        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
+      />
     </div>
     <!-- Información del reclamo -->
-    <div class="p-5 md:p-28 bg-white space-y-6">
-      <div
-        class="mb-4 sm:mb-12 flex flex-row items-center justify-between gap-6"
-      >
-        <Picture
-          src={imagenNumero2}
-          alt="Número 2 Yuntas"
-          class="w-15 sm:w-[75px]"
-        />
-        <h2 class="inline w-full text-lg sm:text-3xl Montserrat font-medium">
+    <div class="p-5 sm:p-20 bg-white mt-12">
+      <div class="mb-4 sm:mb-12 flex flex-row items-center justify-between">
+        <Picture src={imagenNumero2} alt="Número 2 Yuntas" class="w-15 sm:w-40 mr-16" />
+        <h2 class="inline border-b-5 w-full text-lg sm:text-3xl sm:text-6xl Montserrat font-medium">
           Información del reclamo
         </h2>
       </div>
 
-      <div class="space-y-2">
-        <label for="fecha" class="block text-lg sm:text-2xl font-medium"
-          >Fecha de compra</label
-        >
-        <input
-          id="fecha"
-          name="fecha"
-          type="date"
-          class="border w-full text-lg sm:!text-xl p-3 rounded-xl border-gray-400 focus:outline-none"
-        />
-      </div>
+      <label for="fecha" class="block text-lg sm:text-3xl Montserrat font-medium"
+        >Fecha de compra</label
+      >
+      <input
+        id="fecha"
+        name="fecha"
+        type="date"
+        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
+      />
 
-      <div class="space-y-2">
-        <label for="producto" class="block text-lg sm:text-2xl font-medium"
-          >Producto</label
-        >
-        <select
-          id="producto"
-          name="producto"
-          class="border w-full text-lg sm:!text-xl p-3 rounded-xl border-gray-400 focus:outline-none"
-        >
-          {products.data.map((product: Producto)=>(
-            <option value={product.id}>{product.nombre}</option>
-          ))}
-        </select>
-      </div>
+      <label for="producto" class="block text-lg sm:text-3xl Montserrat font-medium"
+        >Producto</label
+      >
+      <select
+        id="producto"
+        name="producto"
+        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
+      >
+        <option>Letreros Neón LED</option>
+        <option>Sillas y Mesas LED</option>
+        <option>Pisos LED</option>
+      </select>
 
-      <div class="space-y-2">
-        <label for="reclamacion" class="block text-lg sm:text-2xl font-medium"
-          >Detalle de la reclamación</label
-        >
-        <textarea
-          id="reclamacion"
-          name="reclamacion"
-          placeholder="Detalle su reclamo aquí..."
-          class="border w-full text-lg sm:!text-xl p-3 rounded-xl h-[150px] border-gray-400 focus:outline-none"
-        ></textarea>
-      </div>
+      <label for="reclamacion" class="block text-lg sm:text-3xl Montserrat font-medium"
+        >Detalle de la reclamación</label
+      >
+      <textarea
+        id="reclamacion"
+        name="reclamacion"
+        placeholder="Detalle su reclamo aquí..."
+        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
+        rows="1"></textarea>
 
-      <div class="space-y-2">
-        <label
-          for="monto"
-          class="block text-lg sm:text-2xl Montserrat font-medium"
-          >Monto reclamado</label
-        >
-        <input
-          id="monto"
-          name="monto"
-          type="number"
-          placeholder="S/999"
-          class="border text-lg sm:!text-xl p-3 rounded-xl border-gray-400 focus:outline-none"
-        />
-      </div>
+      <label for="monto" class="block text-lg sm:text-3xl Montserrat font-medium"
+        >Monto reclamado S/</label
+      >
+      <input
+        id="monto"
+        name="monto"
+        type="number"
+        placeholder="S/999"
+        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
+      />
       <div class="flex justify-center">
-        <button
-          class="bg-blue-900 text-white hover:bg-blue-950 hover:cursor-pointer w-xl sm:w-[400px] py-3 sm:py-4 text-lg sm:text-2xl rounded-xl"
-          >ENVIAR</button
-        >
+        <button class="bg-[#D9D9D9] active:bg-blue-900 active:text-white hover:bg-blue-900 hover:text-white w-xl sm:w-4xl py-3 sm:py-8 Montserrat text-lg sm:text-3xl mt-5 sm:mt-16">ENVIAR</button>
       </div>
     </div>
   </section>

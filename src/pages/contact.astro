@@ -8,14 +8,26 @@ import fondo from "../assets/images/contact/principal.webp";
   description="Contacta a Yuntas Publicidad para una asesoría personalizada en diseño y tecnología LED. Recibe un presupuesto a medida y soluciones para transformar tus espacios."
   canonicalUrl="https://yuntaspublicidad.com/contact/"
 >
-  <!-- Banner Principal -->
-  <section class="relative w-full h-dvh flex flex-col justify-center items-center">
+  <section
+    class="relative w-full h-dvh flex flex-col justify-center items-center"
+  >
+    <!-- Imagen de fondo -->
     <img
       src={fondo.src}
       alt="Fondo de contacto"
+      title="Oficina moderna"
       class="absolute z-0 w-full h-full object-cover object-bottom"
     />
-    <h1 class="relative z-10 Montserrat text-7xl font-black text-white mt-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+
+    <!-- Texto resaltado -->
+    <h1
+      class="relative z-10 bg-[#1ECCE6] rounded-4xl px-2 sm:px-8 py-2 Montserrat text-white font-extrabold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center text-balance"
+    >
+      CONOCE NUESTROS MEDIOS DE
+    </h1>
+    <h1
+      class="block relative z-10 Montserrat text-4xl sm:text-7xl font-black text-white sombra-title"
+    >
       CONTACTO
     </h1>
   </section>
@@ -43,135 +55,158 @@ import fondo from "../assets/images/contact/principal.webp";
               <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
             </svg>
           </div>
-          <p class="text-xl font-semibold text-gray-800">-51 912 849 782</p>
-        </div>
+        </a>
+        <p>+51 912 849 782</p>
+      </div>
 
-        <!-- Dirección -->
-        <div class="text-center bg-[#E2F6F6] rounded-2xl p-8 flex flex-col items-center justify-center min-h-[200px]">
-          <div class="bg-[#203565] w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+      <!-- Línea separadora -->
+      <div class="w-20 h-0.5 md:w-0.5 md:h-20 bg-sky-300"></div>
+
+      <!-- Ubicación -->
+      <div class="flex flex-col items-center mt-8 md:mt-0 flex-1">
+        <a href="#mapa" title="Mapa - Yuntas Publicidad">
+          <div
+            class="hover:bg-white group bg-[#23C1DE] p-2 rounded-2xl w-16 h-16 mb-2 transition-colors"
+          >
+            <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+
+            <svg
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-full h-full bg-white fill-white group-hover:bg-[#23C1DE] group-hover:fill-[#23C1DE] rounded-3xl"
+            >
+              <path
+                class="stroke-[#23C1DE] group-hover:stroke-white"
+                d="M12 21C15.5 17.4 19 14.1764 19 10.2C19 6.22355 15.866 3 12 3C8.13401 3 5 6.22355 5 10.2C5 14.1764 8.5 17.4 12 21Z"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"></path>
+              <path
+                class="stroke-[#23C1DE] group-hover:stroke-white"
+                d="M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"></path>
             </svg>
           </div>
-          <div class="text-gray-800">
-            <p class="text-lg font-semibold">Urb. Alameda la nivel</p>
-            <p class="text-lg">M: F Lt 30</p>
-          </div>
-        </div>
+        </a>
+        <p class="text-center">Urb. Alameda La Rivera Mz F Lt 30</p>
+      </div>
 
-        <!-- Email -->
-        <div class="text-center bg-[#E2F6F6] rounded-2xl p-8 flex flex-col items-center justify-center min-h-[200px]">
-          <div class="bg-[#203565] w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+      <!-- Línea separadora -->
+      <div class="w-20 h-0.5 md:w-0.5 md:h-20 bg-sky-300"></div>
+
+      <!-- Correo Electrónico -->
+      <div class="flex flex-col items-center mt-8 md:mt-0 flex-1">
+        <a href="mailto:yuntaspublicidad@gmail.com" title="Correo - Yuntas Publicidad">
+          <div
+            class="group bg-[#23C1DE] hover:bg-white w-16 h-16 p-2 rounded-2xl mb-2 transition-colors"
+          >
+            <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+
+            <svg
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-full h-full p-2 bg-white group-hover:bg-[#23C1DE] rounded-3xl"
+            >
+              <path
+                class="fill-[#23C1DE] group-hover:fill-white"
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M20 4C21.6569 4 23 5.34315 23 7V17C23 18.6569 21.6569 20 20 20H4C2.34315 20 1 18.6569 1 17V7C1 5.34315 2.34315 4 4 4H20ZM19.2529 6H4.74718L11.3804 11.2367C11.7437 11.5236 12.2563 11.5236 12.6197 11.2367L19.2529 6ZM3 7.1688V17C3 17.5523 3.44772 18 4 18H20C20.5523 18 21 17.5523 21 17V7.16882L13.8589 12.8065C12.769 13.667 11.231 13.667 10.1411 12.8065L3 7.1688Z"
+              ></path>
             </svg>
           </div>
-          <p class="text-xl font-semibold text-gray-800">yuntasp@126.com</p>
-        </div>
+        </a>
+        <p><span>yuntaspublicidad</span><span>@gmail.com</span></p>
       </div>
     </div>
-  </section>
 
-  
-  <!-- Separador -->
-  <div class="border-t border-gray-300 mx-auto max-w-7xl"></div>
+    <!-- Mensaje Final -->
+    <div class="flex flex-col items-center my-8">
+      <p
+        class="bg-gradient-to-r from-blue-700 to-cyan-500 text-center py-4 px-6 sm:px-20 rounded-3xl text-2xl sm:text-3xl font-extrabold mb-12 cursor-default"
+      >
+        ¡HOLA!
+        <span class="text-lg sm:text-xl font-normal block mt-2">
+          Déjanos tus datos y agenda una visita a nuestro local.
+        </span>
+      </p>
 
-  <!-- Sección del Formulario -->
-  <section class="bg-white py-16">
-    <div class="container mx-auto px-4">
-      <!-- Contenedor del formulario con fondo azul claro -->
-      <div class="max-w-7xl mx-auto bg-[#E2F6F6] rounded-2xl p-12">
-        <h2 class="text-3xl font-bold text-center text-[#203565] mb-12">SOLICITA INFORMACIÓN</h2>
-        
-        <form class="space-y-6 px-4 md:px-16" style="padding-left: 220px; padding-right: 220px;">
-          <!-- Primera fila: Nombre y Apellido -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <input
-                type="text"
-                placeholder="Nombre"
-                class="w-full px-4 py-3 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500 text-gray-800 placeholder-gray-500 bg-white"
-              />
-            </div>
-            <div>
-              <input
-                type="text"
-                placeholder="Apellido"
-                class="w-full px-4 py-3 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500 text-gray-800 placeholder-gray-500 bg-white"
-              />
-            </div>
-          </div>
+      <!-- Formulario de Contacto -->
+      <div
+        class="max-w-4xl md:max-w-6xl w-full bg-[#FDEEE8] rounded-3xl p-4 sm:p-6 shadow-2xl mt-0 mb-12 mx-auto flex flex-col items-center justify-center"
+      >
+        <h2
+          class="text-xl sm:text-2xl font-semibold text-center mb-6 text-black"
+        >
+          Solicita información
+        </h2>
 
-          <!-- Segunda fila: Teléfono y Distrito -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <input
-                type="tel"
-                placeholder="Teléfono"
-                class="w-full px-4 py-3 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500 text-gray-800 placeholder-gray-500 bg-white"
-              />
-            </div>
-            <div>
-              <input
-                type="text"
-                placeholder="Distrito"
-                class="w-full px-4 py-3 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500 text-gray-800 placeholder-gray-500 bg-white"
-              />
-            </div>
-          </div>
-
-          <!-- Detalle de solicitud -->
-          <div>
+        <form>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input
               type="text"
-              placeholder="Detalle de solicitud"
-              class="w-full px-4 py-3 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500 text-gray-800 placeholder-gray-500 bg-white"
+              placeholder="Nombre*"
+              class="border text-black border-gray-400 p-3 w-full bg-transparent placeholder-gray-500 focus:border-blue-600 focus:outline-none rounded-md"
+              required
+            />
+            <input
+              type="text"
+              placeholder="Apellidos*"
+              class="border text-black border-gray-400 p-3 w-full bg-transparent placeholder-gray-500 focus:border-blue-600 focus:outline-none rounded-md"
+              required
+            />
+            <input
+              type="tel"
+              placeholder="Teléfono*"
+              class="border text-black border-gray-400 p-3 w-full bg-transparent placeholder-gray-500 focus:border-blue-600 focus:outline-none rounded-md"
+              required
+            />
+            <input
+              type="text"
+              placeholder="Distrito*"
+              class="border text-black border-gray-400 p-3 w-full bg-transparent placeholder-gray-500 focus:border-blue-600 focus:outline-none rounded-md"
+              required
             />
           </div>
 
-          <!-- Mensaje -->
-          <div>
-            <textarea
-              placeholder="Mensaje"
-              rows="6"
-              class="w-full px-4 py-3 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500 text-gray-800 placeholder-gray-500 bg-white"
-            ></textarea>
-          </div>
+          <input
+            type="text"
+            placeholder="Detalle de reclamación"
+            class="border text-black border-gray-400 p-3 w-full bg-transparent placeholder-gray-500 focus:border-blue-600 focus:outline-none mt-4 rounded-md"
+          />
+          <textarea
+            placeholder="Mensaje"
+            rows="4"
+            class="text-black p-3 w-full bg-gray-300 border border-gray-400 placeholder-gray-500 focus:border-blue-600 focus:outline-none mt-4 rounded-md"
+          ></textarea>
 
-          <!-- Botón Enviar -->
-          <div class="text-center">
+          <div class="mt-6 flex justify-center">
             <button
               type="submit"
-              class="bg-[#1D2C5E] hover:bg-[#141B40] text-white font-semibold py-3 px-16 rounded-full transition-colors duration-300 uppercase text-lg"
+              class="bg-[#1D2C5E] hover:bg-[#141B40] text-lg text-white font-semibold py-2 px-10 rounded-full transition-all cursor-pointer"
             >
-              ENVIAR
+              Enviar
             </button>
           </div>
         </form>
       </div>
     </div>
-  </section>
 
-  <!-- Separador -->
-  <div class="border-t border-gray-300 mx-auto max-w-7xl"></div>
-
-  <!-- Sección del Mapa -->
-  <section class="bg-white py-16">
-    <div class="container mx-auto px-4">
-      <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">CADA VEZ MÁS CERCA DE TI</h2>
-      <div class="max-w-7xl mx-auto">
+    <!-- Mapa -->
+    <div id="mapa">
+      <h2 class="text-center text-4xl font-bold">CADA VEZ MÁS CERCA DE TI</h2>
+      <div class="mt-6 flex justify-center">
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3902.255255812076!2d-76.94464365943126!3d-12.025940110892334!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c97c8934a213%3A0x7f6ccb249e86b5e6!2sYuntas%20Producciones!5e0!3m2!1ses-419!2spe!4v1739596969950!5m2!1ses-419!2spe"
-          width="100%"
+          width="600"
           height="450"
-          class="rounded-3xl"
+          class="rounded-3xl w-full md:max-w-6xl max-w-4xl"
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
-          style="border:0;"
-        ></iframe>
+          style="border:0;"></iframe>
       </div>
     </div>
   </section>
-
 </Layout>
