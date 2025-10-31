@@ -179,8 +179,17 @@ export default function FetchBlogsList() {
   return (
     <div className="min-h-screen py-16">
       {/* Header */}
-      <div className="text-center mb-12">
-        <h2 className="text-white text-3xl md:text-4xl font-bold uppercase tracking-wide">
+      <div className="w-full bg-[#2DCCFF]
+       text-white px-6 md:px-12 py-8 flex
+       flex-col sm:flex-row 
+       items-center gap-8 mb-12 shadow-md"> 
+  
+        <h2 className="text-white
+          text-3xl sm:text-4xl lg:text-5xl     
+          font-bold uppercase tracking-wide
+          flex-grow                           
+          leading-tight text-center sm:text-left"> 
+
           DESCUBRE MÁS SOBRE NUESTROS PRODUCTOS
         </h2>
       </div>
@@ -199,11 +208,13 @@ export default function FetchBlogsList() {
             {currentBlogs.length > 0 ? (
               <>
                 {/* Layout 2x3 para sm y md */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 place-items-center lg:hidden">
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center lg:hidden ">
                   {currentBlogs.map((blog) => (
                     <div
                       key={blog.id}
-                      className="group transform transition-all duration-300"
+                      className="w-full "
+
                     >
                       <div className="rounded-2xl p-1">
                         <div className="w-full max-w-[320px] mx-auto bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden">
