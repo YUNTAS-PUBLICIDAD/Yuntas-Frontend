@@ -10,7 +10,7 @@ const textosPromocionales = [
   
   
 ];
-
+ 
 /* Textos dinámicos para botones */
 const textosBoton = [
   "Cotiza aquí",
