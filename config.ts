@@ -7,8 +7,8 @@
 export const config = {
   // La URL de la API se obtiene de la variable de entorno PUBLIC_API_URL
   // Si no está definida, usa el fallback de producción
-  apiUrl: "http://localhost:8000",
-  //apiUrl: "https://apiyuntas.yuntaspublicidad.com", // API desplegada (comentada para desarrollo)
+  //apiUrl: "http://localhost:8000",
+  apiUrl: "https://apiyuntas.yuntaspublicidad.com", // API desplegada (comentada para desarrollo)
   endpoints: {
     auth: {
       // Endpoints de autenticación
