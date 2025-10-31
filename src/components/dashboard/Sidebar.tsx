@@ -50,7 +50,6 @@ const Sidebar = () => {
               <li key={index}>
                 <a
                   href={item.path}
-                  title={` Admin - ${item.name} - Yuntas Publicidad`}
                   className={`flex items-center gap-2 text-sm transition-colors ${
                     darkMode
                       ? "text-gray-300 hover:text-white"

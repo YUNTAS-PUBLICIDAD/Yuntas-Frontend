@@ -1,6 +1,12 @@
 User-agent: *
 
+Allow: /products/
+Allow: /blogs/
+Allow: /about
+Allow: /contact/
+Allow: /
 
-Disallow:
+Disallow: /admin/
+Disallow: /login
 
 Sitemap: https://yuntaspublicidad.com/sitemap-index.xml

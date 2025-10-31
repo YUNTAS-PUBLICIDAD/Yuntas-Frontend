@@ -1,7 +1,7 @@
 ---
 import "../styles/global.css";
 // ClientRouter removido temporalmente - causa conflictos con SSR en rutas dinámicas
-import { ClientRouter } from "astro:transitions";
+// import { ClientRouter } from "astro:transitions";
 import Navbar from "../components/Navbar.astro";
 import ScrollModal from "../components/ScrollModal";
 import Footer from "../components/Footer.astro";
@@ -26,12 +26,8 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/public/yuntas_publicidad_logo.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <!-- Preload de fuentes locales WOFF2 -->
-    <link rel="preload" href="/fonts/montserrat-regular.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="/fonts/montserrat-600.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="/fonts/montserrat-800.woff2" as="font" type="font/woff2" crossorigin> 
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content="Yuntas" />
@@ -40,7 +36,6 @@ const {
     {keywords && <meta name="keywords" content={keywords} />}
     {description && <meta name="description" content={description} />}
     <meta name="robots" content="index, follow" />
-    
     <!--  fuente de Google Fonts Optimizada -->
     <!-- Proximamente -->
     <!-- <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -71,14 +66,13 @@ const {
     </noscript> -->
     <meta name="google-site-verification" content="XmepIr9EXYbyFVG03v5DDp8vneZIOH0Z3OLHOBGX6e0" />
     <!-- ClientRouter removido - causa conflictos con SSR -->
-    <ClientRouter/>
   </head>
-  <body class="font-montserrat">
+  <body>
     <Navbar variant="default" />
 
     <slot />
     <Footer />
-    {(Astro.url.pathname === "/products" || Astro.url.pathname === "/products/" || !Astro.url.pathname.startsWith("/products/")) && <ScrollModal client:idle />}
+    {Astro.url.pathname === "/" && <ScrollModal client:idle />}
     <WhatsApp />
   </body>
 </html>
