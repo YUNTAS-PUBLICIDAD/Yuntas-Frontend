@@ -36,7 +36,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
       href={`/blogs/${blog.link}`}
       onClick={handleClick}
       className="group relative overflow-hidden rounded-2xl bg-white 
-      shadow-md transition-all duration-300 hover:scale-105 
+       transition-all duration-300 hover:scale-105 
       w-full flex flex-col  "
     >
       <div className="relative w-full h-[315px] overflow-hidden flex-shrink-0 ">

@@ -135,27 +135,56 @@ const ProductSearchBar: React.FC<ProductSearchBarProps> = ({
     setSearchTerm("");
     setShowSuggestions(false);
   };
-
+  const handleSearchClick = () => {
+    setShowSuggestions(false);
+  };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); 
+      handleSearchClick();
+    }
+  };
   return (
-    <div className="w-full mb-8" ref={searchRef}>
+    <div className=" w-full relative mb-3" ref={searchRef}>
       {/* Barra de búsqueda */}
-      <div className="relative w-full mb-6">
-        <div className="relative">
+      <div className="relative w-full mb-3">
+        <div className="relative  w-full">
           <input
             type="text"
             value={searchTerm}
             onChange={handleInputChange}
             onFocus={handleInputFocus}
+            onKeyDown={handleKeyDown} 
             placeholder="Buscar productos..."
-            className="w-full bg-gradient-to-r from-gray-800 to-gray-900 border-2 border-gray-700 placeholder-gray-400 px-6 py-4 pr-16 rounded-2xl text-white text-xl focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-300 shadow-xl"
+            className="w-full bg-white border-2 border-[#23c1de] 
+            placeholder-gray-400
+             px-12 pr-32 py-4 pr-16 rounded-2xl text-gray-400 text-xl 
+             focus:outline-none focus:border-[#23c1de] focus:ring-2 
+             focus:ring-[#23c1de] transition-all duration-300 
+             shadow-xl "
           />
 
           {/* Botón limpiar / Icono de búsqueda */}
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-            {searchTerm && (
+          <div className="absolute  top-1/2 transform -translate-y-1/2 flex items-center space-x-2 px-5  ">
+            {!searchTerm && (
+              <svg
+                    className="w-6 h-6 text-gray-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                )}
+              {searchTerm && (
               <button
                 onClick={clearSearch}
-                className="w-6 h-6 text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110"
+                className="w-6 h-6 text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110 "
                 title="Limpiar búsqueda"
               >
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -167,20 +196,21 @@ const ProductSearchBar: React.FC<ProductSearchBarProps> = ({
                   />
                 </svg>
               </button>
+              
             )}
-            <svg
-              className="w-6 h-6 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
+            <div className="absolute left-194 top-1/2 transform -translate-y-1/2">
+              <button
+                 onClick={handleSearchClick}
+                 
+                className="bg-[#23c1de] text-white font-semibold 
+                          py-2 px-6 rounded-full text-base
+                          hover:bg-[#1faac7] transition-colors duration-200
+                          focus:outline-none focus:ring-2 focus:ring-offset-2
+                          focus:ring-[#23c1de]"
+              >
+                Buscar
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -232,7 +262,7 @@ const ProductSearchBar: React.FC<ProductSearchBarProps> = ({
               ))}
             </div>
           </div>
-        </div>
+        </div> 
       )}
     </div>
   );
