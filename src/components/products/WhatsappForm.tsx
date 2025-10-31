@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { FaImage, FaTimes } from "react-icons/fa";
 import { config, getApiUrl } from "../../../config";
 import type { Product } from "../../models/Product";
+import Swal from "sweetalert2";
 
 interface SeccionWhatsapp {
   imagenPrincipal: File | null;
   vistaPreviaPrincipal: string;
-  titulo: string;
   parrafo1: string;
 }
 
@@ -29,12 +29,11 @@ export default function FormularioWhatsapp({
       (producto) => producto.id === productoSeleccionado
     );
   // ✅ Plantilla base vacía para reutilizar
-  const SECCIONES_VACIAS: SeccionWhatsapp[] = Array.from({ length: 1 }, () => ({
-    imagenPrincipal: null,
-    vistaPreviaPrincipal: "",
-    titulo: "",
-    parrafo1: "",
-  }));
+    const SECCIONES_VACIAS: SeccionWhatsapp[] = Array.from({ length: 1 }, () => ({
+        imagenPrincipal: null,
+        vistaPreviaPrincipal: "",
+        parrafo1: "",
+    }));
 
   // Inicializa con secciones vacías
   useEffect(() => {
@@ -52,60 +51,53 @@ export default function FormularioWhatsapp({
       try {
         setCargando(true);
         const token = localStorage.getItem("token");
-        const respuesta = await fetch(
-          getApiUrl(
-            config.endpoints.WhatsappProducto.plantillaPorProducto(
-              productoSeleccionado
-            )
-          ),
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              Accept: "application/json",
-            },
-          }
-        );
-
-        // 🟦 No hay plantilla asociada
-        if (respuesta.status === 404) {
-          alert("ℹ️ El producto seleccionado no tiene una plantilla asociada.");
-          setSeccionesWhatsapp(SECCIONES_VACIAS);
-          return;
-        }
-
-        if (!respuesta.ok) throw new Error("Error al obtener plantilla");
-
-        const datos = await respuesta.json();
-
-        // 🟨 No hay secciones configuradas
-        if (!datos?.secciones || datos.secciones.length === 0) {
-          alert(
-            "ℹ️ Este producto no tiene secciones configuradas en su plantilla."
+          const respuesta = await fetch(
+              getApiUrl(config.endpoints.whatsappProducto.get(productoSeleccionado)),
+              {
+                  headers: {
+                      Authorization: `Bearer ${token}`,
+                      Accept: "application/json",
+                  },
+              }
           );
-          setSeccionesWhatsapp(SECCIONES_VACIAS);
-          return;
-        }
 
-        // ✅ Cargar plantilla existente
-        const secciones = datos.secciones.map((sec: any) => ({
-          imagenPrincipal: null,
-          vistaPreviaPrincipal: sec.imagen_principal_url || "",
-          imagenSecundaria1: null,
-          vistaPreviaSecundaria1: sec.imagen_secundaria1_url || "",
-          imagenSecundaria2: null,
-          vistaPreviaSecundaria2: sec.imagen_secundaria2_url || "",
-          titulo: sec.titulo || "",
-          subtitulo: sec.subtitulo || "",
-          parrafo1: sec.parrafo1 || "",
-        }));
+          // 🟦 No hay registro (producto sin datos de WhatsApp todavía)
+          if (respuesta.status === 404) {
+              setSeccionesWhatsapp(SECCIONES_VACIAS);
+              Swal.fire({
+                  title: "Sin plantilla",
+                  text: "El producto no tiene plantillas asignadas.",
+                  icon: "info",
+                  confirmButtonText: "OK",
+              });
+              return;
+          }
 
-        // Si vienen menos de 3 secciones, completamos el resto vacías
-        const seccionesCompletas = [
-          ...secciones,
-          ...Array(Math.max(0, 3 - secciones.length)).fill(SECCIONES_VACIAS[0]),
-        ];
+          if (!respuesta.ok) throw new Error("Error al obtener plantilla");
 
-        setSeccionesWhatsapp(seccionesCompletas);
+          const json = await respuesta.json();
+          const d = json?.data ?? json;
+
+          console.log('DEBUG plantilla whatsapp d =>', d);
+
+          const texto =
+              d?.parrafo1 ??
+              d?.whatsapp_caption ??
+              d?.parrafo ??
+              d?.titulo ??        // 👈 por si el back solo manda titulo
+              "";
+
+          const imagenUrl =
+              d?.whatsapp_image_url ??
+              d?.imagen_url ??
+              (d?.whatsapp_image ? getApiUrl(d.whatsapp_image) : "") ??
+              "";
+
+          setSeccionesWhatsapp([{
+              imagenPrincipal: null,
+              vistaPreviaPrincipal: imagenUrl,
+              parrafo1: texto,
+          }]);
       } catch (error) {
         console.error("Error cargando plantilla del producto:", error);
         alert("❌ Ocurrió un error al cargar la plantilla del producto.");
@@ -177,15 +169,14 @@ export default function FormularioWhatsapp({
     setSeccionesWhatsapp(nuevasSecciones);
   };
 
-  const manejarCambioTexto = (
-    indice: number,
-    campo: "titulo" | "parrafo1",
-    valor: string
-  ) => {
-    const nuevasSecciones = [...seccionesWhatsapp];
-    nuevasSecciones[indice][campo] = valor;
-    setSeccionesWhatsapp(nuevasSecciones);
-  };
+    const manejarCambioTexto = (
+        indice: number,
+        valor: string
+    ) => {
+        const nuevasSecciones = [...seccionesWhatsapp];
+        nuevasSecciones[indice].parrafo1 = valor;
+        setSeccionesWhatsapp(nuevasSecciones);
+    };
 
   const eliminarImagen = (
     indice: number,
@@ -201,18 +192,19 @@ export default function FormularioWhatsapp({
       return;
     }
 
-    const formData = new FormData();
-    formData.append("producto_id", String(productoSeleccionado));
+      const formData = new FormData();
+      formData.append("producto_id", String(productoSeleccionado));
 
-    seccionesWhatsapp.forEach((item, i) => {
-      if (item.imagenPrincipal)
-        formData.append(
-          `secciones[${i}][imagen_principal]`,
-          item.imagenPrincipal
-        );
-      formData.append(`secciones[${i}][titulo]`, item.titulo);
-      formData.append(`secciones[${i}][parrafo1]`, item.parrafo1);
-    });
+      const s0 = seccionesWhatsapp[0]; // 1 sección (basic)
+      formData.append("parrafo", s0.parrafo1 ?? ""); // se guarda en productos.whatsapp_caption
+
+      if (s0.imagenPrincipal) {
+          // nueva imagen adjunta
+          formData.append("imagen_principal", s0.imagenPrincipal);
+      } else if (!s0.vistaPreviaPrincipal) {
+          // si no hay archivo nuevo y tampoco vista previa => usuario eliminó la imagen
+          formData.append("eliminar_imagen", "1");
+      }
 
     if (plantillaId != null) formData.append("_method", "PUT");
 
@@ -338,32 +330,18 @@ export default function FormularioWhatsapp({
             />
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Título
-              </label>
-              <input
-                type="text"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                value={seccion.titulo}
-                onChange={(e) =>
-                  manejarCambioTexto(index, "titulo", e.target.value)
-                }
-                placeholder="Escribe el título aquí"
-              />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Párrafo 1
+                Párrafo
               </label>
-              <textarea
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                value={seccion.parrafo1}
-                onChange={(e) =>
-                  manejarCambioTexto(index, "parrafo1", e.target.value)
-                }
-                placeholder="Escribe el párrafo aquí"
-                rows={3}
-              />
+                <textarea
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    value={seccion.parrafo1}
+                    onChange={(e) => manejarCambioTexto(index, e.target.value)}
+                    placeholder="Escribe el párrafo aquí"
+                    rows={6}
+                />
             </div>
           </div>
         </div>

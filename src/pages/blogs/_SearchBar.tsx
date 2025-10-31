@@ -143,41 +143,63 @@ const BlogSearchBar: React.FC<BlogSearchBarProps> = ({
   };
 
   return (
-    <div className="w-full mb-8" ref={searchRef}>
+    <div className="w-full mb-8 " ref={searchRef}>
       {/* Barra de búsqueda */}
-      <div className="bg-gray-300 rounded-2xl p-8 w-full flex items-center relative">
+      <div className=" w-full flex items-center relative">
         <div className="relative w-full">
           <input
             type="text"
             value={searchTerm}
             onChange={handleInputChange}
             onFocus={handleInputFocus}
-            placeholder="Buscar blogs..."
-            className="w-full bg-white placeholder-black px-6 py-3 rounded-full text-black text-xl focus:outline-none"
+            placeholder="Buscar artículos..."
+            className="
+            w-full bg-gray-100                 
+            placeholder-gray-500            
+            pl-6 pr-16 py-3          
+            rounded-full                   
+            text-black text-lg              
+            focus:outline-none focus:ring-2 
+            focus:ring-blue-300 
+            "
           />
 
           {/* Botón limpiar / Icono de búsqueda */}
-          <div className="absolute right-6 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+          <div className="absolute  right-0 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
             {searchTerm && (
               <button
-                onClick={clearSearch}
-                className="w-6 h-6 text-gray-500 hover:text-gray-700 transition-colors duration-200"
-                title="Limpiar búsqueda"
-              ></button>
+                type="button" 
+                // onClick={handleSearchSubmit} 
+                className="
+                  absolute right-1 top-1/2 
+                  transform -translate-y-1/2 
+                  w-12 h-12  
+                  bg-[#003d56]  
+                  hover:bg-[#041119]  
+                  text-white  
+                  rounded-full  
+                  flex items-center justify-center 
+                  focus:outline-none focus:ring-2 
+                  focus:ring-blue-400 focus:ring-offset-1
+                "
+                aria-label="Buscar"
+              >
+                {/* Search Icon */}
+                <svg
+                  className="w-6 h-6" 
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5} 
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </button>
             )}
-            <svg
-              className="w-6 h-6 text-gray-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
           </div>
         </div>
       </div>

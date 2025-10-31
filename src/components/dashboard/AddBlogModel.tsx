@@ -14,6 +14,7 @@ interface BlogPOST {
   imagenes_secundarias: (File | null)[];
   alt_imagenes_secundarias: string[];
   parrafos: string[];
+  beneficios: string[];
   url_video: string;
 }
 
@@ -27,6 +28,7 @@ interface Blog {
   imagen_principal: string;
   imagenes?: { ruta_imagen: string; text_alt: string }[];
   parrafos?: { parrafo: string }[];
+  beneficios?: string[];
   alt_imagen_card?: string;
   text_alt_principal?: string;
   url_video: string;
@@ -79,17 +81,40 @@ const AddBlogModal = ({
     alt_imagen_card: "",
     imagenes_secundarias: [null, null, null],
     alt_imagenes_secundarias: ["", "", ""],
-    parrafos: ["", "", ""],
+    parrafos: ["", ""],
+    beneficios: ["", "", ""],
     url_video: "",
   };
 
   const [formData, setFormData] = useState<BlogPOST>(defaultFormData);
 
   useEffect(() => {
-    if (!isOpen) return;
+  if (!isOpen) return;
 
     if (blogToEdit) {
       const productoIdString = blogToEdit.producto_id?.toString() || "";
+
+      // --- Mapeo robusto de párrafos ---
+      let parrafos: string[] = [];
+      if (Array.isArray(blogToEdit.parrafos)) {
+        parrafos = blogToEdit.parrafos.map((p: any) => p.parrafo || "");
+      }
+
+      // --- Mapeo robusto de beneficios ---
+      let beneficios: string[] = [];
+      if (Array.isArray(blogToEdit.beneficios)) {
+        beneficios = blogToEdit.beneficios.map((b: any) => b.beneficio || "");
+      }
+
+      // --- Asignación de datos finales ---
+      // Rellenar mínimo 2 párrafos y 3 beneficios, pero mostrar todos los existentes
+      const minParrafos = 2;
+      const minBeneficios = 3;
+      const parrafosFinal = [...parrafos];
+      while (parrafosFinal.length < minParrafos) parrafosFinal.push("");
+      const beneficiosFinal = [...beneficios];
+      while (beneficiosFinal.length < minBeneficios) beneficiosFinal.push("");
+
       setFormData({
         producto_id: productoIdString,
         subtitulo: blogToEdit.subtitulo || "",
@@ -105,19 +130,18 @@ const AddBlogModal = ({
           blogToEdit.imagenes?.[1]?.text_alt || "",
           blogToEdit.imagenes?.[2]?.text_alt || "",
         ],
-        parrafos: [
-          blogToEdit.parrafos?.[0]?.parrafo || "",
-          blogToEdit.parrafos?.[1]?.parrafo || "",
-          blogToEdit.parrafos?.[2]?.parrafo || "",
-        ],
+        parrafos: parrafosFinal,
+        beneficios: beneficiosFinal,
         url_video: blogToEdit.url_video || "",
       });
+
       setNombreProducto(blogToEdit.nombre_producto || "");
     } else {
       setFormData(defaultFormData);
       setNombreProducto("");
     }
-  }, [isOpen, blogToEdit]);
+}, [isOpen, blogToEdit]);
+
 
   // Cargar productos
   useEffect(() => {
@@ -390,9 +414,21 @@ const AddBlogModal = ({
           formDataToSend.append("alt_imagenes[]", alt.trim());
         }
       });
-      parrafosConContenido.forEach((parrafo) =>
-        formDataToSend.append("parrafos[]", parrafo.trim())
-      );
+      // Enviar los párrafos como array compatible con Laravel
+      if (parrafosConContenido.length > 0) {
+        parrafosConContenido.forEach(p => {
+          formDataToSend.append("parrafos[]", p);
+        });
+      }
+
+      // Enviar beneficios como array para la tabla blogs_parrafos
+      if (formData.beneficios && formData.beneficios.length > 0) {
+        formData.beneficios.forEach(b => {
+          if (b.trim() !== "") {
+            formDataToSend.append("beneficios[]", b.trim());
+          }
+        });
+      }
 
       const endpoint = isEdit
         ? getApiUrl(config.endpoints.blogs.update(blogToEdit.id))
@@ -705,6 +741,35 @@ const AddBlogModal = ({
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Beneficios */}
+            <div className="bg-yellow-50 p-4 sm:p-6 rounded-lg border border-yellow-200 mt-4">
+              <h3 className="text-lg font-semibold text-yellow-800 mb-4">
+                Beneficios <span className="text-red-500">*</span>
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[0, 1, 2].map((i) => (
+                  <div key={i}>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Beneficio {i + 1}
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.beneficios[i]}
+                      onChange={(e) => {
+                        const updated = [...formData.beneficios];
+                        updated[i] = e.target.value;
+                        setFormData({ ...formData, beneficios: updated });
+                      }}
+                      maxLength={100}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <small className="text-gray-500">Máx. 100 caracteres.</small>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Botones */}

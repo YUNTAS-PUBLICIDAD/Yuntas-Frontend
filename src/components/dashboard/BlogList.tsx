@@ -13,11 +13,15 @@ const BlogList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   // Filtrar blogs por término de búsqueda
-  const filteredBlogs = blogs.filter(blog =>
-    blog.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    blog.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredBlogs = (blogs || []).filter(blog => 
+    (blog?.titulo || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (blog?.descripcion || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  useEffect(() => {
+    console.log("BlogList: La lista 'blogs' se ha actualizado:", blogs);
+  }, [blogs]);
+  
   const handleEdit = (blog: Blog) => {
     setBlogToEdit(blog);
     setIsModalOpen(true);
@@ -41,12 +45,18 @@ const BlogList: React.FC = () => {
     refetch(); // Recargar la lista después de crear/actualizar
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
+  const formatDate = (dateString?: string | null) => { 
+    if (!dateString) return 'Fecha no disp.'; 
+    try {
+      // Intenta formatear
+      return new Date(dateString).toLocaleDateString('es-ES', {
+        year: 'numeric', month: 'short', day: 'numeric'
+      });
+    } catch (e) {
+      // Si la fecha es inválida, muestra un error y loguea
+      console.error("Formato de fecha inválido:", dateString, e);
+      return 'Fecha inválida';
+    }
   };
 
   if (loading) {
@@ -93,6 +103,7 @@ const BlogList: React.FC = () => {
         {filteredBlogs.length === 0 ? (
           <div className="p-8 text-center text-gray-500">
             {searchTerm ? 'No se encontraron blogs que coincidan con tu búsqueda.' : 'No hay blogs disponibles.'}
+          
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -118,11 +129,12 @@ const BlogList: React.FC = () => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredBlogs.map((blog) => (
+                  blog && (
                   <tr key={blog.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <img
-                        src={blog.imagenPrincipal}
-                        alt={blog.titulo}
+                        src={blog.imagenPrincipal} 
+                        alt={blog.titulo }
                         className="h-16 w-16 rounded-lg object-cover"
                       />
                     </td>
@@ -164,6 +176,7 @@ const BlogList: React.FC = () => {
                       </div>
                     </td>
                   </tr>
+                  )
                 ))}
               </tbody>
             </table>
@@ -177,7 +190,8 @@ const BlogList: React.FC = () => {
         onClose={handleCloseModal}
         blogToEdit={blogToEdit}
         onSuccess={handleBlogSuccess}
-      />
+        existingBlogs={blogs || []}    
+          />
     </div>
   );
 };

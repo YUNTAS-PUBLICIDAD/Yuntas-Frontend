@@ -10,9 +10,10 @@ interface BlogModalProps {
   onClose: () => void;
   blogToEdit?: Blog | null;
   onSuccess?: (blog: Blog) => void;
+  existingBlogs: Blog[];
 }
 
-const BlogModal: React.FC<BlogModalProps> = ({ isOpen, onClose, blogToEdit, onSuccess }) => {
+const BlogModal: React.FC<BlogModalProps> = ({ isOpen, onClose, blogToEdit, onSuccess,existingBlogs }) => {
   const { createBlog, updateBlog, loading, error, clearError } = useBlogActions();
   
   const [formData, setFormData] = useState<BlogFormData>({
@@ -145,7 +146,37 @@ const BlogModal: React.FC<BlogModalProps> = ({ isOpen, onClose, blogToEdit, onSu
       alert('Por favor, selecciona al menos una imagen adicional.');
       return;
     }
+    console.log("Validating title:", formData.titulo);
+    console.log("Existing blogs passed to modal:", existingBlogs); // Check if the array is correct
 
+    const newTitleLower = formData.titulo.trim().toLowerCase();
+    console.log("Normalized new title:", newTitleLower);
+
+    const isDuplicate = existingBlogs.some(blog => {
+        const existingTitleLower = blog.titulo.trim().toLowerCase();
+        console.log(`Comparing with existing: "${existingTitleLower}" (ID: ${blog.id})`);
+
+        // If editing, skip comparing with itself
+        if (blogToEdit && blog.id === blogToEdit.id) {
+            console.log(`  -> Skipping self (editing ID: ${blogToEdit.id})`);
+            return false;
+        }
+        
+        const titlesMatch = existingTitleLower === newTitleLower;
+        if (titlesMatch) {
+            console.log(`  -> MATCH FOUND! (ID: ${blog.id})`);
+        }
+        return titlesMatch;
+    });
+
+    console.log("Is duplicate found?", isDuplicate); // This should be TRUE if it's a duplicate
+
+    if (isDuplicate) {
+        alert('Error: Ya existe un blog con este título...');
+        console.error("Duplicate title detected, stopping submission."); // Add error log
+        return;
+    }
+   
     try {
       let result: Blog | null = null;
       
