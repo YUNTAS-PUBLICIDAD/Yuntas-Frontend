@@ -8,7 +8,7 @@ import MobileLogin from "../components/login/MobileLogin";
 
 const Login = () => {
   
-  const [checkingAuth, setCheckingAuth] = useState(true); // 👈 Nuevo estado
+  const [checkingAuth, setCheckingAuth] = useState(true); //  Nuevo estado
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -16,7 +16,7 @@ const Login = () => {
     if (token) {
       window.location.href = "/admin/inicio";
     } else {
-      setCheckingAuth(false); // 👈 Solo mostramos el formulario si no hay token
+      setCheckingAuth(false); //  Solo mostramos el formulario si no hay token
     }
 
     
@@ -52,7 +52,7 @@ const Login = () => {
     }
   };
 
-  // 🚫 No renderizar nada mientras se verifica el token
+  //  No renderizar nada mientras se verifica el token
   if (checkingAuth) {
     return null;
   }
