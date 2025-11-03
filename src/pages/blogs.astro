@@ -2,7 +2,7 @@
 // Importaciones
 import SearchBar from "../pages/blogs/_SearchBar";
 import Layout from "../layouts/Layout.astro";
-import imagen1 from "../assets/images/blog/banner_blog.jpg";
+import imagen1 from "../assets/images/blog/banner_blog.webp";
 import { blogService } from "../services/blogService";
 import FetchBlogsList from "../components/blog/FetchBlogsList.tsx";
 import type Blog from "../models/Blog";
@@ -33,35 +33,44 @@ try {
 
 <Layout title={generalMetadata.titulo} description={generalMetadata.description} keywords={generalMetadata.keywordsBlog} canonicalUrl="https://yuntaspublicidad.com/blogs/">
   <!-- Banner -->
-  <section class="relative h-screen">
+  <section class="relative h-screen ">
     <img
       src={imagen1.src}
       alt="Biblioteca moderna con tecnología LED, espacio ideal para proyectos de diseño sostenible y ambientes funcionales"
       title="Biblioteca moderna con tecnología LED"
       class="w-full h-full object-cover"
     />
-    <div
-      class="absolute inset-0 flex flex-col justify-center items-center text-center"
-    >
+        <div class=" absolute inset-0 flex flex-col justify-center items-center text-center">
       <h1
-        class="text-7xl text-center Montserrat font-black text-white sombra-title"
+        class="
+          text-[100px] text-white font-black  
+          Montserrat  
+          [--stroke-color:#2DCCFF]  
+          [paint-order:stroke_fill] 
+          [-webkit-text-stroke:2px_var(--stroke-color)]
+          [text-shadow:4px_4px_0px_rgba(0,0,0,0.4)]
+          mb-0 leading-none "
       >
-        Blog Yuntero
+        BLOG
+      </h1>
+      <h1
+        class="
+          text-[50px] text-white  
+          Montserrat 
+          [--stroke-color:#2DCCFF]
+          [paint-order:stroke_fill]
+          [-webkit-text-stroke:1px_var(--stroke-color)] 
+          [text-shadow:3px_3px_0px_rgba(0,0,0,0.4)] 
+          -mt-2 "
+      >
+        YUNTERO
       </h1>
     </div>
   </section>
-  
-   <div class="bg-[#98d8df] h-3 flex items-center justify-center"></div>
   <!-- Título principal 
-
   <div class="bg-gray h-30 flex items-center justify-center">
-    <h2
-      class="text-xl sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl Montserrat font-extrabold text-[#243360]"
-    >
-      NUESTROS ARTICULOS
-    </h2>
   </div>
-  <!-- <section class="bg-gradient-to-b from-blue-900 to-indigo-950 p-12 text-white">
+  -- <section class="bg-gradient-to-b from-blue-900 to-indigo-950 p-12 text-white">
     <div class="flex justify-center">
       {
         error ? (
@@ -73,8 +82,9 @@ try {
     </div>
   </section> -->
   <!-- Sección de productos -->
-  <section class="w-full bg-gradient-to-b from-blue-900 to-indigo-950 py-20">
-    <div class="max-w-[1200px] px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 mx-auto">
+  <section class="w-full bg-gradient-to-b from-white ">
+    <div class="bg-[#98d8df] h-3 flex items-center justify-center"></div>
+    <div>
       <FetchBlogsList client:load />
     </div>
   </section>

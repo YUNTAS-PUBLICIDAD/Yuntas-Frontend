@@ -1,13 +1,14 @@
 ---
 // Importaciones
 import Layout from "../layouts/Layout.astro";
-// import HeroSlider from "../components/index/HeroSlider.jsx";
 import { Picture } from "astro:assets";
 import card1 from "../assets/images/inicio/cards/card_1.webp";
 import card2 from "../assets/images/inicio/cards/card_2.webp";
 import bg_comentarios from "../assets/images/inicio/bg_comentarios.webp";
-import CommentSlider from "../components/index/ComentariosSlider.jsx";
+import CommentSlider from "../components/index/ComentariosSlider.tsx";
 import Hero from "../components/index/Hero.astro";
+import { FaCheck } from "react-icons/fa6";
+import ProyectosSlider from "../components/index/ProyectosSlider.astro";
 
 // Lista de comentarios de usuarios, sin duplicados y con id único
 const comentarios = [
@@ -68,97 +69,123 @@ const comentarios = [
   keywords="letreros led para negocio, yuntas, yuntas publicidad, yuntas producciones, yuntas decoraciones, decoraciones, iluminación led negocio, que son vinilos, precio led, productos led lima"
   canonicalUrl="https://yuntaspublicidad.com/"
 >
-  <section class="relative h-screen">
+  <section class="relative h-[318px] md:h-screen">
     <!-- <HeroSlider client:load /> -->
     <Hero />
+    <a href="/contact" class="uppercase font-semibold text-white py-2.5 px-8 bg-[#23C1DE] rounded-lg absolute sm:hidden md:hidden xl:hidden left-1/2 -translate-x-1/2 z-10 -bottom-7 text-xl">Contáctanos</a>
   </section>
 
-  <!-- Mensaje central -->
-  <div
-    class="w-full bg-white text-blue-950 text-center text-2xl md:text-3xl font-extrabold py-6"
-  >
-    <h2>¡SOMOS YUNTAS PRODUCCIONES!</h2>
-  </div>
-  <section
-    class="px-4 sm:px-8 md:px-16 lg:px-24 text-white bg-gradient-to-b from-blue-900 to-indigo-950 flex flex-col items-center"
-  >
-    <a
-      href="/contact"
-      class="mt-10 mb-7 font-bold bg-gradient-to-l from-cyan-300 to-cyan-600 px-6 sm:px-8 py-2 rounded-full text-lg sm:text-xl hover:from-cyan-600 hover:to-cyan-300 mx-auto"
-    >
-      ¡Cotiza ahora!
-    </a>
-    <hr
-      class="mb-13 w-4/5 sm:w-3/4 md:w-2/3 lg:w-1/2 border-t border-cyan-400 my-6 mx-auto"
-    />
-    <div class="flex flex-col justify-between items-center w-full h-auto">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 w-full">
-        <div class="rounded-4xl w-full bg-white text-black">
-          <Picture
-            src={card1}
-            formats={["webp"]}
-            alt="Túnel urbano, luces LED azules, experiencia inmersiva, ideal para ambientaciones modernas y espacios interactivos"
-            title="Túnel urbano"
-            class="h-64 sm:h-80 md:h-96 w-full rounded-t-4xl object-cover object-center"
-            width={685}
-            height={384}
-            widths={[320, 540, 600, card1.width]}
-            sizes="(max-width: 420px) 300px, (max-width: 720px) 340px, (max-width: 1024px) 420px, 100vw"
-            quality={60}
-          />
-          <p
-            class="w-full text-center italic py-4 px-6 sm:px-14 text-sm sm:text-base cursor-default"
-          >
+  <section class="bg-white py-16 border-t-8 border-blue-300">
+    {/* DESKTOP */}
+    <div class="w-full hidden sm:grid grid-cols-1 lg:grid-cols-2 gap-14">
+      <!-- Columna izquierda -->
+      <div class="pr-4 sm:pr-0">
+        <div
+          class="bg-[#6DD0DB33] rounded-xl py-4 px-4 sm:px-12 shadow-md flex items-center justify-center gap-16 ml-14 mb-6"
+        >
+          <span class="text-2xl text-[#0D1030]">
+            <FaCheck />
+          </span>
+          <p class="text-[#00031E] font-semibold">
             Descubre cómo integrar esta innovadora tecnología en tus proyectos
             arquitectónicos
           </p>
         </div>
 
-        <div class="rounded-4xl w-full bg-white text-black">
-          <Picture
-            src={card2}
-            formats={["webp"]}
-            alt="Puente geométrico, barras pixel LED púrpura y ámbar, iluminación envolvente, ideal para intervenciones urbanas nocturnas"
-            title="Puente geométrico"
-            class="h-64 sm:h-80 md:h-96 w-full rounded-t-4xl object-cover object-center"
-            width={685}
-            height={384}
-            widths={[320, 540, 600, card2.width]}
-            sizes="(max-width: 420px) 320px, (max-width: 720px) 540px, (max-width: 1024px) 600px, 100vw"
-            quality={60}
-          />
-          <p
-            class="w-full text-center italic py-4 px-6 sm:px-14 text-sm sm:text-base cursor-default"
-          >
+        <Picture
+          src={card2}
+          alt="Evento con iluminación LED"
+          class="rounded-r-xl shadow-lg object-cover sm:h-[548px]"
+        />
+      </div>
+
+      <!-- Columna derecha -->
+      <div class="pl-4 sm:pl-0">
+        <Picture
+          src={card1}
+          alt="Túnel de luces LED"
+          class="rounded-l-xl shadow-lg object-cover sm:h-[548px]"
+        />
+
+        <div
+          class="bg-[#6DD0DB33] rounded-xl py-4 px-4 sm:px-12 shadow-md flex items-center justify-center gap-16 mr-14 mt-6"
+        >
+          <span class="text-2xl text-[#0D1030]">
+            <FaCheck />
+          </span>
+          <p class="text-[#00031E] font-semibold">
             Aprende cómo esta tecnología transforma el ambiente y optimiza el
             consumo energético
           </p>
         </div>
       </div>
-
-      <hr class="mx-auto w-2/3 sm:w-1/2 md:w-1/3 border-cyan-400 my-10" />
     </div>
+    {/* MOBILE */}
+    <div class="w-full flex flex-col items-center justify-center sm:hidden gap-6">
+      <!-- card 1 -->
+      <div class="bg-[#6DD0DB33] rounded-xl px-4 py-3 shadow-md flex items-center justify-center gap-4 w-[80%]">
+        <span class="text-xl text-[#0D1030]"><FaCheck /></span>
+        <p class="text-[#00031E] font-semibold text-xs">Descubre cómo integrar esta innovadora tecnología en tus proyectos arquitectónicos</p>
+      </div>
 
-    <!-- Sección de testimonios -->
-    <div class="py-20 w-full max-w-8xl mx-auto px-4 md:px-0 relative">
-      <h3 class="text-2xl md:text-3xl font-semibold text-center mb-12">
-        Tu opinión es importante para <span class="font-extrabold"
-          >NOSOTROS</span
-        >
+      <div class="grid grid-cols-2 gap-4">
+        <Picture
+          src={card2}
+          height={161}
+          alt="Evento con iluminación LED"
+          class="rounded-r-xl shadow-lg object-cover h-[161px]"
+        />
+
+        <Picture
+          src={card1}
+          height={161}
+          alt="Túnel de luces LED"
+          class="rounded-l-xl shadow-lg object-cover h-[161px]"
+        />
+      </div>
+
+      <!-- card 1 -->
+      <div class="bg-[#6DD0DB33] rounded-xl px-4 py-3 shadow-md flex items-center justify-center gap-4 w-[80%]">
+        <span class="text-xl text-[#0D1030]"><FaCheck /></span>
+        <p class="text-[#00031E] font-semibold text-xs">Aprende cómo esta tecnología transforma el ambiente y optimiza el
+            consumo energético</p>
+      </div>
     </div>
   </section>
+
+  <!-- Nuestros proyectos  -->
+  <ProyectosSlider />
+
+  <!-- Sección de testimonios -->
+  <div class="px-14 py-6 w-full relative bg-[#23C1DE]">
+    <h3 class="text-3xl md:text-4xl font-bold text-white uppercase">
+      <span class="italic">Tu opinión es</span> importante
+    </h3>
+    <h3 class="text-3xl md:text-4xl font-bold text-white uppercase">
+      para nosotros
+    </h3>
+  </div>
   <section
-    class="relative w-full min-h-screen flex justify-center items-center"
+    class="w-full bg-white py-14 px-2 sm:px-16 overflow-visible relative flex justify-center items-center"
   >
-    <img
-      src={bg_comentarios.src}
-      alt="Luminaria LED innovadora para interior de cafetería, estilo contemporáneo, ideal para espacios cálidos y funcionales"
-      title="Luminaria LED"
-      class="absolute z-0 w-full h-full object-cover"
-      loading="lazy"
-    />
-    <div class="relative z-10 p-6 w-full">
-      <CommentSlider comentarios={comentarios} client:visible />
+    <div
+      class="relative w-full h-[765px] flex justify-center items-center rounded-[3rem] overflow-hidden"
+    >
+      <img
+        src={bg_comentarios.src}
+        alt="Luminaria LED innovadora para interior de cafetería, estilo contemporáneo, ideal para espacios cálidos y funcionales"
+        title="Luminaria LED"
+        class="absolute z-0 w-full h-full object-cover object-bottom"
+        loading="lazy"
+      />
+      <div class="relative z-10 p-6 w-full">
+        <CommentSlider comentarios={comentarios} client:visible />
+      </div>
     </div>
+    <a
+      href="/contact"
+      class="py-2 px-10 bg-[#23C1DE] text-white font-bold rounded-2xl absolute bottom-7 text-2xl uppercase"
+      >¡COTIZA AHORA!</a
+    >
   </section>
 </Layout>
