@@ -169,10 +169,10 @@ export default function FetchProductsList() {
 
   if (loading) {
     return (
-      <div className="grid place-content-center min-h-screen">
+      <div className="grid place-content-center min-h-screen bg-white">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-cyan-400 mb-4"></div>
-          <p className="text-white text-2xl font-bold animate-pulse">
+          <p className=" text-2xl font-bold animate-pulse">
             Cargando productos...
           </p>
         </div>
@@ -183,7 +183,7 @@ export default function FetchProductsList() {
   return (
     <div className="w-full bg-white">
       <div className="w-full 
-       text-white px-6 md:px-12 py-8 flex
+       px-6 md:px-12 py-8 flex
        flex-col sm:flex-row 
        items-center gap-8 mb-12 ">
 
@@ -210,17 +210,17 @@ export default function FetchProductsList() {
 
           {/* --- BARRA LATERAL (SIDEBAR) DE CATEGORÍAS --- */}
           <aside className="w-full lg:w-1/4 xl:w-1/5 flex-shrink-0">
-            <h3 className="text-2xl font-bold uppercase tracking-wider mb-4 text-gray-800 dark:text-gray-200">
+            <h3 className="text-2xl font-bold uppercase tracking-wider mb-4 text-gray-800 ">
               CATEGORÍA
             </h3>
             <nav className="space-y-2">
               {/* Botón "Todos los productos" */}
               <button
                 onClick={() => setSelectedCategory(null)}
-                className={`flex justify-between items-center
-                   w-full text-left font-bold ${selectedCategory === null
-                    ? "text-gray-400 dark:text-cyan-400 rounded-2xl text-xl w-full bg-[#d4efef] px-4 border-2 border-[#23c1de] placeholder-gray-400 focus:outline-none focus:border-[#23c1de] focus:ring-2   focus:ring-[#23c1de] transition-all duration-300 shadow-xl "
-                    : "text-gray-400 dark:text-gray-300 hover:text-black dark:hover:text-white "
+                className={`flex justify-between items-center font-normal
+                   w-full text-left ${selectedCategory === null
+                    ? "text-gray-400  rounded-2xl text-xl w-full bg-[#d4efef] px-4 border-2 border-[#23c1de] placeholder-gray-400 focus:outline-none focus:border-[#23c1de] focus:ring-2  focus:ring-[#23c1de] transition-all duration-300 shadow-xl"
+                    : "text-gray-400  hover:text-black"
                   }`}
               >
                 <span>Todos los productos ({allProducts.length})</span>
@@ -240,8 +240,8 @@ export default function FetchProductsList() {
                   <button
                     onClick={() => setSelectedCategory(category)}
                     className={`block w-full text-left ${selectedCategory === category
-                        ? "text-gray-900 dark:text-white font-semibold"
-                        : "text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white"
+                        ? "text-gray-900"
+                        : "text-gray-700 hover:text-black"
                       }`}
                   >
                     {category} ({categoriesWithCounts[category]})
