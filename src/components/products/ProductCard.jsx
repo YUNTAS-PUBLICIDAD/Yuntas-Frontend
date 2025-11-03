@@ -30,7 +30,7 @@ const ProductCard = ({ producto }) => {
       title={titulo}
     >
       {/* Contenedor principal con dimensiones fijas */}
-      <div className="block max-w-lg bg-white rounded-xl shadow-lg overflow-hidden group mb-2 ">
+      <div className="block max-w-lg bg-white rounded-t-xl shadow-lg overflow-hidden group mb-2 ">
         {/* Imagen del producto */}
         <div className="relative aspect-[4/3] w-full ">
           {imagenUrl ? (

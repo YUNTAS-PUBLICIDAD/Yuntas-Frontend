@@ -198,7 +198,10 @@ const ProductSearchBar: React.FC<ProductSearchBarProps> = ({
               </button>
               
             )}
-            <div className="absolute left-194 top-1/2 transform -translate-y-1/2">
+            
+          </div>
+
+          <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
               <button
                  onClick={handleSearchClick}
                  
@@ -211,7 +214,6 @@ const ProductSearchBar: React.FC<ProductSearchBarProps> = ({
                 Buscar
               </button>
             </div>
-          </div>
         </div>
       </div>
 

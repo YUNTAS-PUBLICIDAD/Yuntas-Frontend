@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar.astro";
 import ScrollModal from "../components/ScrollModal";
 import Footer from "../components/Footer.astro";
 import WhatsApp from "../components/ui/whatsapp.astro";
+import { ClientRouter } from "astro:transitions";
 
 interface Props {
   title: string;
@@ -65,9 +66,9 @@ const {
       />
     </noscript> -->
     <meta name="google-site-verification" content="XmepIr9EXYbyFVG03v5DDp8vneZIOH0Z3OLHOBGX6e0" />
-    <!-- ClientRouter removido - causa conflictos con SSR -->
+    <ClientRouter/>
   </head>
-  <body>
+  <body class="font-montserrat">
     <Navbar variant="default" />
 
     <slot />
