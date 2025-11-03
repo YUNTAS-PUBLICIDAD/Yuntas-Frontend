@@ -38,7 +38,7 @@ const Sidebar = () => {
 
   return (
     <aside
-      className={`sidebar hidden lg:block top-0 left-0 z-50 w-64 h-full transition-transform duration-300 ease-in-out
+      className={`sidebar hidden lg:block top-0 left-0 z-30 w-64 h-full transition-transform duration-300 ease-in-out
         ${darkMode ? "bg-[#1e1e2f] text-white" : "bg-gray-200 text-gray-800"}`}
     >
       <div className="p-4 space-y-6">

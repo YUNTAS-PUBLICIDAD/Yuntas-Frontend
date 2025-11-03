@@ -51,7 +51,7 @@ const Navbar = ({ variant = "default", pathname }: NavbarProps) => {
     }
   );
 
-  const headerClasses = clsx("w-full z-20", {
+  const headerClasses = clsx("w-full z-50", {
     fixed: variant !== "admin",
   });
 
