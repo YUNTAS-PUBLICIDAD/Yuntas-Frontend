@@ -79,7 +79,7 @@ const AddBlogModal = ({
     alt_imagen_card: "",
     imagenes_secundarias: [null, null, null],
     alt_imagenes_secundarias: ["", "", ""],
-    parrafos: ["", "", ""],
+    parrafos: ["", "", "","","",""],
     url_video: "",
   };
 
@@ -109,6 +109,8 @@ const AddBlogModal = ({
           blogToEdit.parrafos?.[0]?.parrafo || "",
           blogToEdit.parrafos?.[1]?.parrafo || "",
           blogToEdit.parrafos?.[2]?.parrafo || "",
+          blogToEdit.parrafos?.[3]?.parrafo || "", 
+          blogToEdit.parrafos?.[4]?.parrafo || "", 
         ],
         url_video: blogToEdit.url_video || "",
       });
@@ -671,39 +673,110 @@ const AddBlogModal = ({
             {/* Párrafos */}
             <div className="bg-yellow-50 p-4 sm:p-6 rounded-lg border border-yellow-200">
               <h3 className="text-lg font-semibold text-yellow-800 mb-4">
-                Párrafos <span className="text-red-500">*</span>
+                Contenido del Blog <span className="text-red-500">*</span>
               </h3>
-              {formData.parrafos.map((p, i) => (
-                <div key={i} className="relative mb-6">
-                  <textarea
-                    id={`parrafo-${i}`}
-                    value={p}
-                    onChange={(e) => handleParrafoChange(e, i)}
+
+              {/* === PÁRRAFO 1 === */}
+              <div className="relative mb-6">
+                <label htmlFor="parrafo-0" className="block text-sm font-medium text-gray-700 mb-1">
+                  Párrafo 1 (Introducción)
+                </label>
+                <textarea
+                  id="parrafo-0"
+                  value={formData.parrafos[0]}
+                  onChange={(e) => handleParrafoChange(e, 0)}
+                  className="w-full border border-gray-300 rounded px-3 py-2 pr-20"
+                  rows={4}
+                  placeholder="Párrafo de introducción (opcional)"
+                />
+                <small className="text-gray-500">
+                  Máx. 100 caracteres (letras, números y espacios).
+                </small>
+                <div className="absolute top-9 right-2 flex gap-2">
+                  <button type="button" onClick={() => handleInsertLinkClick(0)} className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition">🔗</button>
+                  <button type="button" onClick={() => handleProductLinkClick(0)} className="bg-green-500 hover:bg-green-700 text-white p-2 rounded-full shadow-lg transition">🛒</button>
+                </div>
+              </div>
+              <div className="bg-yellow-50 p-4 rounded-lg border border-blue-200 mb-6">
+                <h4 className="text-md font-semibold text-yellow-800 mb-3">
+                  Lista de Items / Puntos Clave <span className="text-red-500">*</span>
+                </h4>
+                
+                {/* --- ITEM 1  --- */}
+                <div className="relative flex items-center gap-2 mb-3">
+                  <span className="text-blue-600 font-bold">✔️</span>
+                  <input
+                    type="text"
+                    id="parrafo-1"
+                    value={formData.parrafos[1]}
+                    onChange={(e) => handleParrafoChange(e, 1)}
                     className="w-full border border-gray-300 rounded px-3 py-2 pr-20"
-                    rows={4}
-                    placeholder={`Párrafo ${i + 1} (opcional)`}
+                    placeholder="Item 1 (opcional)"
                   />
-                  <small className="text-gray-500">
-                    Máx. 100 caracteres (letras, números y espacios).
-                  </small>
-                  <div className="absolute top-2 right-2 flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleInsertLinkClick(i)}
-                      className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition"
-                    >
-                      🔗
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleProductLinkClick(i)}
-                      className="bg-green-500 hover:bg-green-700 text-white p-2 rounded-full shadow-lg transition"
-                    >
-                      🛒
-                    </button>
+                  <div className="absolute top-1/2 -translate-y-1/2 right-2 flex gap-2">
+                    <button type="button" onClick={() => handleInsertLinkClick(1)} className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition">🔗</button>
+                    <button type="button" onClick={() => handleProductLinkClick(1)} className="bg-green-500 hover:bg-green-700 text-white p-2 rounded-full shadow-lg transition">🛒</button>
                   </div>
                 </div>
-              ))}
+
+                {/* --- ITEM 2  --- */}
+                <div className="relative flex items-center gap-2 mb-3">
+                  <span className="text-blue-600 font-bold">✔️</span>
+                  <input
+                    type="text"
+                    id="parrafo-2"
+                    value={formData.parrafos[2]}
+                    onChange={(e) => handleParrafoChange(e, 2)}
+                    className="w-full border border-gray-300 rounded px-3 py-2 pr-20"
+                    placeholder="Item 2 (opcional)"
+                  />
+                  <div className="absolute top-1/2 -translate-y-1/2 right-2 flex gap-2">
+                    <button type="button" onClick={() => handleInsertLinkClick(2)} className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition">🔗</button>
+                    <button type="button" onClick={() => handleProductLinkClick(2)} className="bg-green-500 hover:bg-green-700 text-white p-2 rounded-full shadow-lg transition">🛒</button>
+                  </div>
+                </div>
+
+                {/* --- ITEM 3 --- */}
+                <div className="relative flex items-center gap-2">
+                  <span className="text-gray-500 font-bold">✔️</span>
+                  <input
+                    type="text"
+                    id="parrafo-3"
+                    value={formData.parrafos[3]}
+                    onChange={(e) => handleParrafoChange(e, 3)}
+                    className="w-full border border-gray-300 rounded px-3 py-2 pr-20"
+                    placeholder="Item 3 (opcional)"
+                  />
+                  <div className="absolute top-1/2 -translate-y-1/2 right-2 flex gap-2">
+                    <button type="button" onClick={() => handleInsertLinkClick(3)} className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition">🔗</button>
+                    <button type="button" onClick={() => handleProductLinkClick(3)} className="bg-green-500 hover:bg-green-700 text-white p-2 rounded-full shadow-lg transition">🛒</button>
+                  </div>
+                </div>
+              </div>
+
+
+              {/* === PÁRRAFO 3 === */}
+              <div className="relative mb-6">
+                <label htmlFor="parrafo-4" className="block text-sm font-medium text-gray-700 mb-1">
+                  Párrafo 2 (opcional)
+                </label>
+                <textarea
+                  id="parrafo-4"
+                  value={formData.parrafos[4]}
+                  onChange={(e) => handleParrafoChange(e, 4)}
+                  className="w-full border border-gray-300 rounded px-3 py-2 pr-20"
+                  rows={4}
+                  placeholder="Párrafo de conclusión (opcional)"
+                />
+                <small className="text-gray-500">
+                  Máx. 100 caracteres (letras, números y espacios).
+                </small>
+                <div className="absolute top-9 right-2 flex gap-2">
+                  <button type="button" onClick={() => handleInsertLinkClick(4)} className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition">🔗</button>
+                  <button type="button" onClick={() => handleProductLinkClick(4)} className="bg-green-500 hover:bg-green-700 text-white p-2 rounded-full shadow-lg transition">🛒</button>
+                </div>
+              </div>
+              
             </div>
 
             {/* Botones */}
