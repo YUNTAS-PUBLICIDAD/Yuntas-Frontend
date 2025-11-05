@@ -1,8 +1,8 @@
-import { useEffect, useState,useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import type Producto from "../../models/Product.ts";
 import ProductCard from "./ProductCard.jsx";
 import ProductSearchBar from "../../pages/products/_ProductSearchBar.tsx";
-import {config} from "../../../config.ts";
+import { config } from "../../../config.ts";
 
 interface CategoryCounts {
   [key: string]: number;
@@ -89,7 +89,7 @@ export default function FetchProductsList() {
     setFilteredProducts(products);
     setIsSearchActive(
       products.length !== allProducts.length ||
-        (products.length === 0 && allProducts.length > 0)
+      (products.length === 0 && allProducts.length > 0)
     );
     setCurrentPage(1); // Resetear
   };
@@ -155,9 +155,9 @@ export default function FetchProductsList() {
     }
   };
 
- const canGoLeft = currentPage > 1 && !isSearchActive;
+  const canGoLeft = currentPage > 1 && !isSearchActive;
   const canGoRight = currentPage < totalPages && !isSearchActive;
-  
+
 
 
   // Actualizar total de páginas cuando cambian los productos filtrados
@@ -181,33 +181,33 @@ export default function FetchProductsList() {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full bg-white">
       <div className="w-full 
        text-white px-6 md:px-12 py-8 flex
        flex-col sm:flex-row 
-       items-center gap-8 mb-12 "> 
-  
+       items-center gap-8 mb-12 ">
+
         <h2 className="text-black
-          text-3xl sm:text-4xl lg:text-5xl     
+          text-3xl sm:text-4xl lg:text-4xl     
           font-bold uppercase tracking-wide
           flex-grow                           
-          leading-tight text-center sm:text-left "> 
+          leading-tight text-center sm:text-left ">
           Descubre la selección que tenemos para ti
         </h2>
 
         {allProducts.length > 0 && (
-          <div className="w-full flex-grow "> 
-             {/* Buscador de productos */}
-          <ProductSearchBar
-            products={allProducts}
-            onFilteredProducts={handleFilteredProducts}
-          />
+          <div className="w-full flex-grow ">
+            {/* Buscador de productos */}
+            <ProductSearchBar
+              products={allProducts}
+              onFilteredProducts={handleFilteredProducts}
+            />
           </div>
         )}
-      </div>      
+      </div>
       {allProducts.length > 0 ? (
-        <div className="flex flex-col lg:flex-row gap-10 lg:gap-12">
-          
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16">
+
           {/* --- BARRA LATERAL (SIDEBAR) DE CATEGORÍAS --- */}
           <aside className="w-full lg:w-1/4 xl:w-1/5 flex-shrink-0">
             <h3 className="text-2xl font-bold uppercase tracking-wider mb-4 text-gray-800 dark:text-gray-200">
@@ -218,15 +218,14 @@ export default function FetchProductsList() {
               <button
                 onClick={() => setSelectedCategory(null)}
                 className={`flex justify-between items-center
-                   w-full text-left font-bold ${
-                  selectedCategory === null
+                   w-full text-left font-bold ${selectedCategory === null
                     ? "text-gray-400 dark:text-cyan-400 rounded-2xl text-xl w-full bg-[#d4efef] px-4 border-2 border-[#23c1de] placeholder-gray-400 focus:outline-none focus:border-[#23c1de] focus:ring-2   focus:ring-[#23c1de] transition-all duration-300 shadow-xl "
                     : "text-gray-400 dark:text-gray-300 hover:text-black dark:hover:text-white "
-                }`}
+                  }`}
               >
                 <span>Todos los productos ({allProducts.length})</span>
               </button>
-              
+
               {/* Línea decorativa para la categoría activa */}
               <div className={`pl-4 border-l-2 ${selectedCategory === null ? 'border-cyan-400' : 'border-transparent'}`}>
               </div>
@@ -235,17 +234,15 @@ export default function FetchProductsList() {
               {categories.map(category => (
                 <div
                   key={category}
-                  className={`pl-4 border-l-2 ${
-                    selectedCategory === category ? 'border-cyan-400' : 'border-transparent'
-                  }`}
+                  className={`pl-4 border-l-2 ${selectedCategory === category ? 'border-cyan-400' : 'border-transparent'
+                    }`}
                 >
                   <button
                     onClick={() => setSelectedCategory(category)}
-                    className={`block w-full text-left ${
-                      selectedCategory === category
+                    className={`block w-full text-left ${selectedCategory === category
                         ? "text-gray-900 dark:text-white font-semibold"
                         : "text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white"
-                    }`}
+                      }`}
                   >
                     {category} ({categoriesWithCounts[category]})
                   </button>
@@ -254,9 +251,9 @@ export default function FetchProductsList() {
               ))}
             </nav>
           </aside>
-      <div className="flex-grow w-full lg:w-0"> 
+          <div className="flex-grow w-full lg:w-0">
             {currentProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8  px-30 items-center">
+              <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-center">
                 {currentProducts.map((producto) => (
                   <ProductCard
                     producto={producto}
@@ -290,85 +287,65 @@ export default function FetchProductsList() {
                 </p>
               </div>
             )}
-          {/* Paginación - Solo mostrar si no estamos buscando y hay múltiples páginas */}
-          {(totalPages > 1) && !isSearchActive && (
-          <>
-            <div className="flex justify-center items-center mt-10 space-x-2 sm:space-x-4"> 
-               <button
-                aria-label="Página anterior"
-                title="Página anterior"
-                onClick={goLeft}
-                disabled={!canGoLeft}
-                className={`px-2 py-1 transition-colors duration-200 cursor-pointer ${
-                  canGoLeft
-                    ? "text-blue-900 hover:text-blue-700" 
-                    : "text-gray-400 cursor-not-allowed"
-                }`}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                </svg>
-              </button>
+            {/* Paginación - Solo mostrar si no estamos buscando y hay múltiples páginas */}
+            {(totalPages > 1) && !isSearchActive && (
+              <>
+                <div className="flex justify-center items-center mt-10 space-x-2 sm:space-x-4">
+                  <button
+                    aria-label="Página anterior"
+                    title="Página anterior"
+                    onClick={goLeft}
+                    disabled={!canGoLeft}
+                    className={`px-2 py-1 transition-colors duration-200 cursor-pointer ${canGoLeft
+                        ? "text-blue-900 hover:text-blue-700"
+                        : "text-gray-400 cursor-not-allowed"
+                      }`}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                    </svg>
+                  </button>
 
-              <div className="flex items-center space-x-1 sm:space-x-2"> 
-                  {Array.from({ length: totalPages }, (_, i) => (
-                    <button
-                      key={i}
-                      aria-label={`Ir a la página ${i + 1}`}
-                      title={`Ir a la página ${i + 1}`}
-                      onClick={() => setCurrentPage(i + 1)}
-                      className={`
-                        w-8 h-8 sm:w-10 sm:h-10   {/* Size */}
-                        rounded-full             {/* Shape */}
-                        flex items-center justify-center 
-                        text-[20px] font-semibold 
-                        transition-colors duration-200 cursor-pointer
-                        ${
-                          i === (currentPage - 1)
-                            ? "bg-blue-900 text-white" 
-                            : "bg-transparent text-blue-900 hover:bg-blue-100"
-                        }
-                      `}
-                    >
-                      {i + 1}
-                    </button>
-                  ))}
-                </div>
-              <button
-                  aria-label="Página siguiente"
-                  title="Página siguiente"
-                  onClick={goRight}
-                  disabled={!canGoRight}
-                  className={`px-2 py-1 transition-colors duration-200 cursor-pointer  ${
-                    canGoRight
-                      ? "text-blue-900 hover:text-blue-700" 
-                      : "text-gray-400 cursor-not-allowed"
-                  }`}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                  </svg>
-                </button>
-              </div>
-
-            {/* Paginación - Solo mostrar si conocemos el número total de páginas */}
-            {totalPages > 1 && (
-                  <div className="flex justify-center mt-6 space-x-2">
+                  <div className="flex items-center space-x-1 sm:space-x-2">
                     {Array.from({ length: totalPages }, (_, i) => (
                       <button
                         key={i}
                         aria-label={`Ir a la página ${i + 1}`}
                         title={`Ir a la página ${i + 1}`}
-                        onClick={() => setCurrentPage(i + 1)} 
-                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                          i === (currentPage - 1) 
-                            ? "bg-gray-800 dark:bg-white" 
-                            : "bg-gray-300 dark:bg-white/30 hover:bg-gray-400 dark:hover:bg-white/50" // Color inactivo
-                        }`}
-                      />
+                        onClick={() => setCurrentPage(i + 1)}
+                        className={`
+                        w-8 h-8 sm:w-10 sm:h-10   {/* Size */}
+                        rounded-full             {/* Shape */}
+                        flex items-center justify-center 
+                        text-[20px] font-semibold 
+                        transition-colors duration-200 cursor-pointer
+                        ${i === (currentPage - 1)
+                            ? "bg-blue-900 text-white"
+                            : "bg-transparent text-blue-900 hover:bg-blue-100"
+                          }
+                      `}
+                      >
+                        {i + 1}
+                      </button>
                     ))}
                   </div>
-                )}
+                  <button
+                    aria-label="Página siguiente"
+                    title="Página siguiente"
+                    onClick={goRight}
+                    disabled={!canGoRight}
+                    className={`px-2 py-1 transition-colors duration-200 cursor-pointer  ${canGoRight
+                        ? "text-blue-900 hover:text-blue-700"
+                        : "text-gray-400 cursor-not-allowed"
+                      }`}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                    </svg>
+                  </button>
+                </div>
+
+                
               </>
             )}
           </div>

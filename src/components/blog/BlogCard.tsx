@@ -29,19 +29,17 @@ export default function BlogCard({ blog }: BlogCardProps) {
   };
 
   const imagenUrl = buildImageUrl(blog.imagen_principal);
-  const titulo = blog.nombre_producto || "Blog sin título";
+  const titulo = blog.subtitulo || "Blog sin título";
 
   return (
     <a
       href={`/blogs/${blog.link}`}
       onClick={handleClick}
-
       className="group relative overflow-hidden rounded-2xl bg-white 
-       transition-all duration-300 hover:scale-105 
+      shadow-md transition-all duration-300 hover:scale-105 
       w-full flex flex-col  "
-
     >
-      <div className="relative w-full h-[200px] overflow-hidden flex-shrink-0">
+      <div className="relative w-full h-[315px] overflow-hidden flex-shrink-0 ">
         {!imageError && imagenUrl ? (
           <img
             src={imagenUrl}
@@ -73,13 +71,13 @@ export default function BlogCard({ blog }: BlogCardProps) {
         )}
       </div>
 
-      <div className="px-4 py-1 flex-1 flex flex-col justify-center items-center min-h-[60px] max-h-[90px] text-center">
-        <h3 className="w-full flex justify-center items-center text-base font-semibold text-gray-800 mb-1 text-center uppercase leading-tight line-clamp-3 max-h-[48px]">
+      <div className="px-2 py-2 flex-1 flex flex-col justify-center items-center min-h-[75px] max-h-[250px] text-center ">
+        <h3 className="w-full flex justify-left px-2 items-left text-base font-semibold text-gray-800 mb-1 text-left uppercase leading-tight line-clamp-3 max-h-[100px] ">
           {titulo}
         </h3>
-        {blog.subtitulo && (
-          <p className="w-full flex justify-center items-center text-gray-600 text-sm text-center leading-tight line-clamp-3 max-h-[36px]">
-            {blog.subtitulo}
+        {blog.nombre_producto && (
+          <p className="w-full flex justify-left px-2 items-center text-gray-600 text-sm text-center leading-tight line-clamp-3 max-h-[36px]">
+            {blog.nombre_producto}
           </p>
         )}
       </div>
