@@ -294,7 +294,7 @@ export default function FetchBlogsList() {
               </div>
             ) : (
               <div className="text-center py-12">
-                <p className="text-white/70 text-xl">
+                <p className="text-blue/70 text-xl">
                   No hay blogs disponibles
                 </p>
               </div>
