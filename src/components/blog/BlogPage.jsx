@@ -151,15 +151,40 @@ export default function BlogPage({ article }) {
                 />
               </div>
             )}
-
+            
             {/* Texto */}
-            <div className="flex-1 flex items-center justify-center text-center md:text-left z-0 px-4 md:px-0 mt-4 md:mt-0">
-              <div
-                className="text-base sm:text-lg md:text-xl text-[#1A1A1A] max-w-[500px]"
-                dangerouslySetInnerHTML={{
-                  __html: article.parrafos && article.parrafos[1]?.parrafo,
-                }}
-              />
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <span className="text-2xl">✨</span> BENEFICIOS CLAVE:
+              </h3>
+
+                <div className="flex flex-col gap-4">
+                  {[
+                    article.parrafos?.[1]?.parrafo,
+                    article.parrafos?.[2]?.parrafo,
+                    article.parrafos?.[3]?.parrafo
+                  ]
+                  .filter(item => item) 
+                  .map((textoDelItem, index) => (
+                    
+                    <div 
+                      key={index}
+                      className="bg-[#e0f7fa] rounded-xl p-4 shadow-lg flex items-center gap-3"
+                    >
+                      <div className="flex-shrink-0">
+                        <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path>
+                        </svg>
+                      </div>
+                      
+                      <div 
+                        className="text-gray-900 font-semibold text-base sm:text-lg"
+                        dangerouslySetInnerHTML={{ __html: textoDelItem }}
+                      />
+                    </div>
+
+                  ))}
+                </div>
             </div>
           </div>
 
