@@ -18,46 +18,41 @@ import FetchProductsList from "../components/products/FetchProductsList.tsx";
       alt="Night club iluminada con letreros neón LED, luces rosa y azul, ideal para publicidad visual nocturna"
       class="absolute inset-0 w-full h-full object-cover z-0"
       title="Night club iluminada con letreros neón LED"
-      
     />
     <div class="absolute inset-0 bg-black/50 z-10"></div>
-    <div class=" absolute inset-0 flex flex-col justify-center items-center text-center z-15">
+    <div
+      class="absolute inset-0 flex flex-col justify-center items-center text-center z-15"
+    >
       <h1
-        class="
-          text-[65px] text-white font-black  
-          Montserrat  
-          [--stroke-color:#2DCCFF]  
-          [paint-order:stroke_fill] 
+        class="text-[65px] text-white font-black
+          Montserrat
+          [--stroke-color:#2DCCFF]
+          [paint-order:stroke_fill]
           [-webkit-text-stroke:2px_var(--stroke-color)]
           [text-shadow:4px_4px_0px_rgba(0,0,0,0.4)]
-          mb-0 leading-none "
+          mb-0 leading-none"
       >
         PRODUCTOS
       </h1>
-      
     </div>
   </section>
 
   <!-- Título principal -->
   <div class="bg-[#98d8df] h-3 flex items-center justify-center"></div>
 
-<section class="relative w-full bg-black-500 dark:bg-gray-900 pb-20 z-20">
-  <div
-    class="
-        w-full max-w-[1800px] mx-auto
+  <section class="relative w-[95%] m-auto bg-black-500 dark:bg-gray-900 pb-20 z-20">
+    <div
+      class="w-full max-w-[1800px] mx-auto
         px-4 sm:px-6 lg:px-8
-        -mt-10                          
-        relative                          
+        -mt-10
+        relative
         bg-white dark:bg-gray-800
         rounded-[64px]
-        pt-8 pb-12
-      
-      "
-  >
-
-    <div class="mt-8"> 
-      <FetchProductsList client:load />
+        pt-8 pb-12"
+    >
+      <div class="mt-8">
+        <FetchProductsList client:load />
+      </div>
     </div>
-  </div> 
-</section>
+  </section>
 </Layout>

@@ -7,8 +7,9 @@
 export const config = {
   // La URL de la API se obtiene de la variable de entorno PUBLIC_API_URL
   // Si no está definida, usa el fallback de producción
-  //apiUrl: "http://localhost:8000",
-  apiUrl: "https://apiyuntas.yuntaspublicidad.com", // API desplegada (comentada para desarrollo)
+  apiUrl: "http://localhost:8000",
+  
+  //apiUrl: "https://apiyuntas.yuntaspublicidad.com", // API desplegada (comentada para desarrollo)
   endpoints: {
     auth: {
       // Endpoints de autenticación
@@ -47,6 +48,13 @@ export const config = {
     update: (id: number | string) => `/api/v1/email-producto/plantilla/${id}`,
     plantillaPorProducto: (productoId: string | number) => `/api/v1/email-producto/plantilla/${productoId}`,
     },
+    whatsappProducto: {
+    create: (productoId: number | string) =>
+              `/api/v1/whatsapp-producto/productos/${productoId}/whatsapp-template-basic`,
+    get: (productoId: number | string) =>
+              `/api/v1/whatsapp-producto/productos/${productoId}/whatsapp-template-basic`,
+    },
+    
     blogs: {
       // Endpoints de blogs
       list: "/api/v1/blogs",
@@ -56,6 +64,9 @@ export const config = {
       update: (id: number | string) => `/api/v1/blogs/${id}`,
       delete: (id: number | string) => `/api/v1/blogs/${id}`,
     },
+    information:{
+      sendInformation:"/api/v1/send-info",
+    }
   },
 };
 

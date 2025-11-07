@@ -3,15 +3,16 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/pagination";
 import "./HeroSlider.css";
-import imagen1 from "../../assets/images/inicio/slider/diseño-luces-led-en-tunel.webp";
 import imagen2 from "../../assets/images/inicio/slider/estructura-iluminada-con-luces-led-para-exteriores.webp";
 import imagen3 from "../../assets/images/inicio/slider/slider_3.webp";
+import slider1 from "../../assets/images/inicio/slider/luces-1.webp";
+
 import { Image } from "astro:assets";
 
 // Configuración estructurada de slides con metadatos completos
 const slidersData = [
   {
-    src: imagen1,
+    src: slider1,
     title: "Túnel iluminado con luces LED",
     alt: "Túnel iluminado con luces LED, diseño moderno de iluminación en espacios urbanos, tecnología visual para entornos impactantes y personalizados.",
   },
@@ -28,7 +29,7 @@ const slidersData = [
 ];
 ---
 
-<section class="relative w-full h-screen select-none overflow-hidden bg-black">
+<section class="relative w-full h-full select-none overflow-hidden bg-black">
   <div class="hero-swiper">
     <div class="swiper">
       <div class="swiper-wrapper">
@@ -41,31 +42,39 @@ const slidersData = [
                 title={slide.title}
                 widths={[320, 540, 600, slide.src.width]}
                 sizes="(max-width: 420px) 320px, (max-width: 720px) 540px, (max-width: 1024px) 600px, 100vw"
-                quality={60}
+                quality={70}
                 loading={index === 0 ? "eager" : "lazy"}
                 class="w-full h-full object-cover absolute inset-0"
               />
               {/* Texto sobre el slider */}
-              <div class="absolute inset-0 flex flex-col justify-center items-center text-center px-4 sm:px-8 pointer-events-none z-20">
-                <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl Montserrat font-bold text-white sombra-title">
-                  ESPECIALISTAS
+              <div class="absolute inset-0 flex flex-col justify-end p-10 sm:p-20 pointer-events-none z-20 space-y-0 md:space-y-2">
+                <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl Montserrat font-semibold text-white sombra-title">
+                  ESPECIALISTAS EN <br />{" "}
+                  <span class="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl Montserrat font-black text-white sombra-title">
+                    DISEÑAR TU ESPACIO
+                  </span>
                 </h1>
-                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl Montserrat font-black text-white sombra-title">
-                  EN DISEÑAR TU ESPACIO
-                </h1>
+
+                <h2 class="text-lg sm:text-xl md:text-xl lg:text-2xl xl:text-3xl text-white font-semibold">
+                  ¡Somos <span class="font-bold uppercase">Yuntas</span>{" "}
+                  Publicidad!
+                </h2>
+                <a
+                  href="/contact"
+                  class="uppercase font-black text-white py-2 px-8 bg-[#23C1DE] rounded-2xl hidden sm:absolute right-10 "
+                >
+                  Contáctanos
+                </a>
               </div>
             </div>
           ))
         }
       </div>
-
-      <!-- Controles -->
-      <div class="swiper-pagination"></div>
     </div>
   </div>
 </section>
 
-<style >
+<style>
   .hero-swiper {
     width: 100%;
     height: 100%;
@@ -89,10 +98,6 @@ const slidersData = [
       autoplay: {
         delay: 5000,
         disableOnInteraction: false,
-      },
-      pagination: {
-        el: ".swiper-pagination",
-        clickable: true,
       },
     });
   });
