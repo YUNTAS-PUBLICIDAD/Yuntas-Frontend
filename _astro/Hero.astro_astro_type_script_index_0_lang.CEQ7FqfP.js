@@ -1,0 +1,1 @@
+import{S as e,A as a,P as t}from"./autoplay.C5Y-zvcZ.js";import{E as o}from"./effect-fade.CaJJNuHI.js";document.addEventListener("DOMContentLoaded",()=>{new e(".swiper",{modules:[a,t,o],loop:!0,effect:"fade",autoplay:{delay:5e3,disableOnInteraction:!1}})});
