@@ -26,6 +26,7 @@ export interface BlogFormData {
   descripcion: string;
   imagen_principal: File | null;
   titulo_blog?: string;
+  beneficios?: string[];
   subtitulo_beneficio?: string;
   url_video?: string;
   titulo_video?: string;
