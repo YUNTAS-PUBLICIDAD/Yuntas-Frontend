@@ -34,7 +34,7 @@ const ProductoPage = ({ data }: ProductoPageProps) => {
     <div className="w-full">
       {/* el componente emergente genera el siguiente error por consola: Minified React error #418 */}
       <Emergente producto={data} />
-
+    <div className="relative w-full h-[900px]">
       {/* Banner principal */}
       <img
         id="product-img"
@@ -56,9 +56,26 @@ const ProductoPage = ({ data }: ProductoPageProps) => {
           data.imagenes[0] || data.imagen_principal,
           "Banner de " + data.titulo
         )}
-        className="w-full h-[600px] mx-auto my-auto object-cover"
+        className="absolute inset-0 w-full h-full object-cover"
       />
+       <div className="absolute inset-0  flex flex-col justify-center items-center text-center">
+                
+                <h1
+                    className="
+                        text-[80px] text-white font-black 
+                        Montserrat 
+                        [--stroke-color:#2DCCFF] 
+                        [paint-order:stroke_fill] 
+                        [-webkit-text-stroke:2px_var(--stroke-color)]
+                        [text-shadow:4px_4px_0px_rgba(0,0,0,0.4)]
+                        mb-0 leading-none
+                    "
+                >
+                    {data.titulo}
+                </h1>
+            </div>
 
+      </div>      
       <div className="bg-white">
         <h2 className="font-extrabold text-center text-5xl py-16 px-4 text-blue-950">
           {data.titulo}
