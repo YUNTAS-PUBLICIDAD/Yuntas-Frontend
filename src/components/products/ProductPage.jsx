@@ -108,9 +108,9 @@ export default function ProductPage(){
     const { title, subtitle, description, images, specs: allSpecs, benefits, image } = product.data;
     
     return (
-        <div className="w-full">
+        <div>
             <Emergente producto={product} />
-
+        <div className="relative w-full h-[600px]">  
             {/* Banner principal */}
             <img
                 id="product-img"
@@ -125,9 +125,39 @@ export default function ProductPage(){
                         : 'Banner de ' + title
                 }
                 title={getImageTitle(images[0] || image, 'Banner de ' + title)}
-                className="w-full h-[600px] mx-auto my-auto object-cover"
+                className="absolute inset-0 w-full h-full object-cover"
+                
             />
-
+            <div className="absolute inset-0  flex flex-col justify-center items-center text-center">
+                
+                <h1
+                    className="
+                        text-[100px] text-white font-black 
+                        Montserrat 
+                        [--stroke-color:#2DCCFF] 
+                        [paint-order:stroke_fill] 
+                        [-webkit-text-stroke:2px_var(--stroke-color)]
+                        [text-shadow:4px_4px_0px_rgba(0,0,0,0.4)]
+                        mb-0 leading-none
+                    "
+                >
+                    {title}
+                </h1>
+                <h1
+                    className="
+                        text-[50px] text-white 
+                        Montserrat 
+                        [--stroke-color:#2DCCFF]
+                        [paint-order:stroke_fill]
+                        [-webkit-text-stroke:1px_var(--stroke-color)] 
+                        [text-shadow:3px_3px_0px_rgba(0,0,0,0.4)] 
+                        -mt-2
+                    "
+                >
+                    YUNTERO
+                </h1>
+            </div>
+        </div>
             <h2 className="font-extrabold text-center text-5xl py-16 px-4 text-blue-950">{title}</h2>
 
             {/* Sección de Especificaciones */}
