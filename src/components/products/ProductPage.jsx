@@ -158,7 +158,7 @@ export default function ProductPage(){
                 </h1>
             </div>
         </div>
-            <h2 className="font-extrabold text-center text-5xl py-16 px-4 text-blue-950">{title}</h2>
+            <div className="font-extrabold bg-black text-center text-5xl py-16 px-4 text-blue-950">{title}</div>
 
             {/* Sección de Especificaciones */}
             <div className="bg-indigo-950 py-12 lg:py-20">
