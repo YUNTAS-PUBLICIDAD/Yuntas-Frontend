@@ -726,6 +726,7 @@ const AddBlogModal = ({
                   <button type="button" onClick={() => handleProductLinkClick(0)} className="bg-green-500 hover:bg-green-700 text-white p-2 rounded-full shadow-lg transition">🛒</button>
                 </div>
               </div>
+
               {/* Beneficios */}
             <div className="bg-yellow-50 p-4 sm:p-6 rounded-lg border border-yellow-200 mt-4">
               <h3 className="text-lg font-semibold text-yellow-800 mb-4">
@@ -756,15 +757,15 @@ const AddBlogModal = ({
             </div>
 
 
-              {/* === PÁRRAFO 3 === */}
+              {/* === PÁRRAFO 2 === */}
               <div className="relative mb-6">
-                <label htmlFor="parrafo-4" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="parrafo-1" className="block text-sm font-medium text-gray-700 mb-1">
                   Párrafo 2 (opcional)
                 </label>
                 <textarea
-                  id="parrafo-4"
-                  value={formData.parrafos[4]}
-                  onChange={(e) => handleParrafoChange(e, 4)}
+                  id="parrafo-1"
+                  value={formData.parrafos[1]}
+                  onChange={(e) => handleParrafoChange(e, 1)}
                   className="w-full border border-gray-300 rounded px-3 py-2 pr-20"
                   rows={4}
                   placeholder="Párrafo de conclusión (opcional)"
@@ -773,8 +774,8 @@ const AddBlogModal = ({
                   Máx. 100 caracteres (letras, números y espacios).
                 </small>
                 <div className="absolute top-9 right-2 flex gap-2">
-                  <button type="button" onClick={() => handleInsertLinkClick(4)} className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition">🔗</button>
-                  <button type="button" onClick={() => handleProductLinkClick(4)} className="bg-green-500 hover:bg-green-700 text-white p-2 rounded-full shadow-lg transition">🛒</button>
+                  <button type="button" onClick={() => handleInsertLinkClick(1)} className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition">🔗</button>
+                  <button type="button" onClick={() => handleProductLinkClick(1)} className="bg-green-500 hover:bg-green-700 text-white p-2 rounded-full shadow-lg transition">🛒</button>
                 </div>
               </div>
               
