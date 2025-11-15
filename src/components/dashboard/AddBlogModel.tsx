@@ -13,8 +13,9 @@ interface BlogPOST {
   alt_imagen_card: string;
   imagenes_secundarias: (File | null)[];
   alt_imagenes_secundarias: string[];
-  parrafos: string[];
-  beneficios: string[];
+  parrafo1: string; // Introducción
+  beneficios: string[]; // Lista de beneficios (3 fijos)
+  parrafo2: string; // Conclusión/Testimonio
   url_video: string;
 }
 
@@ -59,9 +60,8 @@ const AddBlogModal = ({
   const [nombreProducto, setNombreProducto] = useState("");
   const [loading, setLoading] = useState(false);
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
-  const [selectedParagraphIndex, setSelectedParagraphIndex] = useState<
-    number | null
-  >(null);
+  const [selectedParagraphType, setSelectedParagraphType] = useState<'parrafo1' | 'parrafo2' | 'beneficio' | null>(null);
+  const [selectedBeneficioIndex, setSelectedBeneficioIndex] = useState<number | null>(null);
   const [selectedTextRange, setSelectedTextRange] = useState<{
     start: number;
     end: number;
@@ -81,8 +81,9 @@ const AddBlogModal = ({
     alt_imagen_card: "",
     imagenes_secundarias: [null, null, null],
     alt_imagenes_secundarias: ["", "", ""],
-    parrafos: ["", ""],
-    beneficios: ["", "", ""],
+    parrafo1: "", // Introducción
+    beneficios: ["", "", ""], // 3 beneficios fijos
+    parrafo2: "", // Conclusión/Testimonio
     url_video: "",
   };
 
@@ -94,25 +95,28 @@ const AddBlogModal = ({
     if (blogToEdit) {
       const productoIdString = blogToEdit.producto_id?.toString() || "";
       
-      let parrafos: string[] = [];
+      // Extraer párrafo 1 (introducción)
+      let parrafo1 = "";
+      if (Array.isArray(blogToEdit.parrafos) && blogToEdit.parrafos[0]) {
+        parrafo1 = blogToEdit.parrafos[0].parrafo || "";
+      }
+
+      // Extraer beneficios
+      let beneficios: string[] = ["", "", ""];
       if (Array.isArray(blogToEdit.parrafos)) {
-        parrafos = blogToEdit.parrafos.map((p: any) => p.parrafo || "");
+        // beneficios posiciones 1, 2, 3
+        for (let i = 1; i <= 3; i++) {
+          if (blogToEdit.parrafos[i]) {
+            beneficios[i-1] = blogToEdit.parrafos[i].parrafo || "";
+          }
+        }
       }
 
-      // --- Mapeo robusto de beneficios ---
-      let beneficios: string[] = [];
-      if (Array.isArray(blogToEdit.beneficios)) {
-        beneficios = blogToEdit.beneficios.map((b: any) => b.beneficio || "");
+      // Extraer párrafo 2 (conclusión/testimonio)
+      let parrafo2 = "";
+      if (Array.isArray(blogToEdit.parrafos) && blogToEdit.parrafos[4]) {
+        parrafo2 = blogToEdit.parrafos[4].parrafo || "";
       }
-
-      // --- Asignación de datos finales ---
-      // Rellenar mínimo 2 párrafos y 3 beneficios, pero mostrar todos los existentes
-      const minParrafos = 2;
-      const minBeneficios = 3;
-      const parrafosFinal = [...parrafos];
-      while (parrafosFinal.length < minParrafos) parrafosFinal.push("");
-      const beneficiosFinal = [...beneficios];
-      while (beneficiosFinal.length < minBeneficios) beneficiosFinal.push("");
 
       setFormData({
         producto_id: productoIdString,
@@ -129,8 +133,9 @@ const AddBlogModal = ({
           blogToEdit.imagenes?.[1]?.text_alt || "",
           blogToEdit.imagenes?.[2]?.text_alt || "",
         ],
-        parrafos: parrafosFinal,
-        beneficios: beneficiosFinal,
+        parrafo1,
+        beneficios,
+        parrafo2,
         url_video: blogToEdit.url_video || "",
       });
       setNombreProducto(blogToEdit.nombre_producto || "");
@@ -233,21 +238,30 @@ const AddBlogModal = ({
     setFormData({ ...formData, alt_imagenes_secundarias: updated });
   };
 
-  const handleParrafoChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-    index: number
-  ) => {
-    const updated = [...formData.parrafos];
+  const handleParrafo1Change = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setFormData({ ...formData, parrafo1: e.target.value });
+  };
+
+  const handleParrafo2Change = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setFormData({ ...formData, parrafo2: e.target.value });
+  };
+
+  const handleBeneficioChange = (e: React.ChangeEvent<HTMLTextAreaElement>, index: number) => {
+    const updated = [...formData.beneficios];
     updated[index] = e.target.value;
-    setFormData({ ...formData, parrafos: updated });
+    setFormData({ ...formData, beneficios: updated });
   };
 
   // Funciones para enlaces en párrafos
-  const handleInsertLinkClick = (index: number) => {
-    const textarea = document.getElementById(
-      `parrafo-${index}`
-    ) as HTMLTextAreaElement;
+  const handleInsertLinkClick = (type: 'parrafo1' | 'parrafo2' | 'beneficio', beneficioIndex?: number) => {
+    let textareaId = '';
+    if (type === 'parrafo1') textareaId = 'parrafo1';
+    else if (type === 'parrafo2') textareaId = 'parrafo2';
+    else if (type === 'beneficio' && beneficioIndex !== undefined) textareaId = `beneficio-${beneficioIndex}`;
+
+    const textarea = document.getElementById(textareaId) as HTMLTextAreaElement;
     if (!textarea) return;
+    
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     if (start === end) {
@@ -259,41 +273,48 @@ const AddBlogModal = ({
       return;
     }
     const selected = textarea.value.substring(start, end);
-    setSelectedParagraphIndex(index);
+    setSelectedParagraphType(type);
+    setSelectedBeneficioIndex(beneficioIndex !== undefined ? beneficioIndex : null);
     setSelectedTextRange({ start, end });
     setSelectedText(selected);
     setIsLinkModalOpen(true);
   };
 
-  const handleInsertManualLink = () => {
-    if (
-      selectedParagraphIndex === null ||
-      selectedTextRange === null ||
-      !linkUrl.trim()
-    )
-      return;
-    const currentText = formData.parrafos[selectedParagraphIndex];
-    const linkedText = `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" title="${selectedText}" style="color: white; font-weight: bold;">${selectedText}</a>`;
+const handleInsertManualLink = () => {
+  if (!selectedParagraphType || !selectedTextRange || !linkUrl.trim()) return;
 
-    const newText =
-      currentText.slice(0, selectedTextRange.start) +
-      linkedText +
-      currentText.slice(selectedTextRange.end);
-    const updatedParrafos = [...formData.parrafos];
-    updatedParrafos[selectedParagraphIndex] = newText;
-    setFormData({ ...formData, parrafos: updatedParrafos });
-    setSelectedParagraphIndex(null);
-    setSelectedTextRange(null);
-    setSelectedText("");
-    setLinkUrl("");
-    setIsLinkModalOpen(false);
-  };
+  // Crear el enlace SOLO en negrita 
+  const linkedText = `<strong><a href="${linkUrl}" target="_blank" rel="noopener noreferrer">${selectedText}</a></strong>`;
 
-  const handleProductLinkClick = (index: number) => {
-    const textarea = document.getElementById(
-      `parrafo-${index}`
-    ) as HTMLTextAreaElement;
+  let newText = '';
+  if (selectedParagraphType === 'parrafo1') {
+    const currentText = formData.parrafo1;
+    newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
+    setFormData({ ...formData, parrafo1: newText });
+  } else if (selectedParagraphType === 'parrafo2') {
+    const currentText = formData.parrafo2;
+    newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
+    setFormData({ ...formData, parrafo2: newText });
+  } else if (selectedParagraphType === 'beneficio' && selectedBeneficioIndex !== null) {
+    const currentText = formData.beneficios[selectedBeneficioIndex];
+    newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
+    const updatedBeneficios = [...formData.beneficios];
+    updatedBeneficios[selectedBeneficioIndex] = newText;
+    setFormData({ ...formData, beneficios: updatedBeneficios });
+  }
+
+  resetLinkState();
+};
+
+  const handleProductLinkClick = (type: 'parrafo1' | 'parrafo2' | 'beneficio', beneficioIndex?: number) => {
+    let textareaId = '';
+    if (type === 'parrafo1') textareaId = 'parrafo1';
+    else if (type === 'parrafo2') textareaId = 'parrafo2';
+    else if (type === 'beneficio' && beneficioIndex !== undefined) textareaId = `beneficio-${beneficioIndex}`;
+
+    const textarea = document.getElementById(textareaId) as HTMLTextAreaElement;
     if (!textarea) return;
+    
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     const selected = textarea.value.substring(start, end);
@@ -305,39 +326,52 @@ const AddBlogModal = ({
       );
       return;
     }
-    setSelectedParagraphIndex(index);
+    setSelectedParagraphType(type);
+    setSelectedBeneficioIndex(beneficioIndex !== undefined ? beneficioIndex : null);
     setSelectedTextRange({ start, end });
     setSelectedText(selected);
     setIsProductLinkModalOpen(true);
   };
 
-  const handleInsertProductLink = (producto: Producto) => {
-    if (selectedParagraphIndex === null || selectedTextRange === null) return;
-    const currentText = formData.parrafos[selectedParagraphIndex];
-    const link = producto.link;
-    const linkedText = `<a href="/products/${link}" style="font-weight: bold;" title="${link}">${selectedText}</a>`;
+ const handleInsertProductLink = (producto: Producto) => {
+  if (!selectedParagraphType || !selectedTextRange) return;
 
-    const newText =
-      currentText.slice(0, selectedTextRange.start) +
-      linkedText +
-      currentText.slice(selectedTextRange.end);
-    const updatedParrafos = [...formData.parrafos];
-    updatedParrafos[selectedParagraphIndex] = newText;
-    setFormData({ ...formData, parrafos: updatedParrafos });
-    setSelectedParagraphIndex(null);
-    setSelectedTextRange(null);
-    setSelectedText("");
-    setIsProductLinkModalOpen(false);
-  };
+  // Crear el enlace al producto SOLO en negrita 
+  const linkedText = `<strong><a href="/products/${producto.link}" title="${producto.nombre}">${selectedText}</a></strong>`;
 
-  const closeModal = () => {
-    setIsOpen(false);
-    setSelectedParagraphIndex(null);
+  let newText = '';
+  if (selectedParagraphType === 'parrafo1') {
+    const currentText = formData.parrafo1;
+    newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
+    setFormData({ ...formData, parrafo1: newText });
+  } else if (selectedParagraphType === 'parrafo2') {
+    const currentText = formData.parrafo2;
+    newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
+    setFormData({ ...formData, parrafo2: newText });
+  } else if (selectedParagraphType === 'beneficio' && selectedBeneficioIndex !== null) {
+    const currentText = formData.beneficios[selectedBeneficioIndex];
+    newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
+    const updatedBeneficios = [...formData.beneficios];
+    updatedBeneficios[selectedBeneficioIndex] = newText;
+    setFormData({ ...formData, beneficios: updatedBeneficios });
+  }
+
+  resetLinkState();
+};
+
+  const resetLinkState = () => {
+    setSelectedParagraphType(null);
+    setSelectedBeneficioIndex(null);
     setSelectedTextRange(null);
     setSelectedText("");
     setIsLinkModalOpen(false);
     setIsProductLinkModalOpen(false);
     setLinkUrl("");
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    resetLinkState();
     setFormData(defaultFormData);
   };
 
@@ -346,36 +380,33 @@ const AddBlogModal = ({
     const isEdit = !!blogToEdit;
 
     if (!formData.producto_id) return alert("⚠️ Debe seleccionar un producto.");
+    if (!formData.subtitulo.trim()) return alert("⚠️ El subtítulo es obligatorio.");
+    if (!isEdit && !formData.imagen_principal) return alert("⚠️ La imagen principal es obligatoria para crear.");
 
-    if (!formData.subtitulo.trim())
-      return alert("⚠️ El subtítulo es obligatorio.");
-    if (!isEdit && !formData.imagen_principal)
-      return alert("⚠️ La imagen principal es obligatoria para crear.");
+    // Validar que haya al menos 3 beneficios con contenido
+    const beneficiosConContenido = formData.beneficios.filter(b => b && b.trim());
+    if (beneficiosConContenido.length < 3) return alert("⚠️ Debe haber al menos 3 beneficios con contenido.");
 
-    if (!formData.subtitulo.trim())
-      return alert("⚠️ El subtítulo es obligatorio.");
-    if (!isEdit && !formData.imagen_principal)
-      return alert("⚠️ La imagen principal es obligatoria para crear.");
-    const parrafosConContenido = formData.parrafos.filter((p) => p.trim());
-    if (parrafosConContenido.length === 0)
-      return alert("⚠️ Debe haber al menos un párrafo con contenido.");
-    const urlRegex = /^[a-z0-Z0-9]+(?:-[a-z0-Z0-9]+)*$/;
+    // Validar que los párrafos principales tengan contenido
+    if (!formData.parrafo1.trim()) return alert("⚠️ El párrafo 1 (introducción) es obligatorio.");
+    if (!formData.parrafo2.trim()) return alert("⚠️ El párrafo 2 (conclusión/testimonio) es obligatorio.");
+
+    const urlRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
     if (formData.link && !urlRegex.test(formData.link)) {
-      return alert(
-        "⚠️ El link debe ser URL-friendly (Solo letras, guiones y números)."
-      );
+      return alert("⚠️ El link debe ser URL-friendly (Solo letras minúsculas, guiones y números).");
     }
 
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
       const formDataToSend = new FormData();
+      
       formDataToSend.append("producto_id", formData.producto_id);
       formDataToSend.append("subtitulo", formData.subtitulo);
       formDataToSend.append("url_video", formData.url_video);
 
-      if (formData.link?.trim())
-        formDataToSend.append("link", formData.link.trim());
+      if (formData.link?.trim()) formDataToSend.append("link", formData.link.trim());
+      
       const etiqueta = {
         meta_titulo: formData.meta_titulo?.trim() || "",
         meta_descripcion: formData.meta_descripcion?.trim() || "",
@@ -383,52 +414,42 @@ const AddBlogModal = ({
       if (etiqueta.meta_titulo || etiqueta.meta_descripcion) {
         formDataToSend.append("etiqueta", JSON.stringify(etiqueta));
       }
-      if (formData.text_alt_principal?.trim())
-        formDataToSend.append(
-          "text_alt_principal",
-          formData.text_alt_principal.trim()
-        );
-      if (formData.alt_imagen_card?.trim())
-        formDataToSend.append(
-          "alt_imagen_card",
-          formData.alt_imagen_card.trim()
-        );
-      if (formData.imagen_principal)
-        formDataToSend.append("imagen_principal", formData.imagen_principal);
+      
+      if (formData.text_alt_principal?.trim()) formDataToSend.append("text_alt_principal", formData.text_alt_principal.trim());
+      if (formData.alt_imagen_card?.trim()) formDataToSend.append("alt_imagen_card", formData.alt_imagen_card.trim());
+      if (formData.imagen_principal) formDataToSend.append("imagen_principal", formData.imagen_principal);
 
-      const imagenesConArchivo = formData.imagenes_secundarias.filter(
-        (img) => img !== null
-      );
-      imagenesConArchivo.forEach((img) =>
-        formDataToSend.append("imagenes[]", img as File)
-      );
+      // Imágenes secundarias
+      const imagenesConArchivo = formData.imagenes_secundarias.filter((img) => img !== null);
+      imagenesConArchivo.forEach((img) => formDataToSend.append("imagenes[]", img as File));
+      
       formData.alt_imagenes_secundarias.forEach((alt, index) => {
-        if (
-          formData.imagenes_secundarias[index] !== null ||
-          (isEdit && alt.trim())
-        ) {
+        if (formData.imagenes_secundarias[index] !== null || (isEdit && alt.trim())) {
           formDataToSend.append("alt_imagenes[]", alt.trim());
         }
       });
-     if (parrafosConContenido.length > 0) {
-        parrafosConContenido.forEach(p => {
-          formDataToSend.append("parrafos[]", p);
-        });
-      }
 
-      // Enviar beneficios como array para la tabla blogs_parrafos
-      if (formData.beneficios && formData.beneficios.length > 0) {
-        formData.beneficios.forEach(b => {
-          if (b.trim() !== "") {
-            formDataToSend.append("beneficios[]", b.trim());
-          }
-        });
-      }
+      // PÁRRAFOS 
+      // parrafos[0] = introducción (parrafo1)
+      formDataToSend.append("parrafos[0]", formData.parrafo1.trim());
+
+      // parrafos[1], [2], [3] = beneficios
+      formData.beneficios.forEach((beneficio, index) => {
+        if (beneficio && beneficio.trim()) {
+          formDataToSend.append(`parrafos[${index + 1}]`, beneficio.trim());
+        }
+      });
+
+      // El último párrafo = conclusión/testimonio (parrafo4)
+      const ultimoIndice = formData.beneficios.length + 1;
+      formDataToSend.append(`parrafos[${ultimoIndice}]`, formData.parrafo2.trim());
+
       const endpoint = isEdit
         ? getApiUrl(config.endpoints.blogs.update(blogToEdit.id))
         : getApiUrl(config.endpoints.blogs.create);
 
       if (isEdit) formDataToSend.append("_method", "PUT");
+      
       const res = await fetch(endpoint, {
         method: "POST",
         body: formDataToSend,
@@ -437,12 +458,14 @@ const AddBlogModal = ({
           Accept: "application/json",
         },
       });
+
       let data;
       try {
         data = await res.json();
       } catch {
         data = await res.text();
       }
+
       if (res.ok) {
         alert(`✅ Blog ${isEdit ? "actualizado" : "creado"} correctamente.`);
         closeModal();
@@ -480,11 +503,7 @@ const AddBlogModal = ({
           {blogToEdit ? "Editar Blog" : "Añadir Blog"}
         </h2>
 
-        <form
-          onSubmit={handleSubmit}
-          encType="multipart/form-data"
-          className="space-y-8"
-        >
+        <form onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-8">
           {/* Información Principal & SEO */}
           <div className="bg-blue-50 p-4 sm:p-6 rounded-lg border border-blue-200">
             <h3 className="text-lg font-semibold text-blue-800 mb-4">
@@ -593,216 +612,265 @@ const AddBlogModal = ({
                 </small>
               </div>
             </div>
+          </div>
 
-            {/* Imágenes */}
-            <div className="bg-green-50 p-4 sm:p-6 rounded-lg border border-green-200">
-              <h3 className="text-lg font-semibold text-green-800 mb-4">
-                Imágenes
-              </h3>
-              <div className="space-y-6">
-                {/* Imagen Principal */}
-                <div className="border border-green-400 rounded p-4">
-                  <label className="block font-medium mb-2">
-                    Imagen Principal{" "}
-                    {!blogToEdit && <span className="text-red-500">*</span>}
-                  </label>
-                  {blogToEdit?.imagen_principal && (
-                    <img
-                      src={blogToEdit.imagen_principal}
-                      alt={formData.text_alt_principal || "Imagen principal"}
-                      className="w-full h-48 sm:h-64 object-cover rounded mb-4 border"
-                    />
-                  )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleFileChange(e, "imagen_principal")}
-                    className="w-full file:py-2 file:px-3 file:border-0 file:bg-green-100 file:text-green-700 hover:file:bg-green-200"
+          {/* Imágenes */}
+          <div className="bg-green-50 p-4 sm:p-6 rounded-lg border border-green-200">
+            <h3 className="text-lg font-semibold text-green-800 mb-4">
+              Imágenes
+            </h3>
+            <div className="space-y-6">
+              {/* Imagen Principal */}
+              <div className="border border-green-400 rounded p-4">
+                <label className="block font-medium mb-2">
+                  Imagen Principal{" "}
+                  {!blogToEdit && <span className="text-red-500">*</span>}
+                </label>
+                {blogToEdit?.imagen_principal && (
+                  <img
+                    src={blogToEdit.imagen_principal}
+                    alt={formData.text_alt_principal || "Imagen principal"}
+                    className="w-full h-48 sm:h-64 object-cover rounded mb-4 border"
                   />
-                  <small className="text-gray-500">Peso máximo: 2 MB.</small>
-                  <input
-                    type="text"
-                    name="text_alt_principal"
-                    placeholder="Texto ALT para SEO"
-                    value={formData.text_alt_principal}
-                    onChange={handleInputChange}
-                    className="mt-2 w-full border border-gray-300 rounded px-3 py-2"
-                  />
-                </div>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileChange(e, "imagen_principal")}
+                  className="w-full file:py-2 file:px-3 file:border-0 file:bg-green-100 file:text-green-700 hover:file:bg-green-200"
+                />
+                <small className="text-gray-500">Peso máximo: 2 MB.</small>
+                <input
+                  type="text"
+                  name="text_alt_principal"
+                  placeholder="Texto ALT para SEO"
+                  value={formData.text_alt_principal}
+                  onChange={handleInputChange}
+                  className="mt-2 w-full border border-gray-300 rounded px-3 py-2"
+                />
+              </div>
 
-                {/* Imágenes Secundarias */}
-                <div className="border border-green-400 rounded p-4">
-                  <label className="block font-semibold mb-4">
-                    Imágenes Secundarias
-                  </label>
-                  <small className="text-gray-500">
-                    Imágenes adicionales del artículo. Se creará un registro por
-                    archivo en la tabla imagen_blogs.
-                  </small>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {formData.imagenes_secundarias.map((_, i) => (
-                      <div key={i} className="flex flex-col items-center">
-                        {blogToEdit?.imagenes?.[i]?.ruta_imagen && (
-                          <img
-                            src={blogToEdit.imagenes[i].ruta_imagen}
-                            alt={
-                              formData.alt_imagenes_secundarias[i] ||
-                              `Imagen secundaria #${i + 1}`
-                            }
-                            className="w-full h-32 object-cover rounded mb-2 border"
-                          />
-                        )}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => handleImagenSecundariaChange(e, i)}
-                          className="w-full file:py-2 file:px-3 file:border-0 file:bg-green-100 file:text-green-700 hover:file:bg-green-200"
-                        />
-                        <small className="text-gray-500">
-                          Archivo de imagen secundaria #{i + 1}.<br />
-                          Tamaño máximo: 2 MB.
-                        </small>
-                        <input
-                          type="text"
-                          placeholder={`Texto ALT imagen secundaria #${i + 1}`}
-                          value={formData.alt_imagenes_secundarias[i]}
-                          onChange={(e) =>
-                            handleAltImagenSecundariaChange(e, i)
+              {/* Imágenes Secundarias */}
+              <div className="border border-green-400 rounded p-4">
+                <label className="block font-semibold mb-4">
+                  Imágenes Secundarias
+                </label>
+                <small className="text-gray-500">
+                  Imágenes adicionales del artículo. Se creará un registro por
+                  archivo en la tabla imagen_blogs.
+                </small>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                  {formData.imagenes_secundarias.map((_, i) => (
+                    <div key={i} className="flex flex-col items-center">
+                      {blogToEdit?.imagenes?.[i]?.ruta_imagen && (
+                        <img
+                          src={blogToEdit.imagenes[i].ruta_imagen}
+                          alt={
+                            formData.alt_imagenes_secundarias[i] ||
+                            `Imagen secundaria #${i + 1}`
                           }
-                          className="w-full border border-gray-300 rounded px-3 py-2 mt-2"
+                          className="w-full h-32 object-cover rounded mb-2 border"
                         />
-                      </div>
-                    ))}
-                  </div>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImagenSecundariaChange(e, i)}
+                        className="w-full file:py-2 file:px-3 file:border-0 file:bg-green-100 file:text-green-700 hover:file:bg-green-200"
+                      />
+                      <small className="text-gray-500">
+                        Archivo de imagen secundaria #{i + 1}.<br />
+                        Tamaño máximo: 2 MB.
+                      </small>
+                      <input
+                        type="text"
+                        placeholder={`Texto ALT imagen secundaria #${i + 1}`}
+                        value={formData.alt_imagenes_secundarias[i]}
+                        onChange={(e) =>
+                          handleAltImagenSecundariaChange(e, i)
+                        }
+                        className="w-full border border-gray-300 rounded px-3 py-2 mt-2"
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Video */}
-            <div className="bg-purple-50 p-4 sm:p-6 rounded-lg border border-purple-200">
-              <h3 className="text-lg font-semibold text-purple-800 mb-4">
-                Video
-              </h3>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                URL del Video *
+          {/* Video */}
+          <div className="bg-purple-50 p-4 sm:p-6 rounded-lg border border-purple-200">
+            <h3 className="text-lg font-semibold text-purple-800 mb-4">
+              Video
+            </h3>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              URL del Video *
+            </label>
+            <input
+              type="url"
+              name="url_video"
+              value={formData.url_video}
+              onChange={handleInputChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <small className="text-gray-500">
+              Solo minúsculas y guiones. Hasta 255 letras, números o espacios.
+            </small>
+          </div>
+
+          {/* CONTENIDO */}
+          <div className="bg-yellow-50 p-4 sm:p-6 rounded-lg border border-yellow-200">
+            <h3 className="text-lg font-semibold text-yellow-800 mb-4">
+              Contenido del Blog <span className="text-red-500">*</span>
+            </h3>
+
+            {/* PÁRRAFO 1 - Introducción */}
+            <div className="relative mb-8">
+              <label htmlFor="parrafo1" className="block text-sm font-medium text-gray-700 mb-2">
+                Párrafo 1 (Introducción) <span className="text-red-500">*</span>
               </label>
-              <input
-                type="url"
-                name="url_video"
-                value={formData.url_video}
-                onChange={handleInputChange}
+              <textarea
+                id="parrafo1"
+                value={formData.parrafo1}
+                onChange={handleParrafo1Change}
+                className="w-full border border-gray-300 rounded px-3 py-2 pr-20"
+                rows={5}
+                placeholder="Escribe aquí la introducción del blog..."
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <small className="text-gray-500">
-                Solo minúsculas y guiones. Hasta 255 letras, números o espacios.
+              <small className="text-gray-500 block mt-1">
+                Este párrafo aparecerá en la primera sección del blog.
               </small>
-            </div>
-
-            {/* Párrafos */}
-            <div className="bg-yellow-50 p-4 sm:p-6 rounded-lg border border-yellow-200">
-              <h3 className="text-lg font-semibold text-yellow-800 mb-4">
-                Contenido del Blog <span className="text-red-500">*</span>
-              </h3>
-
-              {/* === PÁRRAFO 1 === */}
-              <div className="relative mb-6">
-                <label htmlFor="parrafo-0" className="block text-sm font-medium text-gray-700 mb-1">
-                  Párrafo 1 (Introducción)
-                </label>
-                <textarea
-                  id="parrafo-0"
-                  value={formData.parrafos[0]}
-                  onChange={(e) => handleParrafoChange(e, 0)}
-                  className="w-full border border-gray-300 rounded px-3 py-2 pr-20"
-                  rows={4}
-                  placeholder="Párrafo de introducción (opcional)"
-                />
-                <small className="text-gray-500">
-                  Máx. 100 caracteres (letras, números y espacios).
-                </small>
-                <div className="absolute top-9 right-2 flex gap-2">
-                  <button type="button" onClick={() => handleInsertLinkClick(0)} className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition">🔗</button>
-                  <button type="button" onClick={() => handleProductLinkClick(0)} className="bg-green-500 hover:bg-green-700 text-white p-2 rounded-full shadow-lg transition">🛒</button>
-                </div>
-              </div>
-
-              {/* Beneficios */}
-            <div className="bg-yellow-50 p-4 sm:p-6 rounded-lg border border-yellow-200 mt-4">
-              <h3 className="text-lg font-semibold text-yellow-800 mb-4">
-                Beneficios <span className="text-red-500">*</span>
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {[0, 1, 2].map((i) => (
-                  <div key={i}>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Beneficio {i + 1}
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.beneficios[i]}
-                      onChange={(e) => {
-                        const updated = [...formData.beneficios];
-                        updated[i] = e.target.value;
-                        setFormData({ ...formData, beneficios: updated });
-                      }}
-                      maxLength={100}
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <small className="text-gray-500">Máx. 100 caracteres.</small>
-                  </div>
-                ))}
+              <div className="absolute top-10 right-2 flex gap-2">
+                <button 
+                  type="button" 
+                  onClick={() => handleInsertLinkClick('parrafo1')} 
+                  className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition text-sm"
+                  title="Insertar enlace URL"
+                >
+                  🔗 URL
+                </button>
+                <button 
+                  type="button" 
+                  onClick={() => handleProductLinkClick('parrafo1')} 
+                  className="bg-green-500 hover:bg-green-700 text-white p-2 rounded-full shadow-lg transition text-sm"
+                  title="Enlazar producto"
+                >
+                  🛒 Producto
+                </button>
               </div>
             </div>
 
-
-              {/* === PÁRRAFO 2 === */}
-              <div className="relative mb-6">
-                <label htmlFor="parrafo-1" className="block text-sm font-medium text-gray-700 mb-1">
-                  Párrafo 2 (opcional)
-                </label>
-                <textarea
-                  id="parrafo-1"
-                  value={formData.parrafos[1]}
-                  onChange={(e) => handleParrafoChange(e, 1)}
-                  className="w-full border border-gray-300 rounded px-3 py-2 pr-20"
-                  rows={4}
-                  placeholder="Párrafo de conclusión (opcional)"
-                />
-                <small className="text-gray-500">
-                  Máx. 100 caracteres (letras, números y espacios).
-                </small>
-                <div className="absolute top-9 right-2 flex gap-2">
-                  <button type="button" onClick={() => handleInsertLinkClick(1)} className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition">🔗</button>
-                  <button type="button" onClick={() => handleProductLinkClick(1)} className="bg-green-500 hover:bg-green-700 text-white p-2 rounded-full shadow-lg transition">🛒</button>
-                </div>
-              </div>
+            {/* LISTA DE BENEFICIOS */}
+            <div className="mb-8">
+              <h4 className="text-lg font-semibold text-gray-800 mb-4">
+                Lista de Beneficios <span className="text-red-500">*</span>
+              </h4>
               
+              <small className="text-gray-500 block mb-4">
+                3 beneficios requeridos. Cada beneficio aparecerá como un ítem en la lista.
+              </small>
+
+
+              {formData.beneficios.map((beneficio, index) => (
+                <div key={index} className="relative mb-4 p-4 bg-white rounded border">
+                  <label htmlFor={`beneficio-${index}`} className="block text-sm font-medium text-gray-700 mb-2">
+                    Beneficio {index + 1} <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    id={`beneficio-${index}`}
+                    value={beneficio}
+                    onChange={(e) => handleBeneficioChange(e, index)}
+                    className="w-full border border-gray-300 rounded px-3 py-2 pr-20"
+                    rows={3}
+                    placeholder={`Describe el beneficio ${index + 1}...`}
+                    required
+                  />
+                  <div className="absolute top-12 right-6 flex gap-2">
+                    <button 
+                      type="button" 
+                      onClick={() => handleInsertLinkClick('beneficio', index)} 
+                      className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition text-sm"
+                      title="Insertar enlace URL"
+                    >
+                      🔗
+                    </button>
+                    <button 
+                      type="button" 
+                      onClick={() => handleProductLinkClick('beneficio', index)} 
+                      className="bg-green-500 hover:bg-green-700 text-white p-2 rounded-full shadow-lg transition text-sm"
+                      title="Enlazar producto"
+                    >
+                      🛒
+                    </button>
+
+                  </div>
+                </div>
+              ))}
             </div>
 
-            {/* Botones */}
-            <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">
-              <button
-                type="button"
-                onClick={closeModal}
-                className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded"
-                disabled={loading}
-              >
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded disabled:opacity-50"
-              >
-                {loading
-                  ? "Procesando..."
-                  : blogToEdit
-                  ? "Actualizar"
-                  : "Crear"}
-              </button>
+
+            {/* PÁRRAFO 2 - Conclusión/Testimonio */}
+            <div className="relative mb-6">
+              <label htmlFor="parrafo2" className="block text-sm font-medium text-gray-700 mb-2">
+                Párrafo 2 (Conclusión/Testimonio) <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                id="parrafo2"
+                value={formData.parrafo2}
+                onChange={handleParrafo2Change}
+                className="w-full border border-gray-300 rounded px-3 py-2 pr-20"
+                rows={5}
+                placeholder="Escribe aquí la conclusión o testimonio del blog..."
+                required
+              />
+              <small className="text-gray-500 block mt-1">
+                Este párrafo aparecerá en la sección de testimonio del cliente.
+              </small>
+              <div className="absolute top-10 right-2 flex gap-2">
+                <button 
+                  type="button" 
+                  onClick={() => handleInsertLinkClick('parrafo2')} 
+                  className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition text-sm"
+                  title="Insertar enlace URL"
+                >
+                  🔗 URL
+                </button>
+                <button 
+                  type="button" 
+                  onClick={() => handleProductLinkClick('parrafo2')} 
+                  className="bg-green-500 hover:bg-green-700 text-white p-2 rounded-full shadow-lg transition text-sm"
+                  title="Enlazar producto"
+                >
+                  🛒 Producto
+                </button>
+
+              </div>
             </div>
+          </div>
+
+          {/* Botones */}
+          <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">
+            <button
+              type="button"
+              onClick={closeModal}
+              className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded"
+              disabled={loading}
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded disabled:opacity-50"
+            >
+              {loading
+                ? "Procesando..."
+                : blogToEdit
+                ? "Actualizar"
+                : "Crear"}
+            </button>
           </div>
         </form>
 
@@ -825,7 +893,7 @@ const AddBlogModal = ({
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
-                  onClick={() => setIsLinkModalOpen(false)}
+                  onClick={resetLinkState}
                   className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded"
                 >
                   Cancelar
@@ -871,7 +939,7 @@ const AddBlogModal = ({
               <div className="flex justify-end">
                 <button
                   type="button"
-                  onClick={() => setIsProductLinkModalOpen(false)}
+                  onClick={resetLinkState}
                   className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded"
                 >
                   Cancelar
