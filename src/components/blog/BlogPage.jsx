@@ -218,7 +218,7 @@ export default function BlogPage({ article }) {
                 <blockquote
                   className="text-[#1A1A1A] text-sm sm:text-base md:text-lg leading-relaxed"
                   dangerouslySetInnerHTML={{
-                    __html: article.parrafos && article.parrafos[2]?.parrafo,
+                    __html: article.parrafos && article.parrafos[4]?.parrafo,
                   }}
                 />
               </div>
