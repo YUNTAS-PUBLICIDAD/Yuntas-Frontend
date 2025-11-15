@@ -772,6 +772,7 @@ const handleInsertManualLink = () => {
                 3 beneficios requeridos. Cada beneficio aparecerá como un ítem en la lista.
               </small>
 
+
               {formData.beneficios.map((beneficio, index) => (
                 <div key={index} className="relative mb-4 p-4 bg-white rounded border">
                   <label htmlFor={`beneficio-${index}`} className="block text-sm font-medium text-gray-700 mb-2">
@@ -803,10 +804,12 @@ const handleInsertManualLink = () => {
                     >
                       🛒
                     </button>
+
                   </div>
                 </div>
               ))}
             </div>
+
 
             {/* PÁRRAFO 2 - Conclusión/Testimonio */}
             <div className="relative mb-6">
@@ -842,6 +845,7 @@ const handleInsertManualLink = () => {
                 >
                   🛒 Producto
                 </button>
+
               </div>
             </div>
           </div>

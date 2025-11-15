@@ -157,34 +157,24 @@ export default function BlogPage({ article }) {
               <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <span className="text-2xl">✨</span> BENEFICIOS CLAVE:
               </h3>
-
-                <div className="flex flex-col gap-4">
-                  {[
-                    article.parrafos?.[1]?.parrafo,
-                    article.parrafos?.[2]?.parrafo,
-                    article.parrafos?.[3]?.parrafo
-                  ]
-                  .filter(item => item) 
-                  .map((textoDelItem, index) => (
-                    
-                    <div 
-                      key={index}
-                      className="bg-[#e0f7fa] rounded-xl p-4 shadow-lg flex items-center gap-3"
-                    >
-                      <div className="flex-shrink-0">
-                        <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path>
-                        </svg>
-                      </div>
-                      
-                      <div 
-                        className="text-gray-900 font-semibold text-base sm:text-lg"
-                        dangerouslySetInnerHTML={{ __html: textoDelItem }}
-                      />
+              <div className="flex flex-col gap-4">
+                {article.beneficios?.map((item, index) => (
+                  <div 
+                    key={index}
+                    className="bg-[#e0f7fa] rounded-xl p-4 shadow-lg flex items-center gap-3"
+                  >
+                    <div className="flex-shrink-0">
+                      <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path>
+                      </svg>
                     </div>
-
-                  ))}
-                </div>
+                    <div 
+                      className="text-gray-900 font-semibold text-base sm:text-lg"
+                      dangerouslySetInnerHTML={{ __html: item.beneficio }}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -218,7 +208,9 @@ export default function BlogPage({ article }) {
                 <blockquote
                   className="text-[#1A1A1A] text-sm sm:text-base md:text-lg leading-relaxed"
                   dangerouslySetInnerHTML={{
+
                     __html: article.parrafos && article.parrafos[4]?.parrafo,
+
                   }}
                 />
               </div>
