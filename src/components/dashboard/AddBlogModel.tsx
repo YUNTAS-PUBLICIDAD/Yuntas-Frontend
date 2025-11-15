@@ -89,6 +89,12 @@ const AddBlogModal = ({
 
   const [formData, setFormData] = useState<BlogPOST>(defaultFormData);
 
+  // Función helper para extraer texto seguro de parrafos
+  const getParrafoText = (parrafo: any): string => {
+    if (!parrafo) return "";
+    return typeof parrafo === 'string' ? parrafo : parrafo.parrafo || "";
+  };
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -96,27 +102,18 @@ const AddBlogModal = ({
       const productoIdString = blogToEdit.producto_id?.toString() || "";
       
       // Extraer párrafo 1 (introducción)
-      let parrafo1 = "";
-      if (Array.isArray(blogToEdit.parrafos) && blogToEdit.parrafos[0]) {
-        parrafo1 = blogToEdit.parrafos[0].parrafo || "";
-      }
+      let parrafo1 = getParrafoText(blogToEdit.parrafos?.[0]);
 
-      // Extraer beneficios
+      // Extraer beneficios 
       let beneficios: string[] = ["", "", ""];
       if (Array.isArray(blogToEdit.parrafos)) {
-        // beneficios posiciones 1, 2, 3
         for (let i = 1; i <= 3; i++) {
-          if (blogToEdit.parrafos[i]) {
-            beneficios[i-1] = blogToEdit.parrafos[i].parrafo || "";
-          }
+          beneficios[i-1] = getParrafoText(blogToEdit.parrafos[i]);
         }
       }
 
       // Extraer párrafo 2 (conclusión/testimonio)
-      let parrafo2 = "";
-      if (Array.isArray(blogToEdit.parrafos) && blogToEdit.parrafos[4]) {
-        parrafo2 = blogToEdit.parrafos[4].parrafo || "";
-      }
+      let parrafo2 = getParrafoText(blogToEdit.parrafos?.[4]);
 
       setFormData({
         producto_id: productoIdString,
@@ -280,31 +277,31 @@ const AddBlogModal = ({
     setIsLinkModalOpen(true);
   };
 
-const handleInsertManualLink = () => {
-  if (!selectedParagraphType || !selectedTextRange || !linkUrl.trim()) return;
+  const handleInsertManualLink = () => {
+    if (!selectedParagraphType || !selectedTextRange || !linkUrl.trim()) return;
 
-  // Crear el enlace SOLO en negrita 
-  const linkedText = `<strong><a href="${linkUrl}" target="_blank" rel="noopener noreferrer">${selectedText}</a></strong>`;
+    // Crear el enlace SOLO en negrita 
+    const linkedText = `<strong><a href="${linkUrl}" target="_blank" rel="noopener noreferrer">${selectedText}</a></strong>`;
 
-  let newText = '';
-  if (selectedParagraphType === 'parrafo1') {
-    const currentText = formData.parrafo1;
-    newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-    setFormData({ ...formData, parrafo1: newText });
-  } else if (selectedParagraphType === 'parrafo2') {
-    const currentText = formData.parrafo2;
-    newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-    setFormData({ ...formData, parrafo2: newText });
-  } else if (selectedParagraphType === 'beneficio' && selectedBeneficioIndex !== null) {
-    const currentText = formData.beneficios[selectedBeneficioIndex];
-    newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-    const updatedBeneficios = [...formData.beneficios];
-    updatedBeneficios[selectedBeneficioIndex] = newText;
-    setFormData({ ...formData, beneficios: updatedBeneficios });
-  }
+    let newText = '';
+    if (selectedParagraphType === 'parrafo1') {
+      const currentText = formData.parrafo1;
+      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
+      setFormData({ ...formData, parrafo1: newText });
+    } else if (selectedParagraphType === 'parrafo2') {
+      const currentText = formData.parrafo2;
+      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
+      setFormData({ ...formData, parrafo2: newText });
+    } else if (selectedParagraphType === 'beneficio' && selectedBeneficioIndex !== null) {
+      const currentText = formData.beneficios[selectedBeneficioIndex];
+      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
+      const updatedBeneficios = [...formData.beneficios];
+      updatedBeneficios[selectedBeneficioIndex] = newText;
+      setFormData({ ...formData, beneficios: updatedBeneficios });
+    }
 
-  resetLinkState();
-};
+    resetLinkState();
+  };
 
   const handleProductLinkClick = (type: 'parrafo1' | 'parrafo2' | 'beneficio', beneficioIndex?: number) => {
     let textareaId = '';
@@ -333,31 +330,31 @@ const handleInsertManualLink = () => {
     setIsProductLinkModalOpen(true);
   };
 
- const handleInsertProductLink = (producto: Producto) => {
-  if (!selectedParagraphType || !selectedTextRange) return;
+  const handleInsertProductLink = (producto: Producto) => {
+    if (!selectedParagraphType || !selectedTextRange) return;
 
-  // Crear el enlace al producto SOLO en negrita 
-  const linkedText = `<strong><a href="/products/${producto.link}" title="${producto.nombre}">${selectedText}</a></strong>`;
+    // Crear el enlace al producto SOLO en negrita 
+    const linkedText = `<strong><a href="/products/${producto.link}" title="${producto.nombre}">${selectedText}</a></strong>`;
 
-  let newText = '';
-  if (selectedParagraphType === 'parrafo1') {
-    const currentText = formData.parrafo1;
-    newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-    setFormData({ ...formData, parrafo1: newText });
-  } else if (selectedParagraphType === 'parrafo2') {
-    const currentText = formData.parrafo2;
-    newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-    setFormData({ ...formData, parrafo2: newText });
-  } else if (selectedParagraphType === 'beneficio' && selectedBeneficioIndex !== null) {
-    const currentText = formData.beneficios[selectedBeneficioIndex];
-    newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-    const updatedBeneficios = [...formData.beneficios];
-    updatedBeneficios[selectedBeneficioIndex] = newText;
-    setFormData({ ...formData, beneficios: updatedBeneficios });
-  }
+    let newText = '';
+    if (selectedParagraphType === 'parrafo1') {
+      const currentText = formData.parrafo1;
+      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
+      setFormData({ ...formData, parrafo1: newText });
+    } else if (selectedParagraphType === 'parrafo2') {
+      const currentText = formData.parrafo2;
+      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
+      setFormData({ ...formData, parrafo2: newText });
+    } else if (selectedParagraphType === 'beneficio' && selectedBeneficioIndex !== null) {
+      const currentText = formData.beneficios[selectedBeneficioIndex];
+      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
+      const updatedBeneficios = [...formData.beneficios];
+      updatedBeneficios[selectedBeneficioIndex] = newText;
+      setFormData({ ...formData, beneficios: updatedBeneficios });
+    }
 
-  resetLinkState();
-};
+    resetLinkState();
+  };
 
   const resetLinkState = () => {
     setSelectedParagraphType(null);
