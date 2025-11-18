@@ -233,7 +233,8 @@ export default function BlogPage({ article }) {
               Descubre más detalles sobre nuestros productos y servicios
             </p>
           </div>
-
+  
+  
           <div className="relative bg-black rounded-2xl overflow-hidden shadow-lg border border-gray-200">
             <div className="aspect-video w-full relative">
               {article.url_video ? (
