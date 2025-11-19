@@ -1,23 +1,29 @@
 ---
 import { LuTelescope } from "react-icons/lu";
 ---
+<!-- Sección de tarjeta de visión con icono azul y texto descriptivo -->
 <section
-  class="w-full bg-white p-6 flex md:flex-col flex-row items-center justify-evenly md:h-full"
+  class="w-full bg-[#E6F7F9] p-6 flex flex-col items-center justify-center rounded-3xl min-h-96"
 >
-  <div class="flex flex-col items-center md:order-1 md:w-1/2">
-    <LuTelescope className="bg-blue-500/90 rounded-3xl size-24 md:size-32 p-4"/>
-    <div class="flex-col w-full">
-      <p class="text-blue-500 text-center font-extrabold text-2xl md:text-3xl my-4 mb-0 md:mb-4">
-        VISIÓN
-      </p>
-      <hr class="border-2 border-blue-500" />
+  <!-- Icono y título -->
+  <div class="flex flex-col items-center mb-4">
+    <div class="bg-[#1e3a8a] rounded-full p-6 mb-3">
+      <LuTelescope className="text-white size-14"/>
     </div>
+
+    <!-- titulo color negro -->
+    <p class="text-[#010510] text-center font-bold text-base">
+      VISIÓN
+    </p>
   </div>
-  <p class="text-gray-600 text-sm md:text-lg lg:text-xl font-semibold md:order-2 md:w-1/2 md:text-center text-wrap p-4">
+
+  <!-- Texto -->
+  <p class="text-gray-800 text-sm font-normal text-center leading-relaxed px-2">
     Ser reconocidos como líderes en 
-    <span class="text-blue-800/70 font-bold">soluciones tecnológicas</span> para
-    iluminación y diseño en el mercado nacional peruano, impulsando la
-    <span class="text-blue-800/70 font-bold">innovación constante</span> y creando un impacto positivo en la comunidad
-    local.
+    <span class="font-bold">soluciones técnológicas</span> 
+    para iluminación y diseño en el mercado nacional peruano, impulsando la 
+    <span class="font-bold">innovación constante</span> 
+    y creando un impacto positivo en la comunidad local.
   </p>
 </section>
+
