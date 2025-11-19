@@ -1,39 +1,53 @@
 ---
-import logo from '../../../public/images/yuntas_publicidad_logo.webp';
+import teamImage from '../../../public/images/pexels-gustavo-fring-4872026.webp';
 ---
+<!-- linea color azul-->
+<div class="w-full h-5 bg-[#9ED8DF]"></div>
+<div class="w-full bg-[#1ABCD7] py-4 md:py-4 px-4 md:px-8">
+  <!-- TÍTULO PRINCIPAL -->
+  <div class="w-full  py-12 px-4">
+    <h2 class="text-white text-center uppercase tracking-wide leading-tight">
+        <span class="block text-2xl md:text-4xl lg:text-5xl font-semibold">
+            Tu Socio para Personalizar
+        </span>
+        
+        <span class="block text-2xl md:text-4xl lg:text-5xl font-black mt-1">
+            Tu Negocio
+        </span>
+    </h2>
+</div>
+</div>
 
-<section
-  class="relative w-full py-28 md:py-36 flex justify-center bg-gradient-to-b from-blue-900 to-indigo-950 px-8 text-white"
->
-  <div class="md:max-w-5xl flex flex-col xl:flex-row items-center gap-6 md:gap-12">
-    <!-- Logo -->
-    <div class="flex-shrink-0">
-      <img
-        src= { logo.src }
-        alt="Logo Yuntas"
-        title="Logo Yuntas Publicidad"
-        class="w-32 md:w-60"
-      />
+<!--SECCIÓN CONTENIDO PRINCIPAL-->
+<section class="w-full bg-white py-12 md:py-20 px-4 md:px-8">
+  <div class="max-w-6xl mx-auto">
+    
+    <!-- GRID: IMAGEN Y TEXTO -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 items-center">
+      
+      <!-- IMAGEN DEL EQUIPO -->
+      <div class="flex justify-center md:justify-start">
+        <img
+          src={teamImage.src}
+          alt="Equipo de trabajo en reunión Yuntas"
+          class="w-full max-w-xl rounded-[2.5rem] shadow-lg object-cover h-120"
+        />
+      </div>
+
+      <!-- TEXTO DESCRIPTIVO -->
+      <div class="flex flex-col justify-center items-center text-center p-4">
+  <p class="text-lg md:text-xl text-gray-900 leading-snug">
+    En Yuntas Producciones <span class="font-extrabold">transformamos</span><br />
+    <span class="font-extrabold">espacios con soluciones tecnológicas</span><br />
+    <span class="font-extrabold">innovadoras</span> en iluminación y diseño,<br />
+    ofreciendo calidad y vanguardia <span class="font-extrabold">para</span><br />
+    <span class="font-extrabold">crear experiencias inolvidables</span>
+  </p>
+</div>
+      
     </div>
-    <!-- Texto -->
-    <div class="text-center max-w-sm md:max-w-lg">
-      <p class="text-lg md:text-3xl font-light leading-tight">
-        En Yuntas Producciones
-        <span class="font-bold"
-          >transformamos espacios con soluciones tecnológicas</span
-        >
-        innovadoras en iluminación y diseño, ofreciendo calidad y vanguardia
-        <span class="font-bold">para crear experiencias inolvidables</span>.
-      </p>
-    </div>
-  </div>
-  <!-- Esquinas decorativas -->
-  <div
-    class="absolute hidden md:block top-15 left-15 border-t-2 border-l-2 border-cyan-400 md:w-40 md:h-30 lg:w-80 lg:h-60"
-  >
-  </div>
-  <div
-    class="absolute hidden md:block bottom-15 right-15 border-b-2 border-r-2 border-cyan-400 md:w-40 md:h-30 lg:w-80 lg:h-60"
-  >
   </div>
 </section>
+
+<!--linea color azul-->
+<div class="w-full h-5 bg-[#9ED8DF]"></div>
