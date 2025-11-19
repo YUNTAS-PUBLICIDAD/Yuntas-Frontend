@@ -16,6 +16,8 @@ export default interface Blog {
   videoBlog?: string;
   tituloVideoBlog?: string;
   created_at: string;
+
+  
 }
 
 export interface BlogFormData {
