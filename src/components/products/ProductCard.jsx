@@ -25,8 +25,8 @@ const ProductCard = ({ producto }) => {
       onClick={handleClick}
       className="block max-w-lg flex flex-col w-max-lg items-center 
       hover:scale-105 transition-all duration-200 
-      cursor-pointer group mb-8 rounded-xl
-      shadow-xl "
+      cursor-pointer group mb-7 rounded-xl
+      shadow-xl"
       title={titulo}
     >
       {/* Contenedor principal con dimensiones fijas */}
