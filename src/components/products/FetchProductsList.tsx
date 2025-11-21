@@ -3,6 +3,7 @@ import type Producto from "../../models/Product.ts";
 import ProductCard from "./ProductCard.jsx";
 import ProductSearchBar from "../../pages/products/_ProductSearchBar.tsx";
 import { config } from "../../../config.ts";
+import Emergente_Producto from "./Emergente_Producto.jsx";
 
 interface CategoryCounts {
   [key: string]: number;
@@ -25,6 +26,7 @@ export default function FetchProductsList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const itemsPerPage = 6;
+  const [product, setProduct] = useState(null);
 
   // Fetch inicial de productos
   useEffect(() => {
@@ -183,6 +185,8 @@ export default function FetchProductsList() {
   }
 
   return (
+    <div>
+        <Emergente_Producto producto={product} /> 
     <div className="w-full bg-white">
       <div
         className="w-full 
@@ -419,5 +423,6 @@ export default function FetchProductsList() {
         </div>
       )}
     </div>
+      </div>
   );
 }
