@@ -37,6 +37,9 @@ const NavItem = ({ link, texto, title, isActive }: NavItemProps) => (
 const Navbar = ({ variant = "default", pathname }: NavbarProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  // MEJORA: Manejo de error en la carga del logo
+  const [logoError, setLogoError] = useState(false);
+
   const { darkMode } = useDarkMode();
 
   const navClasses = clsx(
@@ -80,7 +83,8 @@ const Navbar = ({ variant = "default", pathname }: NavbarProps) => {
 
         <a href="/" title="Ir a la página de inicio" className="hidden md:block">
           <img
-            src={variant === "admin" ? "/images/yuntas_publicidad_logo.webp" : "/images/yuntas_publicidad_logo-v2.webp"}
+            // MEJORA: Si el logo-v2 falla al cargar, se usa el logo principal como fallback
+            src={logoError || variant === "admin" ? "/images/yuntas_publicidad_logo.webp" : "/images/yuntas_publicidad_logo-v2.webp"}
             width={59}
             height={56}
             // srcSet={'/images/yuntas_publicidad_logo_mobile.webp 60w, /images/yuntas_publicidad_logo_tablet.webp 125w'}
@@ -89,6 +93,8 @@ const Navbar = ({ variant = "default", pathname }: NavbarProps) => {
             title="Logo Yuntas Publicidad"
             loading="eager"
             className="h-14 w-auto"
+            // MEJORA: Handler que detecta errores de carga y activa el fallback
+            onError={() => setLogoError(true)}
           />
         </a>
 
