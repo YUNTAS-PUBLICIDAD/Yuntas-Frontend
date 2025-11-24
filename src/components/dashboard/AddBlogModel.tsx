@@ -281,7 +281,7 @@ const AddBlogModal = ({
     if (!selectedParagraphType || !selectedTextRange || !linkUrl.trim()) return;
 
     // Crear el enlace SOLO en negrita 
-    const linkedText = `<strong><a href="${linkUrl}" target="_blank" rel="noopener noreferrer">${selectedText}</a></strong>`;
+    const linkedText = `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer">${selectedText}</a>`;
 
     let newText = '';
     if (selectedParagraphType === 'parrafo1') {
