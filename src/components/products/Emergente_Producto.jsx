@@ -30,7 +30,7 @@ const schema = z.object({
     .regex(/^[0-9]{9}$/, "El celular debe tener exactamente 9 dígitos"),
 });
 
-const SHOW_DELAY_MS = 5000; // 3s
+const SHOW_DELAY_MS = 5000; // 5s
 
 const Emergente_Producto = ({ producto }) => {
   const modalRef = useRef(null);
