@@ -2,7 +2,6 @@ import { FaFacebook, FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
 import { FaTiktok } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { useDarkMode } from "../hooks/darkmode/useDarkMode"; 
-import yuntasLogo from "../../public/images/yuntas_publicidad_logo.webp";
 
 const Footerjsx = ({ variant = "default" }) => {
     const { darkMode } = useDarkMode();
@@ -23,7 +22,7 @@ const Footerjsx = ({ variant = "default" }) => {
         {/* Logo y redes */}
         <div className="flex flex-col items-center text-center md:text-left mb-8 md:mb-0 w-full md:w-auto">
           <img
-            src={yuntasLogo.src}
+            src="/images/yuntas_publicidad_logo.webp"
             alt="Yuntas Logo"
             title="Logo Yuntas Publicidad"
             className={`mx-auto ${isAdmin ? "h-16" : "h-24"}`}
