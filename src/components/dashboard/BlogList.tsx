@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useBlogs } from '../../hooks/useBlogs';
 import { useBlogActions } from '../../hooks/useBlogActions';
-import BlogModal from './BlogModal';
-import type Blog from '../../models/Blog';
+import AddBlogModal from './AddBlogModel';
 
 const BlogList: React.FC = () => {
   const { blogs, loading, error, refetch } = useBlogs();
   const { deleteBlog, loading: actionLoading } = useBlogActions();
   
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [blogToEdit, setBlogToEdit] = useState<Blog | null>(null);
+  const [blogToEdit, setBlogToEdit] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   // Filtrar blogs por término de búsqueda
@@ -18,11 +17,12 @@ const BlogList: React.FC = () => {
     blog.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleEdit = (blog: Blog) => {
+  const handleEdit = (blog: any) => {
     setBlogToEdit(blog);
     setIsModalOpen(true);
   };
 
+  // Función para manejar la eliminación de un blog
   const handleDelete = async (id: number) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar este blog?')) {
       const success = await deleteBlog(id);
@@ -32,15 +32,13 @@ const BlogList: React.FC = () => {
     }
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  // Función para abrir el modal de creación de un nuevo blog
+  const handleCreateNew = () => {
     setBlogToEdit(null);
+    setIsModalOpen(true);
   };
 
-  const handleBlogSuccess = (blog: Blog) => {
-    refetch(); // Recargar la lista después de crear/actualizar
-  };
-
+  // Función para formatear fechas al formato español
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-ES', {
       year: 'numeric',
@@ -70,7 +68,7 @@ const BlogList: React.FC = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Gestión de Blogs</h1>
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={handleCreateNew}
           className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
           Crear Nuevo Blog
@@ -172,11 +170,14 @@ const BlogList: React.FC = () => {
       </div>
 
       {/* Modal para crear/editar blog */}
-      <BlogModal
+      <AddBlogModal
         isOpen={isModalOpen}
-        onClose={handleCloseModal}
+        setIsOpen={setIsModalOpen}
         blogToEdit={blogToEdit}
-        onSuccess={handleBlogSuccess}
+        onSuccess={() => {
+          refetch();
+          setBlogToEdit(null);
+        }}
       />
     </div>
   );
