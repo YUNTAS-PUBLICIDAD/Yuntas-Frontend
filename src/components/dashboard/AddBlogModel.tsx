@@ -104,7 +104,7 @@ const AddBlogModal = ({
       // Extraer párrafo 1 (introducción)
       let parrafo1 = getParrafoText(blogToEdit.parrafos?.[0]);
 
-      // Extraer beneficios 
+      // Extraer beneficios de parrafos[1], parrafos[2], parrafos[3]
       let beneficios: string[] = ["", "", ""];
       if (Array.isArray(blogToEdit.parrafos)) {
         for (let i = 1; i <= 3; i++) {
@@ -112,7 +112,7 @@ const AddBlogModal = ({
         }
       }
 
-      // Extraer párrafo 2 (conclusión/testimonio)
+      // Extraer párrafo 2 (conclusión/testimonio) que está en parrafos[4]
       let parrafo2 = getParrafoText(blogToEdit.parrafos?.[4]);
 
       setFormData({
@@ -426,18 +426,18 @@ const AddBlogModal = ({
         }
       });
 
-      // PÁRRAFOS 
-      // parrafos[0] = introducción (parrafo1)
+      // ESTRUCTURA DE PÁRRAFOS EN LA API:
+      
       formDataToSend.append("parrafos[0]", formData.parrafo1.trim());
 
-      // parrafos[1], [2], [3] = beneficios
+      // Agregar los 3 beneficios
       formData.beneficios.forEach((beneficio, index) => {
         if (beneficio && beneficio.trim()) {
           formDataToSend.append(`parrafos[${index + 1}]`, beneficio.trim());
         }
       });
 
-      // El último párrafo = conclusión/testimonio (parrafo4)
+      // Agregar el testimonio/conclusión
       const ultimoIndice = formData.beneficios.length + 1;
       formDataToSend.append(`parrafos[${ultimoIndice}]`, formData.parrafo2.trim());
 
