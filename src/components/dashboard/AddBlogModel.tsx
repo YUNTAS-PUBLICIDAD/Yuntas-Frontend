@@ -280,28 +280,29 @@ const AddBlogModal = ({
   const handleInsertManualLink = () => {
     if (!selectedParagraphType || !selectedTextRange || !linkUrl.trim()) return;
 
-    // Crear el enlace SOLO en negrita 
-    const linkedText = `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer">${selectedText}</a>`;
+    const selected = selectedText;
 
-    let newText = '';
-    if (selectedParagraphType === 'parrafo1') {
-      const currentText = formData.parrafo1;
-      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-      setFormData({ ...formData, parrafo1: newText });
-    } else if (selectedParagraphType === 'parrafo2') {
-      const currentText = formData.parrafo2;
-      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-      setFormData({ ...formData, parrafo2: newText });
-    } else if (selectedParagraphType === 'beneficio' && selectedBeneficioIndex !== null) {
-      const currentText = formData.beneficios[selectedBeneficioIndex];
-      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-      const updatedBeneficios = [...formData.beneficios];
-      updatedBeneficios[selectedBeneficioIndex] = newText;
-      setFormData({ ...formData, beneficios: updatedBeneficios });
+    const linkedText =
+      `<strong><a href="${linkUrl}" target="_blank" rel="noopener noreferrer">${selected}</a></strong>`;
+
+    const apply = (original: string) =>
+      original.slice(0, selectedTextRange.start) +
+      linkedText +
+      original.slice(selectedTextRange.end);
+
+    if (selectedParagraphType === "parrafo1") {
+      setFormData({ ...formData, parrafo1: apply(formData.parrafo1) });
+    } else if (selectedParagraphType === "parrafo2") {
+      setFormData({ ...formData, parrafo2: apply(formData.parrafo2) });
+    } else if (selectedParagraphType === "beneficio" && selectedBeneficioIndex !== null) {
+      const arr = [...formData.beneficios];
+      arr[selectedBeneficioIndex] = apply(arr[selectedBeneficioIndex]);
+      setFormData({ ...formData, beneficios: arr });
     }
 
     resetLinkState();
   };
+
 
   const handleProductLinkClick = (type: 'parrafo1' | 'parrafo2' | 'beneficio', beneficioIndex?: number) => {
     let textareaId = '';
@@ -333,24 +334,25 @@ const AddBlogModal = ({
   const handleInsertProductLink = (producto: Producto) => {
     if (!selectedParagraphType || !selectedTextRange) return;
 
-    // Crear el enlace al producto SOLO en negrita 
-    const linkedText = `<strong><a href="/products/${producto.link}" title="${producto.nombre}">${selectedText}</a></strong>`;
+    // Texto EXACTO seleccionado, sin cortar, sin añadir ni quitar caracteres.
+    const selected = selectedText;
 
-    let newText = '';
-    if (selectedParagraphType === 'parrafo1') {
-      const currentText = formData.parrafo1;
-      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-      setFormData({ ...formData, parrafo1: newText });
-    } else if (selectedParagraphType === 'parrafo2') {
-      const currentText = formData.parrafo2;
-      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-      setFormData({ ...formData, parrafo2: newText });
-    } else if (selectedParagraphType === 'beneficio' && selectedBeneficioIndex !== null) {
-      const currentText = formData.beneficios[selectedBeneficioIndex];
-      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-      const updatedBeneficios = [...formData.beneficios];
-      updatedBeneficios[selectedBeneficioIndex] = newText;
-      setFormData({ ...formData, beneficios: updatedBeneficios });
+    const linkedText =
+      `<strong><a href="/products/${producto.link}" title="${producto.nombre}">${selected}</a></strong>`;
+
+    const apply = (original: string) =>
+      original.slice(0, selectedTextRange.start) +
+      linkedText +
+      original.slice(selectedTextRange.end);
+
+    if (selectedParagraphType === "parrafo1") {
+      setFormData({ ...formData, parrafo1: apply(formData.parrafo1) });
+    } else if (selectedParagraphType === "parrafo2") {
+      setFormData({ ...formData, parrafo2: apply(formData.parrafo2) });
+    } else if (selectedParagraphType === "beneficio" && selectedBeneficioIndex !== null) {
+      const arr = [...formData.beneficios];
+      arr[selectedBeneficioIndex] = apply(arr[selectedBeneficioIndex]);
+      setFormData({ ...formData, beneficios: arr });
     }
 
     resetLinkState();
