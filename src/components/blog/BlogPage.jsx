@@ -51,6 +51,7 @@ export default function BlogPage({ article }) {
             src={buildImageUrl(article.imagen_principal)}
             alt={article.nombre_producto || "Imagen principal del blog"}
             title={getImageTitle(article.imagen_principal, "Imagen principal del blog")}
+            loading="eager"// Cargar de inmediato para mejorar SEO
             className="w-full max-h-[100vh] object-cover"
           />
         ) : (
@@ -110,6 +111,7 @@ export default function BlogPage({ article }) {
                 <img
                   src={buildImageUrl(article.imagenes[0].ruta_imagen)}
                   alt={article.imagenes[0].texto_alt || "Imagen del blog"}
+                  loading="lazy"// Carga diferida para mejorar rendimiento
                   className="shadow-lg w-full h-[300px] md:h-full object-cover object-center"
                 />
               </div>
@@ -124,6 +126,7 @@ export default function BlogPage({ article }) {
                 <img
                   src={buildImageUrl(article.imagenes[0].ruta_imagen)}
                   alt={article.imagenes[0].texto_alt || 'Imagen del blog'}
+                  loading="lazy"// Carga diferida para mejorar rendimiento
                   className="w-full h-[250px] sm:h-[300px] object-cover rounded-lg shadow-md"
                 />
               </div>
@@ -141,6 +144,7 @@ export default function BlogPage({ article }) {
                 <img
                   src={buildImageUrl(article.imagenes[1].ruta_imagen)}
                   alt={article.imagenes[1].texto_alt || 'Imagen del blog'}
+                  loading="lazy"// Carga diferida para mejorar rendimiento
                   className="
                     rounded-full shadow-lg border-4 border-[#98D8DF]
                     w-[220px] h-[220px]
@@ -158,22 +162,35 @@ export default function BlogPage({ article }) {
                 <span className="text-2xl">✨</span> BENEFICIOS CLAVE:
               </h3>
               <div className="flex flex-col gap-4">
-                {article.beneficios?.map((item, index) => (
-                  <div 
-                    key={index}
-                    className="bg-[#e0f7fa] rounded-xl p-4 shadow-lg flex items-center gap-3"
-                  >
-                    <div className="flex-shrink-0">
-                      <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </div>
-                    <div 
-                      className="text-gray-900 font-semibold text-base sm:text-lg"
-                      dangerouslySetInnerHTML={{ __html: item.beneficio }}
-                    />
-                  </div>
-                ))}
+                {/* 
+                  CORRECCIÓN: Los beneficios vienen en la estructura article.parrafos[]
+                  
+                */}
+                {article.parrafos && article.parrafos.length >= 4 ? (
+                  [1, 2, 3].map((index) => {
+                    const beneficio = article.parrafos[index]?.parrafo;
+                    if (!beneficio) return null;
+                    
+                    return (
+                      <div 
+                        key={index}
+                        className="bg-[#e0f7fa] rounded-xl p-4 shadow-lg flex items-center gap-3"
+                      >
+                        <div className="flex-shrink-0">
+                          <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path>
+                          </svg>
+                        </div>
+                        <div 
+                          className="text-gray-900 font-semibold text-base sm:text-lg"
+                          dangerouslySetInnerHTML={{ __html: beneficio }}
+                        />
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="text-gray-500 italic">No hay beneficios configurados para este blog.</p>
+                )}
               </div>
             </div>
           </div>
@@ -187,20 +204,27 @@ export default function BlogPage({ article }) {
           <div className={`relative flex flex-col md:flex-row items-center justify-center w-full 
             py-16 overflow-hidden rounded-none h-auto md:h-[750px]`}
             style={{
-              backgroundImage: `url(${buildImageUrl(article.imagenes[2].ruta_imagen)})`,
+              backgroundImage: article.imagenes?.[2]?.ruta_imagen 
+                ? `url(${buildImageUrl(article.imagenes[2].ruta_imagen)})` 
+                : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
           >
             <div className="bg-[#00031ECF]/80 absolute inset-0"></div>
             {/* Imagen desplazada */}
-            <div className="w-[95%] md:w-[900px] h-[300px] sm:h-[400px] md:h-[500px] flex items-center justify-center rounded-2xl overflow-hidden shadow-lg md:translate-x-[200px]">
-              <img
-                src={buildImageUrl(article.imagenes[2].ruta_imagen)}
-                alt={article.imagenes[2].texto_alt || "Imagen del blog"}
-                className="w-full h-full object-cover object-center"
-              />
-            </div>
+            
+            {/* Verifica si existe una tercera imagen en el arreglo antes de renderizarla */}
+            {article.imagenes?.[2] && (
+              <div className="w-[95%] md:w-[900px] h-[300px] sm:h-[400px] md:h-[500px] flex items-center justify-center rounded-2xl overflow-hidden shadow-lg md:translate-x-[200px]">
+                <img
+                  src={buildImageUrl(article.imagenes[2].ruta_imagen)}
+                  alt={article.imagenes[2].texto_alt || "Imagen del blog"}
+                  loading="lazy"
+                  className="w-full h-full object-cover object-center"
+                />
+              </div>
+            )}
 
             {/* Tarjeta superpuesta */}
             <div className="absolute inset-0 flex items-center justify-center px-4">

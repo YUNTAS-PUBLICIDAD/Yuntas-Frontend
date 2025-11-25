@@ -1,7 +1,7 @@
 export default interface Blog {
   id: number;
   titulo: string;
-  link: string;
+  link?: string; // Opcional para evitar conflictos de tipo con otros modelos
   producto_id: number;
   parrafo: string;
   descripcion: string;
@@ -50,6 +50,13 @@ export default interface BlogAPI {
   parrafos: Array<{
     parrafo: string;
   }>;
+  beneficios?: Array<{
+    beneficio: string;
+  }>;
+  subtitulo_beneficio?: string;
+  url_video?: string;
+  titulo_video?: string;
+  link?: string;
   created_at: string;
   updated_at?: string;
 }

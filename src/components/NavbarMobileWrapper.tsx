@@ -1,7 +1,6 @@
 import { useState } from "react";
 import MobileMenuUnified from "./MobileMenuUnified";
 import ToggleNavbar from "./ui/ToggleNavbar";
-import logo from "../../public/images/yuntas_publicidad_logo.webp";
 
 const NavbarMobileWrapper = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,7 +8,7 @@ const NavbarMobileWrapper = () => {
   return (
     <>
       <ToggleNavbar isOpen={isOpen} setIsOpen={setIsOpen} />
-      <MobileMenuUnified isOpen={isOpen} onClose={() => setIsOpen(false)} logo={logo} />
+      <MobileMenuUnified isOpen={isOpen} onClose={() => setIsOpen(false)} logo="/images/yuntas_publicidad_logo.webp" />
     </>
   );
 };

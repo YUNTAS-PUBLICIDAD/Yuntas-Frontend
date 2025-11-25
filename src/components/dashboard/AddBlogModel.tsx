@@ -104,7 +104,7 @@ const AddBlogModal = ({
       // Extraer párrafo 1 (introducción)
       let parrafo1 = getParrafoText(blogToEdit.parrafos?.[0]);
 
-      // Extraer beneficios 
+      // Extraer beneficios de parrafos[1], parrafos[2], parrafos[3]
       let beneficios: string[] = ["", "", ""];
       if (Array.isArray(blogToEdit.parrafos)) {
         for (let i = 1; i <= 3; i++) {
@@ -112,7 +112,7 @@ const AddBlogModal = ({
         }
       }
 
-      // Extraer párrafo 2 (conclusión/testimonio)
+      // Extraer párrafo 2 (conclusión/testimonio) que está en parrafos[4]
       let parrafo2 = getParrafoText(blogToEdit.parrafos?.[4]);
 
       setFormData({
@@ -280,28 +280,29 @@ const AddBlogModal = ({
   const handleInsertManualLink = () => {
     if (!selectedParagraphType || !selectedTextRange || !linkUrl.trim()) return;
 
-    // Crear el enlace SOLO en negrita 
-    const linkedText = `<strong><a href="${linkUrl}" target="_blank" rel="noopener noreferrer">${selectedText}</a></strong>`;
+    const selected = selectedText;
 
-    let newText = '';
-    if (selectedParagraphType === 'parrafo1') {
-      const currentText = formData.parrafo1;
-      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-      setFormData({ ...formData, parrafo1: newText });
-    } else if (selectedParagraphType === 'parrafo2') {
-      const currentText = formData.parrafo2;
-      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-      setFormData({ ...formData, parrafo2: newText });
-    } else if (selectedParagraphType === 'beneficio' && selectedBeneficioIndex !== null) {
-      const currentText = formData.beneficios[selectedBeneficioIndex];
-      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-      const updatedBeneficios = [...formData.beneficios];
-      updatedBeneficios[selectedBeneficioIndex] = newText;
-      setFormData({ ...formData, beneficios: updatedBeneficios });
+    const linkedText =
+      `<strong><a href="${linkUrl}" target="_blank" rel="noopener noreferrer">${selected}</a></strong>`;
+
+    const apply = (original: string) =>
+      original.slice(0, selectedTextRange.start) +
+      linkedText +
+      original.slice(selectedTextRange.end);
+
+    if (selectedParagraphType === "parrafo1") {
+      setFormData({ ...formData, parrafo1: apply(formData.parrafo1) });
+    } else if (selectedParagraphType === "parrafo2") {
+      setFormData({ ...formData, parrafo2: apply(formData.parrafo2) });
+    } else if (selectedParagraphType === "beneficio" && selectedBeneficioIndex !== null) {
+      const arr = [...formData.beneficios];
+      arr[selectedBeneficioIndex] = apply(arr[selectedBeneficioIndex]);
+      setFormData({ ...formData, beneficios: arr });
     }
 
     resetLinkState();
   };
+
 
   const handleProductLinkClick = (type: 'parrafo1' | 'parrafo2' | 'beneficio', beneficioIndex?: number) => {
     let textareaId = '';
@@ -333,24 +334,25 @@ const AddBlogModal = ({
   const handleInsertProductLink = (producto: Producto) => {
     if (!selectedParagraphType || !selectedTextRange) return;
 
-    // Crear el enlace al producto SOLO en negrita 
-    const linkedText = `<strong><a href="/products/${producto.link}" title="${producto.nombre}">${selectedText}</a></strong>`;
+    // Texto EXACTO seleccionado, sin cortar, sin añadir ni quitar caracteres.
+    const selected = selectedText;
 
-    let newText = '';
-    if (selectedParagraphType === 'parrafo1') {
-      const currentText = formData.parrafo1;
-      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-      setFormData({ ...formData, parrafo1: newText });
-    } else if (selectedParagraphType === 'parrafo2') {
-      const currentText = formData.parrafo2;
-      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-      setFormData({ ...formData, parrafo2: newText });
-    } else if (selectedParagraphType === 'beneficio' && selectedBeneficioIndex !== null) {
-      const currentText = formData.beneficios[selectedBeneficioIndex];
-      newText = currentText.slice(0, selectedTextRange.start) + linkedText + currentText.slice(selectedTextRange.end);
-      const updatedBeneficios = [...formData.beneficios];
-      updatedBeneficios[selectedBeneficioIndex] = newText;
-      setFormData({ ...formData, beneficios: updatedBeneficios });
+    const linkedText =
+      `<strong><a href="/products/${producto.link}" title="${producto.nombre}">${selected}</a></strong>`;
+
+    const apply = (original: string) =>
+      original.slice(0, selectedTextRange.start) +
+      linkedText +
+      original.slice(selectedTextRange.end);
+
+    if (selectedParagraphType === "parrafo1") {
+      setFormData({ ...formData, parrafo1: apply(formData.parrafo1) });
+    } else if (selectedParagraphType === "parrafo2") {
+      setFormData({ ...formData, parrafo2: apply(formData.parrafo2) });
+    } else if (selectedParagraphType === "beneficio" && selectedBeneficioIndex !== null) {
+      const arr = [...formData.beneficios];
+      arr[selectedBeneficioIndex] = apply(arr[selectedBeneficioIndex]);
+      setFormData({ ...formData, beneficios: arr });
     }
 
     resetLinkState();
@@ -426,18 +428,18 @@ const AddBlogModal = ({
         }
       });
 
-      // PÁRRAFOS 
-      // parrafos[0] = introducción (parrafo1)
+      // ESTRUCTURA DE PÁRRAFOS EN LA API:
+      
       formDataToSend.append("parrafos[0]", formData.parrafo1.trim());
 
-      // parrafos[1], [2], [3] = beneficios
+      // Agregar los 3 beneficios
       formData.beneficios.forEach((beneficio, index) => {
         if (beneficio && beneficio.trim()) {
           formDataToSend.append(`parrafos[${index + 1}]`, beneficio.trim());
         }
       });
 
-      // El último párrafo = conclusión/testimonio (parrafo4)
+      // Agregar el testimonio/conclusión
       const ultimoIndice = formData.beneficios.length + 1;
       formDataToSend.append(`parrafos[${ultimoIndice}]`, formData.parrafo2.trim());
 

@@ -2,12 +2,13 @@
 import { Picture } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import imagen1 from "../assets/images/blog/banner_blog2.jpg";
+import AboutComponent from "../components/about/AboutComponent.astro";
 import imagenNumero1 from "../assets/images/libro_reclamaciones/numero1.webp";
 import imagenNumero2 from "../assets/images/libro_reclamaciones/numero2.webp";
 ---
 
 <Layout title="Blog" canonicalUrl="https://yuntaspublicidad.com/libro_reclamaciones/">
-  <section class="relative h-screen">
+  <section class="relative">
     <Picture
       src={imagen1}
       formats={["webp"]}
@@ -23,137 +24,155 @@ import imagenNumero2 from "../assets/images/libro_reclamaciones/numero2.webp";
         Reclamaciones
       </h1>
     </div>
+    <div class="w-full h-5 bg-[#9ED8DF]"></div>
+    <div class="w-full bg-[#1ABCD7] py-4 md:py-4 px-4 md:px-8">
+      <!-- TÍTULO PRINCIPAL -->
+      <div class="w-full  py-12 px-4">
+        <h2 class="text-white text-center uppercase tracking-wide leading-tight">
+            <span class="block text-2xl md:text-4xl lg:text-5xl font-black mt-1">
+                LIBRO DE RECLAMACIONES
+            </span>
+        </h2>
+    </div>
+    </div>
   </section>
+
   <div
-    class="w-full bg-white text-blue-950 text-3xl font-extrabold text-center h-20 content-center"
-  >
-    <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
-      LIBRO DE RECLAMACIONES
-    </h2>
+    class="w-full bg-white text-blue-950 text-3xl font-extrabold text-center h-20 content-center">
+    
   </div>
+
+
+
   <!-- Inicio del formulario del Libro de Reclamaciones -->
-  <section class="bg-linear-to-b from-blue-900 to-indigo-950 p-4 sm:p-12">
-    <!-- Datos Personales -->
-    <div class="p-5 sm:p-20 bg-white">
-      <div class="mb-4 sm:mb-12 flex flex-row items-center justify-between">
-        <Picture src={imagenNumero1} alt="Número 1 Yuntas" class="w-15 sm:w-40 mr-16" />
-        <h2 class="inline border-b-5 w-full text-lg sm:text-3xl sm:text-6xl Montserrat font-medium">
-          Datos personales
+  <section class="bg-[#FFFEFA] py-12">
+  <div class="mx-auto px-6" style="max-width: 70%;">
+
+    <!-- SECCIÓN 1 -->
+    <div class="mb-16">
+      <div class="flex items-center gap-4 mb-10 font-bold">
+        <div class="w-10 h-10 flex items-center justify-center border-2 border-black rounded-full text-xl font-bold">
+          1
+        </div>
+        <h2 class="text-2xl font-semibold text-[#1A1A1A]">
+          Datos de la persona que presenta el reclamo
         </h2>
       </div>
 
-      <label for="nombre" class="block text-lg sm:text-3xl Montserrat font-medium"
-        >Nombres y Apellidos</label
-      >
+      <!-- Nombre -->
+      <label class="block text-lg font-semibold mb-2">Nombre</label>
       <input
-        id="nombre"
-        name="nombre"
         type="text"
-        placeholder="ej: Juan Quispe"
-        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
+        placeholder="ej: Juan"
+        class="w-full bg-white px-4 py-3 border border-gray-400 rounded-xl text-gray-800 placeholder-gray-500 placeholder:italic mb-6"
       />
 
-      <label for="tipo_documento" class="block text-lg sm:text-3xl Montserrat font-medium"
-        >Tipo de documento</label
-      >
-      <select
-        id="tipo_documento"
-        name="tipo_documento"
-        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
-      >
-        <option>DNI</option>
-        <option>Carnet de Extranjería</option>
-      </select>
-
-      <label
-        for="numero_documento"
-        class="block text-lg sm:text-3xl Montserrat font-medium">Número de documento</label
-      >
+      <!-- Apellido -->
+      <label class="block text-lg font-semibold mb-2">Apellido</label>
       <input
-        id="numero_documento"
-        name="numero_documento"
-        type="number"
-        placeholder="ej: 123456789"
-        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
+        type="text"
+        placeholder="ej: Quispe"
+        class="w-full bg-white px-4 py-3 border border-gray-400 rounded-xl text-gray-800 placeholder-gray-500 placeholder:italic mb-6"
       />
 
-      <label for="correo" class="block text-lg sm:text-3xl Montserrat font-medium"
-        >Correo Electrónico</label
-      >
+      <!-- Tipo + Número de documento -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-lg font-semibold mb-2">Tipo de documento</label>
+          <select
+            class="w-full bg-white px-4 py-3 border border-gray-400 rounded-xl text-gray-800 placeholder-gray-500 mb-6">
+            <option>seleccionar</option>
+            <option>DNI</option>
+            <option>Carnet de Extranjería</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-lg font-semibold mb-2">Número de documento</label>
+          <input
+            type="text"
+            placeholder="ej: 123456789"
+            class="w-full bg-white px-4 py-3 border border-gray-400 rounded-xl text-gray-800 placeholder-gray-500 mb-6 placeholder:italic"
+          />
+        </div>
+      </div>
+
+      <!-- Correo -->
+      <label class="block text-lg font-semibold mb-2">Correo Electrónico</label>
       <input
-        id="correo"
-        name="correo"
         type="email"
-        placeholder="ej: juanquispe@gmail.com"
-        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
+        placeholder="ej: juan@quispe.com"
+        class="w-full bg-white px-4 py-3 border border-gray-400 rounded-xl text-gray-800 placeholder-gray-500 placeholder:italic mb-6"
       />
 
-      <label for="telefono" class="block text-lg sm:text-3xl Montserrat font-medium"
-        >Teléfono</label
-      >
+      <!-- Teléfono -->
+      <label class="block text-lg font-semibold mb-2">Teléfono</label>
       <input
-        id="telefono"
-        name="telefono"
         type="tel"
         placeholder="ej: 987 654 321"
-        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
+        class="w-full bg-white px-4 py-3 border border-gray-400 rounded-xl text-gray-800 placeholder-gray-500 placeholder:italic mb-6"
       />
     </div>
-    <!-- Información del reclamo -->
-    <div class="p-5 sm:p-20 bg-white mt-12">
-      <div class="mb-4 sm:mb-12 flex flex-row items-center justify-between">
-        <Picture src={imagenNumero2} alt="Número 2 Yuntas" class="w-15 sm:w-40 mr-16" />
-        <h2 class="inline border-b-5 w-full text-lg sm:text-3xl sm:text-6xl Montserrat font-medium">
-          Información del reclamo
+
+    <!-- SECCIÓN 2 -->
+    <div class="mt-20">
+      <div class="flex items-center gap-4 mb-17 relative">
+        <div class="w-10 h-10 flex items-center justify-center border border-black rounded-full text-xl font-semibold">
+          2
+        </div>
+        <h2 class="text-2xl font-semibold text-[#1A1A1A]">
+          Información de reclamo
         </h2>
+
       </div>
 
-      <label for="fecha" class="block text-lg sm:text-3xl Montserrat font-medium"
-        >Fecha de compra</label
-      >
+      <!-- Fecha -->
+      <label class="block text-lg font-semibold mb-2">Fecha de compra</label>
       <input
-        id="fecha"
-        name="fecha"
-        type="date"
-        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
+        type="date" 
+        class="w-full bg-white px-4 py-3 border border-gray-400 rounded-xl text-gray-800 mb-6"
       />
 
-      <label for="producto" class="block text-lg sm:text-3xl Montserrat font-medium"
-        >Producto</label
-      >
+      <!-- Producto -->
+      <label class="block text-lg font-semibold mb-2">Producto</label>
       <select
-        id="producto"
-        name="producto"
-        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
+        class="w-full bg-white px-4 py-3 border border-gray-400  rounded-xl text-gray-800 mb-6 italic text-gray-400"
       >
+        <option>seleccionar</option>
         <option>Letreros Neón LED</option>
         <option>Sillas y Mesas LED</option>
-        <option>Pisos LED</option>
       </select>
 
-      <label for="reclamacion" class="block text-lg sm:text-3xl Montserrat font-medium"
-        >Detalle de la reclamación</label
-      >
+      <!-- Detalle -->
+      <label class="block text-lg font-semibold mb-2">Detalle de la reclamación</label>
       <textarea
-        id="reclamacion"
-        name="reclamacion"
-        placeholder="Detalle su reclamo aquí..."
-        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
-        rows="1"></textarea>
+        placeholder="Detalle su reclamo aquí"
+        rows="4"
+        class="w-full bg-white px-4 py-3 border border-gray-400 rounded-xl text-gray-800 placeholder:italic mb-6"
+      ></textarea>
 
-      <label for="monto" class="block text-lg sm:text-3xl Montserrat font-medium"
-        >Monto reclamado S/</label
-      >
+      <!-- Monto -->
+      <label class="block text-lg font-semibold mb-2">Monto reclamado</label>
       <input
-        id="monto"
-        name="monto"
         type="number"
-        placeholder="S/999"
-        class="border-b-3 w-full text-lg sm:text-3xl mt-2 mb-4 sm:mb-12"
+        placeholder="S/.999"
+        class="w-full md:w-1/3 bg-white px-4 py-3 border border-gray-400 rounded-xl text-gray-800 mb-10"
       />
+
+      <!-- Botón -->
       <div class="flex justify-center">
-        <button class="bg-[#D9D9D9] active:bg-blue-900 active:text-white hover:bg-blue-900 hover:text-white w-xl sm:w-4xl py-3 sm:py-8 Montserrat text-lg sm:text-3xl mt-5 sm:mt-16">ENVIAR</button>
+        <button
+          class="bg-[#1CC4DA] text-white font-semibold px-19 py-3 rounded-xl text-lg hover:bg-[#17b0c3] transition mt-15 mb-15"
+        >
+          ENVIAR
+        </button>
       </div>
+
     </div>
-  </section>
+
+  </div>
+</section>
+
+
+
 </Layout>
