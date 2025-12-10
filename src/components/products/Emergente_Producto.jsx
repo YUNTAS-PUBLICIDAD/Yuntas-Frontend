@@ -238,9 +238,9 @@ const Emergente_Producto = ({ producto }) => {
             {/* Clip con esquinas redondeadas y diagonal */}
             <div className="w-full h-full clip-vase overflow-hidden rounded-2xl relative">
               <img
-                src="src/assets/images/emergente/Productos.webp"
-                alt={`Popup estatico`}
-                title={`Popup estatico`}
+                src={"src/assets/images/emergente/Productos.webp"}
+                alt={`Popup`}
+                title={`Popup`}
                 className="w-full h-full object-cover object-center"
               />
               <div className="absolute inset-0 bg-black/10 sm:bg-transparent"></div>
