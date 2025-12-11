@@ -1,8 +1,6 @@
 import { useRef, useEffect, useState, useMemo } from "react";
 import { config, getApiUrl } from "../../../config";
 import { z } from "zod";
-import yuleLove from "../../assets/images/emergente/yuleLove.webp";
-import productoImagen from "../../assets/images/emergente/Productos.webp";
 
 /* Textos promocionales */
 const textosPromocionales = [{ titulo: "¡Tu marca brillando como se merece!" }];
@@ -238,7 +236,7 @@ const Emergente_Producto = ({ producto }) => {
             {/* Clip con esquinas redondeadas y diagonal */}
             <div className="w-full h-full clip-vase overflow-hidden rounded-2xl relative">
               <img
-                src={"src/assets/images/emergente/Productos.webp"}
+                src={"images/Productos.webp"}
                 alt={`Popup`}
                 title={`Popup`}
                 className="w-full h-full object-cover object-center"
